@@ -1,30 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NoteData;
 using UnityEngine;
 
 public class NotesDirector : MonoBehaviour
 {
-    [SerializeField] public bool isRikuMethod;
     [SerializeField] private GameObject normalNotes;
     [SerializeField] private GameObject judgePerfect;
     [SerializeField] private GameObject judgeGreat;
     [SerializeField] private GameObject judgeGood;
     [SerializeField] private GameObject judgeMiss;
-    private List<Note>[] NotesData = new List<Note>[6];
+    private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private float Speed;
     private const float missGap = 0.2f;
-    private Note _notesData;
+    private KeyValuePair<GameObject, Note> _notesData;
     private string _judgeMassage;
 
     void Start()
     {
         Speed = GetComponent<NotesController>().Speed;
-        if (isRikuMethod)
-            NotesData = NotesInformation_Riku.InitNoteData("Test");
-        else
-            NotesData = NotesInformation.InitNoteData("Test");
+
+        var notesSheet = ImportData.ImportSheet("Test", "Expert");
+        
+        // 要修正＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 
         int len;
         float pos_x;
@@ -50,7 +48,7 @@ public class NotesDirector : MonoBehaviour
 
         if (gap < missGap)
         {
-            Note data = NotesData[laneNumber][0];
+            Note_old data = NotesData[laneNumber][0];
             Destroy(data.noteObject);
             NotesData[laneNumber].RemoveAt(0);
 
@@ -72,21 +70,21 @@ public class NotesDirector : MonoBehaviour
             Debug.Log(_judgeMassage);
         }
     }
+    
+    // 要修正＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 
     private void Update()
     {
-        for (int i = 0; i < 6; i++)
-        {
-            if (NotesData[i].Count == 0) continue;
-            _notesData = NotesData[i][0];
-            if (_notesData.JustTime + missGap < Time.time)
-            {
-                Destroy(_notesData.noteObject);
-                NotesData[i].RemoveAt(0);
-                
-                Instantiate(judgeMiss, new Vector3(-5 + i * 2, 0.5f, 0), Quaternion.identity);
-                Debug.Log("Miss");
-            }
+        if (NotesData.Count == 0) return;
+        
+        _notesData = NotesData[0];
+        if (_notesData.Value.GetTime() + missGap < Time.time)
+        { 
+            Destroy(_notesData.Key);
+            NotesData.RemoveAt(0);
+            
+            Instantiate(judgeMiss, new Vector3(-6 + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()), 0.5f, 0), Quaternion.identity);
+            Debug.Log("Miss");
         }
     }
 }

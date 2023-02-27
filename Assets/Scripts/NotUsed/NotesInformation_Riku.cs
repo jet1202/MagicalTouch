@@ -2,36 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using NoteData;
+using Note_oldData;
 
-namespace NoteData
+public static class Note_oldsInformation_Riku
 {
-    public class Note
-    {
-        public GameObject noteObject;
-        public char Type { get; }
-        public float JustTime { get; }
-
-        public Note(char type, float justTime)
-        {
-            noteObject = null;
-            Type = type;
-            JustTime = justTime;
-        }
-
-        public void setObj(GameObject obj)
-        {
-            this.noteObject = obj;
-        }
-    }
-}
-
-public static class NotesInformation
-{
+    public static int beat = 4;
     private static TextAsset csvFile;
     private static List<string[]> csvData = new List<string[]>();
     private static int Bpm;
     private static float Tempo = 0;
+    private static float MeasureTempo;
 
     static void CsvReader(string songName)
     {
@@ -45,33 +25,42 @@ public static class NotesInformation
 
         Bpm = int.Parse(csvData[0][1]);
         Tempo = 60f / Bpm;
+        MeasureTempo = Tempo * beat;
     }
 
-    public static List<Note>[] InitNoteData(string songName)
+    public static List<Note_old>[] InitNote_oldData(string songName)
     {
         CsvReader(songName);
 
-        List<Note>[] noteData = new List<Note>[6];
+        List<Note_old>[] Note_oldData = new List<Note_old>[6];
         for (int i = 0; i < 6; i++)
         {
-            noteData[i] = new List<Note>();
+            Note_oldData[i] = new List<Note_old>();
         }
         
         int beatTotal = csvData[2].Length;
-        
+
+        float MeasureBeat;
+        string Measure;
         for (int i = 2; i < 8; i++)
         {
             for (int j = 0; j < beatTotal; j++)
             {
-                if (csvData[i][j] == "n") continue;
-            
-                noteData[i - 2].Add(new Note(csvData[i][j][0], Tempo * j));
+                Measure = csvData[i][j];
+                MeasureBeat = MeasureTempo / Measure.Length;
+
+                for (int k = 0; k < Measure.Length; k++)
+                {
+                    if (Measure[k] == 'n') continue;
+                    
+                    Note_oldData[i - 2].Add(new Note_old(Measure[k], MeasureTempo * j + MeasureBeat * k));
+                }
             }
         }
 
-        return noteData;
+        return Note_oldData;
     }
-
+    
     public static float GetTempo()
     {
         return Tempo;
