@@ -17,12 +17,12 @@ public class GameDirector : MonoBehaviour
     
     void Update()
     {
-        if (Keyboard.current.sKey.wasPressedThisFrame)
-        {
-            isPlaying = !isPlaying;
-            Time.timeScale = Time.timeScale == 0 ? 1 : 0;
-        }
-
         musicTime = Time.time - waitTime;
+    }
+
+    public void StartStopButtonTap()
+    {
+        isPlaying = !isPlaying;
+        Time.timeScale = Time.timeScale == 0 ? 1 : 0;
     }
 }
