@@ -79,8 +79,7 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: e1260c1148f6143b28bae5ace5e9c5d1,
       type: 2}
-    excludedTargetPlatforms:
-    - Android
+    excludedTargetPlatforms: []
   - serializedVersion: 2
     name: High Fidelity
     pixelLightCount: 2
@@ -120,7 +119,7 @@ QualitySettings:
     excludedTargetPlatforms:
     - Android
   m_PerPlatformDefaultQuality:
-    Android: 0
+    Android: 1
     CloudRendering: 2
     GameCoreScarlett: 2
     GameCoreXboxOne: 2
@@ -128,9 +127,9 @@ QualitySettings:
     Nintendo Switch: 2
     PS4: 2
     PS5: 2
-    Server: 0
+    Server: 1
     Stadia: 2
-    Standalone: 0
+    Standalone: 1
     WebGL: 1
     Windows Store Apps: 2
     XboxOne: 2

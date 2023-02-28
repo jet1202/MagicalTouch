@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.InputSystem.Utilities;
@@ -27,8 +28,9 @@ public class TouchDirector : MonoBehaviour
         _width = Screen.width;
     }
 
-    void Update()
+    void FixedUpdate()
     {
+
         // それぞれのタッチがどのレーンをタッチしているのか認識
         activeTouchList = Touch.activeTouches;
         laneTouching = new bool[12];
@@ -38,7 +40,7 @@ public class TouchDirector : MonoBehaviour
             if (touchlane != -1)
                 laneTouching[touchlane] = true;
             if (touch.phase == TouchPhase.Began)
-                _notesDirector.BeginTouch(touchlane);
+                Task.Run(() => _notesDirector.BeginTouch(touchlane));
         }
 
         for (int i = 0; i < 12; i++)

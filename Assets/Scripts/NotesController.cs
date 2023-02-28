@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NotesController : MonoBehaviour
 {
+    [SerializeField] private GameDirector gameDirector;
     [SerializeField] public float Speed;
     void Start()
     {
@@ -12,6 +13,6 @@ public class NotesController : MonoBehaviour
 
     void Update()
     {
-        transform.position = new Vector3(0, 0, -Time.time * Speed);
+        transform.position = new Vector3(0, 0, -gameDirector.musicTime * Speed);
     }
 }

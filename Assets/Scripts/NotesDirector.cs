@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class NotesDirector : MonoBehaviour
 {
+    [SerializeField] private GameDirector gameDirector;
     [SerializeField] private GameObject normalNotes;
     [SerializeField] private GameObject judgePerfect;
     [SerializeField] private GameObject judgeGreat;
@@ -21,64 +22,86 @@ public class NotesDirector : MonoBehaviour
         Speed = GetComponent<NotesController>().Speed;
 
         var notesSheet = ImportData.ImportSheet("Test", "Expert");
-        
-        // 要修正＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 
-        int len;
-        float pos_x;
-        for (int i = 0; i < 6; i++)
+        int len = notesSheet.Count;
+        for (int i = 0; i < len; i++)
         {
-            len = NotesData[i].Count;
-            pos_x = -5f + i * 2;
-            for (int j = 0; j < len; j++)
-            {
-                GameObject ins = Instantiate(normalNotes, 
-                    new Vector3(pos_x, 0, NotesData[i][j].JustTime * Speed),
-                    Quaternion.identity, this.transform);
-                NotesData[i][j].setObj(ins);
-            }
+            GameObject ins = Instantiate(normalNotes, this.transform);
+            _notesData = new KeyValuePair<GameObject, Note>(ins, notesSheet[i]);
+            NoteSettings(_notesData);
+            NotesData.Add(_notesData);
         }
+    }
+
+    private void NoteSettings(KeyValuePair<GameObject, Note> noteData)
+    {
+        float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.5f;
+        float sizex = noteData.Value.GetEndLane() - noteData.Value.GetStartLane();
+        float time = noteData.Value.GetTime() * Speed;
+        
+        noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
+        noteData.Key.transform.localScale = new Vector3(sizex, 0.1f, 1f);
+        noteData.Key.transform.rotation = Quaternion.identity;
     }
 
     public void BeginTouch(int laneNumber)
     {
-        if (NotesData[laneNumber].Count == 0) return;
-        
-        float gap = Math.Abs(NotesData[laneNumber][0].JustTime - Time.time);
+        int con = NotesData.Count;
+        if (con == 0) return;
 
-        if (gap < missGap)
+        // どのノーツをタップしたか判定
+        bool isGetNote = false;
+        float gap = -1f;
+        int i;
+        for (i = 0; i < con; i++)
         {
-            Note_old data = NotesData[laneNumber][0];
-            Destroy(data.noteObject);
-            NotesData[laneNumber].RemoveAt(0);
+            Note data = NotesData[i].Value;
+            gap = Mathf.Abs(data.GetTime() - gameDirector.musicTime);
+            if (gap > missGap)
+            {
+                break;
+            }
+
+            if (data.GetStartLane() - 1 <= laneNumber && laneNumber <= data.GetEndLane())
+            {
+                isGetNote = true;
+                break;
+            }
+        }
+        
+        // タップしたノーツの判定
+        if (isGetNote)
+        {
+            Vector3 notePos = new Vector3(-6f + (NotesData[i].Value.GetEndLane() + NotesData[i].Value.GetStartLane()) * 0.5f, 0.5f, 0);
+            Destroy(NotesData[i].Key);
+            NotesData.RemoveAt(i);
 
             if (gap < 0.05f)
             {
-                Instantiate(judgePerfect, new Vector3(-5 + laneNumber * 2, 0.5f, 0), Quaternion.identity);
+                Instantiate(judgePerfect, notePos, Quaternion.identity);
                 _judgeMassage = "Perfect";
             }
             else if (gap < 0.1f)
             {
-                Instantiate(judgeGreat, new Vector3(-5 + laneNumber * 2, 0.5f, 0), Quaternion.identity);
+                Instantiate(judgeGreat, notePos, Quaternion.identity);
                 _judgeMassage = "Great";
             }
             else
             {
-                Instantiate(judgeGood, new Vector3(-5 + laneNumber * 2, 0.5f, 0), Quaternion.identity);
+                Instantiate(judgeGood, notePos, Quaternion.identity);
                 _judgeMassage = "Good";
             }
             Debug.Log(_judgeMassage);
         }
     }
     
-    // 要修正＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 
     private void Update()
     {
         if (NotesData.Count == 0) return;
         
         _notesData = NotesData[0];
-        if (_notesData.Value.GetTime() + missGap < Time.time)
+        if (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
         { 
             Destroy(_notesData.Key);
             NotesData.RemoveAt(0);
