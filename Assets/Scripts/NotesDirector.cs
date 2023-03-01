@@ -6,6 +6,7 @@ using UnityEngine;
 public class NotesDirector : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
+    [SerializeField] private ImportData importData;
     [SerializeField] private GameObject normalNotes;
     [SerializeField] private GameObject judgePerfect;
     [SerializeField] private GameObject judgeGreat;
@@ -21,7 +22,7 @@ public class NotesDirector : MonoBehaviour
     {
         Speed = GetComponent<NotesController>().Speed;
 
-        var notesSheet = ImportData.ImportSheet("Test", "Expert");
+        var notesSheet = importData.ImportSheet("Test", "Expert");
 
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
@@ -106,7 +107,7 @@ public class NotesDirector : MonoBehaviour
             Destroy(_notesData.Key);
             NotesData.RemoveAt(0);
             
-            Instantiate(judgeMiss, new Vector3(-6 + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()), 0.5f, 0), Quaternion.identity);
+            Instantiate(judgeMiss, new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f, 0), Quaternion.identity);
             Debug.Log("Miss");
         }
     }

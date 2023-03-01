@@ -10,6 +10,7 @@ using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 public class TouchDirector : MonoBehaviour
 {
+    [SerializeField] private GameDirector gameDirector;
     [SerializeField] private List<GameObject> laneArray;
     [SerializeField] private NotesDirector _notesDirector;
     private bool[] laneTouching = new bool[12];
@@ -28,33 +29,35 @@ public class TouchDirector : MonoBehaviour
         _width = Screen.width;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-
-        // それぞれのタッチがどのレーンをタッチしているのか認識
-        activeTouchList = Touch.activeTouches;
-        laneTouching = new bool[12];
-        foreach (var touch in activeTouchList)
+        if (gameDirector.isPlaying)
         {
-            touchlane = TouchLane(touch.screenPosition);
-            if (touchlane != -1)
-                laneTouching[touchlane] = true;
-            if (touch.phase == TouchPhase.Began)
-                Task.Run(() => _notesDirector.BeginTouch(touchlane));
-        }
-
-        for (int i = 0; i < 12; i++)
-        {
-            if (laneTouching[i] != lastLaneTouching[i])
+            // それぞれのタッチがどのレーンをタッチしているのか認識
+            activeTouchList = Touch.activeTouches;
+            laneTouching = new bool[12];
+            foreach (var touch in activeTouchList)
             {
-                if (laneTouching[i])
-                    laneArray[i].GetComponent<MeshRenderer>().enabled = true;
-                else
-                    laneArray[i].GetComponent<MeshRenderer>().enabled = false;
+                touchlane = TouchLane(touch.screenPosition);
+                if (touchlane != -1)
+                    laneTouching[touchlane] = true;
+                if (touch.phase == TouchPhase.Began)
+                    _notesDirector.BeginTouch(touchlane);
             }
-        }
 
-        lastLaneTouching = laneTouching;
+            for (int i = 0; i < 12; i++)
+            {
+                if (laneTouching[i] != lastLaneTouching[i])
+                {
+                    if (laneTouching[i])
+                        laneArray[i].GetComponent<MeshRenderer>().enabled = true;
+                    else
+                        laneArray[i].GetComponent<MeshRenderer>().enabled = false;
+                }
+            }
+
+            lastLaneTouching = laneTouching;
+        }
     }
 
     int TouchLane(Vector2 touchPos)
