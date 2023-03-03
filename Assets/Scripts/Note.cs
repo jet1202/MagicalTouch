@@ -46,10 +46,26 @@ public class Note
     }
 }
 
+[Serializable]
 public class Base
 {
-    public string Name;
-    public string Url;
-    public int Bpm;
-    public float Offset;
+    public string filePath;
+    public int bpm;
+    public float offset;
+}
+
+[Serializable]
+public class NoteSaveData
+{
+    public NoteSave[] item;
+}
+
+[Serializable]
+public class NoteSave
+{
+    public float time;
+    public int startLane;
+    public int endLane;
+    public char kind;
+    public float length;
 }

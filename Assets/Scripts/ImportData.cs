@@ -2,39 +2,46 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class ImportData : MonoBehaviour
 {
-    private KeyValuePair<string, KeyValuePair<int, float>> _baseData;
+    private Base _baseData;
     private List<Note> _notesData;
 
-    public KeyValuePair<string, KeyValuePair<int, float>> ImportBase(string name)
+    public IEnumerator ImportBase(string name)
     {
-        string url = Application.streamingAssetsPath + $"\\SongData\\{name}\\base.bin";
+        string url = Application.streamingAssetsPath + $"\\SongData\\{name}\\base.json";
+        
+        UnityWebRequest req = UnityWebRequest.Get(url);
+        yield return req.SendWebRequest();
+        if (req.result != UnityWebRequest.Result.ConnectionError)
+        {
+            string jsonStr = req.downloadHandler.text;
 
-        // var formatter = new BinaryFormatter();
-        // FileStream fs = new FileStream(url, FileMode.Open);
-        // _baseData = (KeyValuePair<string, KeyValuePair<int, float>>)formatter.Deserialize(fs);
-        // fs.Close();
+            var saveData = JsonUtility.FromJson<Base>(jsonStr);
 
-        return _baseData;
+            _baseData = new Base();
+            _baseData.filePath = saveData.filePath;
+            _baseData.bpm = saveData.bpm;
+            _baseData.offset = saveData.offset;
+        }
+
+        yield return _baseData;
     }
 
-    public List<Note> ImportSheet(string name, string difficulty)
+    public IEnumerator ImportSheet(string name, string difficulty)
     {
         _notesData = new List<Note>();
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}.bin";
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}.json";
 
         // var formatter = new BinaryFormatter();
         // FileStream fs = new FileStream(url, FileMode.Open);
         // _notesData = (List<Note>)formatter.Deserialize(fs);
-        StartCoroutine(getData(url));
+        yield return StartCoroutine(getData(url));
 
-        return _notesData;
+        yield return _notesData;
     }
 
     IEnumerator getData(string filename)
@@ -43,11 +50,16 @@ public class ImportData : MonoBehaviour
         yield return req.SendWebRequest();
         if (req.result != UnityWebRequest.Result.ConnectionError)
         {
-            var data = System.Text.Encoding.ASCII.GetBytes(req.downloadHandler.text);
+            string jsonStr = req.downloadHandler.text;
 
-            BinaryFormatter reader = new BinaryFormatter();
-            var ms = new MemoryStream(data);
-            _notesData = (List<Note>)reader.Deserialize(ms);
+            NoteSaveData saveData = JsonUtility.FromJson<NoteSaveData>(jsonStr);
+
+            Note note;
+            foreach (var n in saveData.item)
+            {
+                note = new Note(n.time, n.startLane, n.endLane, n.kind, n.length);
+                _notesData.Add(note);
+            }
         }
     }
 }

@@ -13,16 +13,29 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject judgeGood;
     [SerializeField] private GameObject judgeMiss;
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
+    public int bpm;
+    public float offset;
+    
     private float Speed;
     private const float missGap = 0.2f;
     private KeyValuePair<GameObject, Note> _notesData;
     private string _judgeMassage;
 
-    void Start()
+    private bool isOk = false;
+
+    IEnumerator Start()
     {
         Speed = GetComponent<NotesController>().Speed;
 
-        var notesSheet = importData.ImportSheet("Test", "Expert");
+        IEnumerator corutine = importData.ImportSheet("Test", "Expert");
+        yield return StartCoroutine(corutine);
+        List<Note> notesSheet = (List<Note>)corutine.Current;
+
+        corutine = importData.ImportBase("Test");
+        yield return StartCoroutine(corutine);
+        Base baseData = (Base)corutine.Current;
+        bpm = baseData.bpm;
+        offset = baseData.offset;
 
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
@@ -32,6 +45,8 @@ public class NotesDirector : MonoBehaviour
             NoteSettings(_notesData);
             NotesData.Add(_notesData);
         }
+
+        isOk = true;
     }
 
     private void NoteSettings(KeyValuePair<GameObject, Note> noteData)
@@ -99,16 +114,21 @@ public class NotesDirector : MonoBehaviour
 
     private void Update()
     {
-        if (NotesData.Count == 0) return;
-        
-        _notesData = NotesData[0];
-        if (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
-        { 
-            Destroy(_notesData.Key);
-            NotesData.RemoveAt(0);
-            
-            Instantiate(judgeMiss, new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f, 0), Quaternion.identity);
-            Debug.Log("Miss");
+        if (isOk)
+        {
+            if (NotesData.Count == 0) return;
+
+            _notesData = NotesData[0];
+            if (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
+            {
+                Destroy(_notesData.Key);
+                NotesData.RemoveAt(0);
+
+                Instantiate(judgeMiss,
+                    new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f,
+                        0), Quaternion.identity);
+                Debug.Log("Miss");
+            }
         }
     }
 }
