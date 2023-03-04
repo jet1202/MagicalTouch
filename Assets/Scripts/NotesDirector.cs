@@ -21,8 +21,6 @@ public class NotesDirector : MonoBehaviour
     private KeyValuePair<GameObject, Note> _notesData;
     private string _judgeMassage;
 
-    private bool isOk = false;
-
     IEnumerator Start()
     {
         Speed = GetComponent<NotesController>().Speed;
@@ -37,6 +35,11 @@ public class NotesDirector : MonoBehaviour
         bpm = baseData.bpm;
         offset = baseData.offset;
 
+        corutine = importData.AudioImport("Test");
+        yield return StartCoroutine(corutine);
+        if (!(bool)corutine.Current)
+            throw new Exception("Audio load Failed.");
+
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
         {
@@ -46,7 +49,8 @@ public class NotesDirector : MonoBehaviour
             NotesData.Add(_notesData);
         }
 
-        isOk = true;
+        gameDirector.isOk = true;
+        Debug.Log("Load Finished.");
     }
 
     private void NoteSettings(KeyValuePair<GameObject, Note> noteData)
@@ -114,21 +118,18 @@ public class NotesDirector : MonoBehaviour
 
     private void Update()
     {
-        if (isOk)
+        if (NotesData.Count == 0) return;
+
+        _notesData = NotesData[0];
+        if (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
         {
-            if (NotesData.Count == 0) return;
+            Destroy(_notesData.Key);
+            NotesData.RemoveAt(0);
 
-            _notesData = NotesData[0];
-            if (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
-            {
-                Destroy(_notesData.Key);
-                NotesData.RemoveAt(0);
-
-                Instantiate(judgeMiss,
-                    new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f,
-                        0), Quaternion.identity);
-                Debug.Log("Miss");
-            }
+            Instantiate(judgeMiss,
+                new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f,
+                    0), Quaternion.identity);
+            Debug.Log("Miss");
         }
     }
 }

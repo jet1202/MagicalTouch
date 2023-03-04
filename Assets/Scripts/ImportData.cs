@@ -62,4 +62,21 @@ public class ImportData : MonoBehaviour
             }
         }
     }
+
+    public IEnumerator AudioImport(string name)
+    {
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/Audio.ogg";
+        UnityWebRequest req = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.OGGVORBIS);
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.ConnectionError)
+        {
+            yield return false;
+            yield break;
+        }
+        
+        AudioClip audioClip = DownloadHandlerAudioClip.GetContent(req);
+        GetComponent<AudioSource>().clip = audioClip;
+        yield return true;
+    }
 }
