@@ -46,7 +46,7 @@ public class GameDirector : MonoBehaviour
                 musicTime = 0;
             }
         }
-        musicTime = Time.fixedTime - waitTime;
+        musicTime = Time.time - waitTime;
     }
 
     public void StartStopButtonTap()
@@ -58,11 +58,11 @@ public class GameDirector : MonoBehaviour
             if (isPlaying)
             {
                 if (isAudio)
-                    audioSource.Play();
+                    audioSource.UnPause();
             }
             else
             {
-                audioSource.Stop();
+                audioSource.Pause();
             }
         }
     }

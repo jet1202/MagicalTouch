@@ -7,6 +7,8 @@ public class NotesDirector : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private ImportData importData;
+    [SerializeField] private Cri cri;
+    
     [SerializeField] private GameObject normalNotes;
     [SerializeField] private GameObject judgePerfect;
     [SerializeField] private GameObject judgeGreat;
@@ -112,6 +114,7 @@ public class NotesDirector : MonoBehaviour
                 _judgeMassage = "Good";
             }
             Debug.Log(_judgeMassage);
+            cri.se.Play(1);
         }
     }
     
