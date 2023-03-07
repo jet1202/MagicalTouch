@@ -814,6 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   se: {fileID: 0}
+  bgm: {fileID: 0}
 --- !u!4 &380982850
 Transform:
   m_ObjectHideFlags: 0
@@ -1335,6 +1336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c4f57becdd7c9419a57368a749f772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cri: {fileID: 380982849}
   timeText: {fileID: 1946030870}
   isPlaying: 0
   musicTime: 0

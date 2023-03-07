@@ -23,24 +23,28 @@ public class NotesDirector : MonoBehaviour
     private KeyValuePair<GameObject, Note> _notesData;
     private string _judgeMassage;
 
+    private string title = "Test";
+    private string difficulty = "Expert";
+
     IEnumerator Start()
     {
         Speed = GetComponent<NotesController>().Speed;
 
-        IEnumerator corutine = importData.ImportSheet("Test", "Expert");
+        IEnumerator corutine = importData.ImportSheet(title, difficulty);
         yield return StartCoroutine(corutine);
         List<Note> notesSheet = (List<Note>)corutine.Current;
 
-        corutine = importData.ImportBase("Test");
+        corutine = importData.ImportBase(title);
         yield return StartCoroutine(corutine);
         Base baseData = (Base)corutine.Current;
         bpm = baseData.bpm;
         offset = baseData.offset;
 
-        corutine = importData.AudioImport("Test");
-        yield return StartCoroutine(corutine);
-        if (!(bool)corutine.Current)
-            throw new Exception("Audio load Failed.");
+        // corutine = importData.AudioImport("Test");
+        // yield return StartCoroutine(corutine);
+        // if (!(bool)corutine.Current)
+        //     throw new Exception("Audio load Failed.");
+        cri.SetBgm(title);
 
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)

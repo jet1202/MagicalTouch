@@ -7,9 +7,10 @@ using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
+    [SerializeField] private Cri cri;
     [SerializeField] private Text timeText;
 
-    private AudioSource audioSource;
+    // private AudioSource audioSource;
     public bool isPlaying = false;
     public float musicTime;
     public float waitTime;
@@ -25,13 +26,13 @@ public class GameDirector : MonoBehaviour
 
     private void Start()
     {
-        audioSource = this.GetComponent<AudioSource>();
+        // audioSource = this.GetComponent<AudioSource>();
     }
 
     void Update()
     {
-
-        timeText.text = audioSource.time.ToString("F2");
+        if (isOk)
+            timeText.text = (cri.bgm.time / 1000f).ToString();
 
         if (isAudio)
         {
@@ -42,7 +43,8 @@ public class GameDirector : MonoBehaviour
             if (musicTime > 0)
             {
                 isAudio = true;
-                audioSource.Play();
+                // audioSource.Play();
+                cri.bgm.Play(0);
                 musicTime = 0;
             }
         }
@@ -58,11 +60,15 @@ public class GameDirector : MonoBehaviour
             if (isPlaying)
             {
                 if (isAudio)
-                    audioSource.UnPause();
+                {
+                    // audioSource.UnPause();
+                    cri.bgm.Pause(false);
+                }
             }
             else
             {
-                audioSource.Pause();
+                // audioSource.Pause();
+                cri.bgm.Pause(true);
             }
         }
     }
