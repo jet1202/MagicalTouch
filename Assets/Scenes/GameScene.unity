@@ -571,7 +571,13 @@ MonoBehaviour:
   gameDirector: {fileID: 745814838}
   importData: {fileID: 745814840}
   cri: {fileID: 380982849}
-  normalNotes: {fileID: 6373266450215309851, guid: 44c9ab59ba6aa2c4eae62c2268049e2f,
+  normalNote: {fileID: 3401851094058923445, guid: f3ca527d61247c54f97662e6bb5cbc78,
+    type: 3}
+  holdNote: {fileID: 4384366980701419821, guid: 85c50a0f72986e84eb49dcd907ea08d2,
+    type: 3}
+  flickNote: {fileID: 6298575762882459934, guid: 8f6d5e182d1dc1548a67c4135aa7e144,
+    type: 3}
+  longNote: {fileID: 8434124444890167761, guid: 91376a9b5aa9eff4387184cd1273b44d,
     type: 3}
   judgePerfect: {fileID: 5880260410966071217, guid: b9af985d11284ca46a29f4e269909bc6,
     type: 3}
@@ -2912,10 +2918,10 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -5, y: 0, z: 5}
-  - {x: -5, y: 0, z: -5}
-  - {x: 5, y: 0, z: -5}
-  - {x: 5, y: 0, z: 5}
+  - {x: -6, y: 0, z: 0.5}
+  - {x: -6, y: 0, z: -0.5}
+  - {x: 6, y: 0, z: -0.5}
+  - {x: 6, y: 0, z: 0.5}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -3030,7 +3036,7 @@ Transform:
   m_GameObject: {fileID: 1316820012}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.02, z: 0}
-  m_LocalScale: {x: 1.2, y: 1, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 21091007}

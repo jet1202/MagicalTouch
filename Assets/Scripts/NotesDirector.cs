@@ -9,7 +9,11 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private ImportData importData;
     [SerializeField] private Cri cri;
     
-    [SerializeField] private GameObject normalNotes;
+    [SerializeField] private GameObject normalNote;
+    [SerializeField] private GameObject holdNote;
+    [SerializeField] private GameObject flickNote;
+    [SerializeField] private GameObject longNote;
+    
     [SerializeField] private GameObject judgePerfect;
     [SerializeField] private GameObject judgeGreat;
     [SerializeField] private GameObject judgeGood;
@@ -49,7 +53,7 @@ public class NotesDirector : MonoBehaviour
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
         {
-            GameObject ins = Instantiate(normalNotes, this.transform);
+            GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), this.transform);
             _notesData = new KeyValuePair<GameObject, Note>(ins, notesSheet[i]);
             NoteSettings(_notesData);
             NotesData.Add(_notesData);
@@ -66,8 +70,39 @@ public class NotesDirector : MonoBehaviour
         float time = noteData.Value.GetTime() * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
-        noteData.Key.transform.localScale = new Vector3(sizex, 0.1f, 1f);
-        noteData.Key.transform.rotation = Quaternion.identity;
+        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
+
+        if (noteData.Value.GetKind() == 'L')
+        {
+            float length = noteData.Value.GetLength();
+            noteData.Key.transform.GetChild(0).transform.localPosition = new Vector3(0f, length / 2 * Speed, 0f);
+            noteData.Key.transform.GetChild(0).transform.localScale = new Vector3(sizex, length * Speed, 1f);
+        }
+    }
+
+    GameObject NoteKind(char kind)
+    {
+        GameObject k;
+        switch (kind)
+        {
+            case 'N':
+                k = normalNote;
+                break;
+            case 'H':
+                k = holdNote;
+                break;
+            case 'F':
+                k = flickNote;
+                break;
+            case 'L':
+                k = longNote;
+                break;
+            default:
+                k = normalNote;
+                break;
+        }
+
+        return k;
     }
 
     public void BeginTouch(int laneNumber)
@@ -99,7 +134,7 @@ public class NotesDirector : MonoBehaviour
         if (isGetNote)
         {
             Vector3 notePos = new Vector3(-6f + (NotesData[i].Value.GetEndLane() + NotesData[i].Value.GetStartLane()) * 0.5f, 0.5f, 0);
-            Destroy(NotesData[i].Key);
+            NotesData[i].Key.SetActive(false);
             NotesData.RemoveAt(i);
 
             if (gap < 0.05f)
