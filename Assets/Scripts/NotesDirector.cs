@@ -112,13 +112,13 @@ public class NotesDirector : MonoBehaviour
 
         // どのノーツをタップしたか判定
         bool isGetNote = false;
-        float gap = -1f;
+        float gap = 1f;
         int i;
         for (i = 0; i < con; i++)
         {
             Note data = NotesData[i].Value;
-            gap = Mathf.Abs(data.GetTime() - gameDirector.musicTime);
-            if (gap > missGap)
+            gap = gameDirector.musicTime - data.GetTime();
+            if (Mathf.Abs(gap) > missGap)
             {
                 break;
             }
@@ -137,20 +137,20 @@ public class NotesDirector : MonoBehaviour
             NotesData[i].Key.SetActive(false);
             NotesData.RemoveAt(i);
 
-            if (gap < 0.05f)
+            if (Mathf.Abs(gap) < 0.05f)
             {
                 Instantiate(judgePerfect, notePos, Quaternion.identity);
-                _judgeMassage = "Perfect";
+                _judgeMassage = gap + " Perfect";
             }
-            else if (gap < 0.1f)
+            else if (Mathf.Abs(gap) < 0.1f)
             {
                 Instantiate(judgeGreat, notePos, Quaternion.identity);
-                _judgeMassage = "Great";
+                _judgeMassage = gap + " Great";
             }
             else
             {
                 Instantiate(judgeGood, notePos, Quaternion.identity);
-                _judgeMassage = "Good";
+                _judgeMassage = gap + " Good";
             }
             Debug.Log(_judgeMassage);
             cri.se.Play(1);
@@ -171,7 +171,7 @@ public class NotesDirector : MonoBehaviour
             Instantiate(judgeMiss,
                 new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f,
                     0), Quaternion.identity);
-            Debug.Log("Miss");
+            // Debug.Log("Miss");
         }
     }
 }

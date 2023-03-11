@@ -36,6 +36,7 @@ public class TouchDirector : MonoBehaviour
             // それぞれのタッチがどのレーンをタッチしているのか認識
             activeTouchList = Touch.activeTouches;
             laneTouching = new bool[12];
+            Debug.Log(activeTouchList.Count);
             foreach (var touch in activeTouchList)
             {
                 touchlane = TouchLane(touch.screenPosition);

@@ -9,8 +9,8 @@ public class GameDirector : MonoBehaviour
 {
     [SerializeField] private Cri cri;
     [SerializeField] private Text timeText;
-
-    // private AudioSource audioSource;
+    
+    private AudioSource audioSource;
     public bool isPlaying = false;
     public float musicTime;
     public float waitTime;
@@ -32,7 +32,7 @@ public class GameDirector : MonoBehaviour
     void Update()
     {
         if (isOk)
-            timeText.text = (cri.bgm.time / 1000f).ToString();
+            timeText.text = $"{cri.bgm.time / 1000f} {musicTime}";
 
         if (isAudio)
         {
@@ -43,9 +43,9 @@ public class GameDirector : MonoBehaviour
             if (musicTime > 0)
             {
                 isAudio = true;
-                // audioSource.Play();
                 cri.bgm.Play(0);
-                musicTime = 0;
+                waitTime = Time.time;
+                Debug.Log($"waitTime {waitTime}");
             }
         }
         musicTime = Time.time - waitTime;
