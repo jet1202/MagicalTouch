@@ -6,6 +6,7 @@ using UnityEngine;
 public class NotesDirector : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
+    [SerializeField] private TouchDirector touchDirector;
     [SerializeField] private ImportData importData;
     [SerializeField] private Cri cri;
     
@@ -105,8 +106,9 @@ public class NotesDirector : MonoBehaviour
         return k;
     }
 
-    public void BeginTouch(int laneNumber)
+    public void BeginTouch(int laneNumber, double touchTime)
     {
+        // NormalNote, LongNoteの始点
         int con = NotesData.Count;
         if (con == 0) return;
 
@@ -117,11 +119,13 @@ public class NotesDirector : MonoBehaviour
         for (i = 0; i < con; i++)
         {
             Note data = NotesData[i].Value;
-            gap = gameDirector.musicTime - data.GetTime();
+            gap = (float)(touchTime - gameDirector.waitTime - data.GetTime());
             if (Mathf.Abs(gap) > missGap)
             {
                 break;
             }
+            
+            if (data.GetKind() != 'N' && data.GetKind() != 'L') continue;
 
             if (data.GetStartLane() - 1 <= laneNumber && laneNumber <= data.GetEndLane())
             {
@@ -134,27 +138,32 @@ public class NotesDirector : MonoBehaviour
         if (isGetNote)
         {
             Vector3 notePos = new Vector3(-6f + (NotesData[i].Value.GetEndLane() + NotesData[i].Value.GetStartLane()) * 0.5f, 0.5f, 0);
-            NotesData[i].Key.SetActive(false);
+            NotesData[i].Key.GetComponent<SpriteRenderer>().enabled = false;
             NotesData.RemoveAt(i);
 
-            if (Mathf.Abs(gap) < 0.05f)
-            {
-                Instantiate(judgePerfect, notePos, Quaternion.identity);
-                _judgeMassage = gap + " Perfect";
-            }
-            else if (Mathf.Abs(gap) < 0.1f)
-            {
-                Instantiate(judgeGreat, notePos, Quaternion.identity);
-                _judgeMassage = gap + " Great";
-            }
-            else
-            {
-                Instantiate(judgeGood, notePos, Quaternion.identity);
-                _judgeMassage = gap + " Good";
-            }
-            Debug.Log(_judgeMassage);
             cri.se.Play(1);
+            NoteJudge(Mathf.Abs(gap), notePos);
         }
+    }
+
+    void NoteJudge(float gap, Vector3 appearPos)
+    {
+        if (gap < 0.05f)
+        {
+            Instantiate(judgePerfect, appearPos, Quaternion.identity);
+            _judgeMassage = gap + " Perfect";
+        }
+        else if (gap < 0.1f)
+        {
+            Instantiate(judgeGreat, appearPos, Quaternion.identity);
+            _judgeMassage = gap + " Great";
+        }
+        else
+        {
+            Instantiate(judgeGood, appearPos, Quaternion.identity);
+            _judgeMassage = gap + " Good";
+        }
+        //Debug.Log(_judgeMassage);
     }
     
 
@@ -163,7 +172,7 @@ public class NotesDirector : MonoBehaviour
         if (NotesData.Count == 0) return;
 
         _notesData = NotesData[0];
-        if (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
+        while (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
         {
             Destroy(_notesData.Key);
             NotesData.RemoveAt(0);
@@ -171,7 +180,81 @@ public class NotesDirector : MonoBehaviour
             Instantiate(judgeMiss,
                 new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f,
                     0), Quaternion.identity);
-            // Debug.Log("Miss");
+            //Debug.Log("Miss");
+
+            if (NotesData.Count == 0) return;
+            _notesData = NotesData[0];
+        }
+
+        int index = 0;
+        while (NotesData[index].Value.GetTime() < gameDirector.musicTime)
+        {
+            char ki = NotesData[index].Value.GetKind();
+            if (ki == 'H' || ki == 'M' || ki == 'T')
+            {
+                var n = NotesData[index].Value;
+                var isTaps = touchDirector.laneTouching;
+
+                bool tap = false;
+                for (int i = Mathf.Max(n.GetStartLane() - 1, 0); i <= Mathf.Min(n.GetEndLane(), 11); i++)
+                {
+                    if (isTaps[i])
+                    {
+                        tap = true;
+                        break;
+                    }
+                }
+
+                if (tap)
+                {
+                    Vector3 notePos = new Vector3(-6f + (n.GetEndLane() + n.GetStartLane()) * 0.5f, 0.5f, 0);
+                    if (ki == 'H' || ki == 'T')
+                        NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
+                    NotesData.RemoveAt(index);
+
+                    cri.se.Play(1);
+                    NoteJudge(0f, notePos);
+                }
+                else
+                {
+                    index++;
+                }
+            }
+            else if (ki == 'F')
+            {
+                var n = NotesData[index].Value;
+                var isFlicks = touchDirector.laneFlicking;
+                
+                bool flick = false;
+                for (int i = Mathf.Max(n.GetStartLane() - 1, 0); i <= Mathf.Min(n.GetEndLane(), 11); i++)
+                {
+                    if (isFlicks[i])
+                    {
+                        flick = true;
+                        break;
+                    }
+                }
+                
+                if (flick)
+                {
+                    Vector3 notePos = new Vector3(-6f + (n.GetEndLane() + n.GetStartLane()) * 0.5f, 0.5f, 0);
+                    NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
+                    NotesData.RemoveAt(index);
+
+                    cri.se.Play(0);
+                    NoteJudge(0f, notePos);
+                }
+                else
+                {
+                    index++;
+                }
+            }
+            else
+            {
+                index++;
+            }
+
+            if (NotesData.Count <= index) return;
         }
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
@@ -20,8 +19,8 @@ public class GameDirector : MonoBehaviour
     
     void Awake()
     {
-        Time.timeScale = 0;
-        musicTime = Time.fixedTime - waitTime;
+        Time.timeScale = 1;
+        musicTime = -waitTime;
     }
 
     private void Start()
@@ -34,21 +33,18 @@ public class GameDirector : MonoBehaviour
         if (isOk)
             timeText.text = $"{cri.bgm.time / 1000f} {musicTime}";
 
-        if (isAudio)
-        {
-            // musicTime = audioSource.time;
-        }
-        else
+        if (!isAudio)
         {
             if (musicTime > 0)
             {
                 isAudio = true;
                 cri.bgm.Play(0);
-                waitTime = Time.time;
-                Debug.Log($"waitTime {waitTime}");
+                waitTime = Time.realtimeSinceStartup;
             }
         }
-        musicTime = Time.time - waitTime;
+        
+        if (isPlaying)
+            musicTime = Time.realtimeSinceStartup - waitTime;
     }
 
     public void StartStopButtonTap()
@@ -56,18 +52,17 @@ public class GameDirector : MonoBehaviour
         if (isOk)
         {
             isPlaying = !isPlaying;
-            Time.timeScale = Time.timeScale == 0 ? 1 : 0;
             if (isPlaying)
             {
                 if (isAudio)
                 {
-                    // audioSource.UnPause();
                     cri.bgm.Pause(false);
                 }
+
+                waitTime = Time.realtimeSinceStartup - musicTime;
             }
             else
             {
-                // audioSource.Pause();
                 cri.bgm.Pause(true);
             }
         }

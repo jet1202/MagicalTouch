@@ -300,6 +300,7 @@ MonoBehaviour:
   - {fileID: 917238058}
   - {fileID: 320572723}
   _notesDirector: {fileID: 311307477}
+  laneTouching: 000000000000000000000000
 --- !u!4 &121340879
 Transform:
   m_ObjectHideFlags: 0
@@ -569,6 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDirector: {fileID: 745814838}
+  touchDirector: {fileID: 121340878}
   importData: {fileID: 745814840}
   cri: {fileID: 380982849}
   normalNote: {fileID: 3401851094058923445, guid: f3ca527d61247c54f97662e6bb5cbc78,

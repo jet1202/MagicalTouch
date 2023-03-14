@@ -1,19 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.InputSystem.Utilities;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
-using TouchPhase = UnityEngine.InputSystem.TouchPhase;
+using Vector2 = UnityEngine.Vector2;
 
 public class TouchDirector : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private List<GameObject> laneArray;
     [SerializeField] private NotesDirector _notesDirector;
-    private bool[] laneTouching = new bool[12];
+    public bool[] laneTouching = new bool[12];
+    public bool[] laneFlicking = new bool[12];
     private bool[] lastLaneTouching = new bool[12];
     private ReadOnlyArray<Touch> activeTouchList;
     private int _height, _width, touchlane;
@@ -36,14 +36,19 @@ public class TouchDirector : MonoBehaviour
             // それぞれのタッチがどのレーンをタッチしているのか認識
             activeTouchList = Touch.activeTouches;
             laneTouching = new bool[12];
-            Debug.Log(activeTouchList.Count);
+            laneFlicking = new bool[12];
             foreach (var touch in activeTouchList)
             {
                 touchlane = TouchLane(touch.screenPosition);
                 if (touchlane != -1)
+                {
                     laneTouching[touchlane] = true;
-                if (touch.phase == TouchPhase.Began)
-                    _notesDirector.BeginTouch(touchlane);
+                    Vector2 move = touch.delta;
+                    if (move.x * move.x + move.y * move.y >= 500)
+                        laneFlicking[touchlane] = true;
+                }
+                if (touch.began)
+                    _notesDirector.BeginTouch(touchlane, touch.startTime);
             }
 
             for (int i = 0; i < 12; i++)
