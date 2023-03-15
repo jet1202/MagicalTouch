@@ -5,13 +5,13 @@ using System.Collections.Generic;
 [Serializable]
 public class Note
 {
-    private float Time { get; }
+    private int Time { get; }
     private int StartLane { get; }
     private int EndLane { get; }
     private char Kind { get; }
-    private float Length { get; }
+    private int Length { get; }
     
-    public Note(float time, int startLane, int endLane, char kind, float length)
+    public Note(int time, int startLane, int endLane, char kind, int length)
     {
         this.Time = time;
         this.StartLane = startLane;
@@ -20,7 +20,7 @@ public class Note
         this.Length = length;
     }
     
-    public float GetTime()
+    public int GetTime()
     {
         return Time;
     }
@@ -40,7 +40,7 @@ public class Note
         return Kind;
     }
 
-    public float GetLength()
+    public int GetLength()
     {
         return Length;
     }

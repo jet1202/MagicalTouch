@@ -56,7 +56,8 @@ public class ImportData : MonoBehaviour
             Note note;
             foreach (var n in saveData.item)
             {
-                note = new Note(n.time, n.startLane, n.endLane, n.kind, n.length);
+                note = new Note((int)Math.Round(n.time * 100, MidpointRounding.AwayFromZero), n.startLane, n.endLane,
+                    n.kind, (int)Math.Round(n.length * 100, MidpointRounding.AwayFromZero));
                 _notesData.Add(note);
             }
         }

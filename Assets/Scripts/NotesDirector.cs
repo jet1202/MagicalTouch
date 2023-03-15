@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class NotesDirector : MonoBehaviour
@@ -14,6 +15,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject holdNote;
     [SerializeField] private GameObject flickNote;
     [SerializeField] private GameObject longNote;
+    [SerializeField] private GameObject maintainNote;
     
     [SerializeField] private GameObject judgePerfect;
     [SerializeField] private GameObject judgeGreat;
@@ -22,6 +24,7 @@ public class NotesDirector : MonoBehaviour
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     public int bpm;
     public float offset;
+    public float timing;
     
     private float Speed;
     private const float missGap = 0.2f;
@@ -30,6 +33,7 @@ public class NotesDirector : MonoBehaviour
 
     private string title = "Test";
     private string difficulty = "Expert";
+    private bool isPushLine = true;
 
     IEnumerator Start()
     {
@@ -37,19 +41,42 @@ public class NotesDirector : MonoBehaviour
 
         IEnumerator corutine = importData.ImportSheet(title, difficulty);
         yield return StartCoroutine(corutine);
-        List<Note> notesSheet = (List<Note>)corutine.Current;
+        List<Note> notesSheetA = (List<Note>)corutine.Current;
 
         corutine = importData.ImportBase(title);
         yield return StartCoroutine(corutine);
         Base baseData = (Base)corutine.Current;
         bpm = baseData.bpm;
+        timing = 30f / bpm;
         offset = baseData.offset;
-
-        // corutine = importData.AudioImport("Test");
-        // yield return StartCoroutine(corutine);
-        // if (!(bool)corutine.Current)
-        //     throw new Exception("Audio load Failed.");
+        
         cri.SetBgm(title);
+        
+        // ノーツの設定(Longノーツの中継判定地点を作る)
+        int leng = notesSheetA.Count;
+        Note n;
+        for (int i = 0; i < leng; i++)
+        {
+            n = notesSheetA[i];
+            if (n.GetKind() != 'L') continue;
+            
+            // 終点('T')の判定
+            notesSheetA.Add(new Note(n.GetTime() + n.GetLength(), n.GetStartLane(), n.GetEndLane(), 'T', 0));
+
+            float nextTiming = (float)(Math.Round((n.GetTime() / 100f - offset) / timing + 1.1f) * timing) + offset;
+            for (float j = nextTiming; j < (n.GetTime() + n.GetLength()) / 100f - 0.1f; j += timing)
+            {
+                notesSheetA.Add(new Note((int)Math.Floor(j * 100), n.GetStartLane(), n.GetEndLane(), 'M', 0));
+            }
+        }
+        
+        // 整列
+        var notesData = notesSheetA.OrderBy(x => x.GetTime()).ThenBy(x => x.GetStartLane());
+        List<Note> notesSheet = new List<Note>();
+        foreach (var data in notesData)
+        {
+            notesSheet.Add(data);
+        }
 
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
@@ -68,14 +95,14 @@ public class NotesDirector : MonoBehaviour
     {
         float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.5f;
         float sizex = noteData.Value.GetEndLane() - noteData.Value.GetStartLane();
-        float time = noteData.Value.GetTime() * Speed;
+        float time = noteData.Value.GetTime() * Speed / 100;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
         noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
 
         if (noteData.Value.GetKind() == 'L')
         {
-            float length = noteData.Value.GetLength();
+            float length = noteData.Value.GetLength() / 100f;
             noteData.Key.transform.GetChild(0).transform.localPosition = new Vector3(0f, length / 2 * Speed, 0f);
             noteData.Key.transform.GetChild(0).transform.localScale = new Vector3(sizex, length * Speed, 1f);
         }
@@ -98,6 +125,10 @@ public class NotesDirector : MonoBehaviour
             case 'L':
                 k = longNote;
                 break;
+            case 'M':
+            case 'T':
+                k = maintainNote;
+                break;
             default:
                 k = normalNote;
                 break;
@@ -119,7 +150,7 @@ public class NotesDirector : MonoBehaviour
         for (i = 0; i < con; i++)
         {
             Note data = NotesData[i].Value;
-            gap = (float)(touchTime - gameDirector.waitTime - data.GetTime());
+            gap = (float)(touchTime - gameDirector.waitTime - data.GetTime() / 100f);
             if (Mathf.Abs(gap) > missGap)
             {
                 break;
@@ -172,7 +203,7 @@ public class NotesDirector : MonoBehaviour
         if (NotesData.Count == 0) return;
 
         _notesData = NotesData[0];
-        while (_notesData.Value.GetTime() + missGap < gameDirector.musicTime)
+        while (_notesData.Value.GetTime() / 100f + missGap < gameDirector.musicTime)
         {
             Destroy(_notesData.Key);
             NotesData.RemoveAt(0);
@@ -187,7 +218,7 @@ public class NotesDirector : MonoBehaviour
         }
 
         int index = 0;
-        while (NotesData[index].Value.GetTime() < gameDirector.musicTime)
+        while (NotesData[index].Value.GetTime() / 100f < gameDirector.musicTime)
         {
             char ki = NotesData[index].Value.GetKind();
             if (ki == 'H' || ki == 'M' || ki == 'T')

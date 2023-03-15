@@ -301,6 +301,7 @@ MonoBehaviour:
   - {fileID: 320572723}
   _notesDirector: {fileID: 311307477}
   laneTouching: 000000000000000000000000
+  laneFlicking: 000000000000000000000000
 --- !u!4 &121340879
 Transform:
   m_ObjectHideFlags: 0
@@ -581,6 +582,8 @@ MonoBehaviour:
     type: 3}
   longNote: {fileID: 8434124444890167761, guid: 91376a9b5aa9eff4387184cd1273b44d,
     type: 3}
+  maintainNote: {fileID: 8781556880654120215, guid: 5e2d4ad6a44b49842b906b1f7a1b7723,
+    type: 3}
   judgePerfect: {fileID: 5880260410966071217, guid: b9af985d11284ca46a29f4e269909bc6,
     type: 3}
   judgeGreat: {fileID: 2663498915071419088, guid: a2f8dc44264cdf54c8e115d60911b295,
@@ -591,6 +594,7 @@ MonoBehaviour:
     type: 3}
   bpm: 0
   offset: 0
+  timing: 0
 --- !u!1 &320572723
 GameObject:
   m_ObjectHideFlags: 0
