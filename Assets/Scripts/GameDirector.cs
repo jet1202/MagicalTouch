@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
+    [SerializeField] private NotesDirector notesDirector;
     [SerializeField] private Cri cri;
     [SerializeField] private Text timeText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI comboText;
     
     private AudioSource audioSource;
     public bool isPlaying = false;
@@ -31,7 +35,7 @@ public class GameDirector : MonoBehaviour
     void Update()
     {
         if (isOk)
-            timeText.text = $"{cri.bgm.time / 1000f} {musicTime}";
+            timeText.text = $"{cri.bgm.time / 1000f}";
 
         if (!isAudio)
         {
@@ -45,6 +49,9 @@ public class GameDirector : MonoBehaviour
         
         if (isPlaying)
             musicTime = Time.realtimeSinceStartup - waitTime;
+
+        scoreText.text = notesDirector.score.ToString("D7");
+        comboText.text = notesDirector.combo.ToString();
     }
 
     public void StartStopButtonTap()
