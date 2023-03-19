@@ -598,7 +598,7 @@ MonoBehaviour:
     type: 3}
   effectObject: {fileID: 8429544229075532967, guid: 238039e6f2105cc429b84ed1a6e9eae6,
     type: 3}
-  justFlame: {fileID: 0}
+  justFlame: {fileID: 1873982661}
   bpm: 0
   offset: 0
   timing: 0
