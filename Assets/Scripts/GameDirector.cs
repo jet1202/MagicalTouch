@@ -20,7 +20,7 @@ public class GameDirector : MonoBehaviour
     private bool isAudio = false;
 
     public bool isOk = false;
-    
+
     void Awake()
     {
         Time.timeScale = 1;

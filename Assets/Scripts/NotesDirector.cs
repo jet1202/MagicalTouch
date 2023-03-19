@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class NotesDirector : MonoBehaviour
@@ -17,11 +18,16 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject longNote;
     [SerializeField] private GameObject maintainNote;
     [SerializeField] private GameObject pushLine;
-    
+
+    [SerializeField] private GameObject judgeExcellent;
     [SerializeField] private GameObject judgePerfect;
     [SerializeField] private GameObject judgeGreat;
-    [SerializeField] private GameObject judgeGood;
+    [SerializeField] private GameObject judgeBad;
     [SerializeField] private GameObject judgeMiss;
+    [SerializeField] private GameObject effectObject;
+    
+    [SerializeField] private SpriteRenderer justFlame;
+    
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
     public int bpm;
@@ -29,7 +35,7 @@ public class NotesDirector : MonoBehaviour
     public float timing;
     
     private float Speed;
-    private const float missGap = 0.2f;
+    private const float missGap = 0.20f;
     private KeyValuePair<GameObject, Note> _notesData;
     private KeyValuePair<GameObject, int> _linesData;
     private string _judgeMassage;
@@ -51,9 +57,10 @@ public class NotesDirector : MonoBehaviour
     private int totalN10 = 0;
     
     // 判定
+    private int isFull = 2;
     private int excellent = 0;
     private int perfect = 0;
-    private int good = 0;
+    private int great = 0;
     private int bad = 0;
     private int miss = 0;
 
@@ -164,6 +171,9 @@ public class NotesDirector : MonoBehaviour
                 beforeData = data;
             }
         }
+        
+        // 画面の設定
+        justFlame.color = new Color(1f, 1f, 0f, 1f);
 
         gameDirector.isOk = true;
         Debug.Log($"Load Finished. Total:{total}, TotalN:{totalN10}");
@@ -229,7 +239,7 @@ public class NotesDirector : MonoBehaviour
         {
             Note data = NotesData[i].Value;
             gap = (float)(touchTime - gameDirector.waitTime - data.GetTime() / 100f);
-            if (Mathf.Abs(gap) > missGap)
+            if (gap < -missGap)
             {
                 break;
             }
@@ -248,16 +258,24 @@ public class NotesDirector : MonoBehaviour
         {
             Vector3 notePos = new Vector3(-6f + (NotesData[i].Value.GetEndLane() + NotesData[i].Value.GetStartLane()) * 0.5f, 0.5f, 0);
             char kind = NotesData[i].Value.GetKind();
+            int wi = NotesData[i].Value.GetEndLane() - NotesData[i].Value.GetStartLane();
             NotesData[i].Key.GetComponent<SpriteRenderer>().enabled = false;
             NotesData.RemoveAt(i);
 
             cri.se.Play(1);
-            NoteJudge(Mathf.Abs(gap), notePos, kind);
+            NoteJudge(Mathf.Abs(gap), notePos, kind, wi);
         }
     }
 
-    void NoteJudge(float gap, Vector3 appearPos, char kind)
+    void NoteJudge(float gap, Vector3 appearPos, char kind, int wi)
     {
+        appearPos = new Vector3(appearPos.x, 0f, 0f);
+        
+        GameObject ins = Instantiate(effectObject, appearPos, quaternion.identity);
+        ins.transform.rotation = new Quaternion(0.7071068f, 0, 0, 0.7071068f);
+        ins.GetComponent<EffectController>().width = wi;
+        Color color = new Color();
+        
         int s = 0;
         switch (kind)
         {
@@ -277,35 +295,40 @@ public class NotesDirector : MonoBehaviour
         
         if (gap < 0.02f)
         {
-            Instantiate(judgePerfect, appearPos, Quaternion.identity);
+            Instantiate(judgeExcellent, appearPos, Quaternion.identity);
+            color = new Color(1f, 1f, 0f, 1f);
             _judgeMassage = gap + " Excellent";
             excellent++;
             combo++;
         }
-        else if (gap < 0.05f)
+        else if (gap < 0.06f)
         {
             Instantiate(judgePerfect, appearPos, Quaternion.identity);
+            color = new Color(1f, 1f, 0f, 1f);
             _judgeMassage = gap + " Perfect";
             perfect++;
             combo++;
         }
-        else if (gap < 0.10f)
+        else if (gap < 0.15f)
         {
             Instantiate(judgeGreat, appearPos, Quaternion.identity);
-            _judgeMassage = gap + " Good";
-            good++;
-            s -= s * 4;
+            color = new Color(95f / 255f, 184f / 255f, 1f, 1f);
+            _judgeMassage = gap + " Great";
+            great++;
+            s -= 4;
             combo++;
         }
         else
         {
-            Instantiate(judgeGood, appearPos, Quaternion.identity);
+            Instantiate(judgeBad, appearPos, Quaternion.identity);
+            color = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
             _judgeMassage = gap + " Bad";
             bad++;
             s = 0;
             combo = 0;
         }
-        // Debug.Log(_judgeMassage);
+        Debug.Log(_judgeMassage);
+        ins.GetComponent<SpriteRenderer>().color = color;
 
         // スコア加算
         notesN10 += s;
@@ -317,11 +340,11 @@ public class NotesDirector : MonoBehaviour
     {
         if (NotesData.Count != 0)
         {
-
+            // 見逃したノーツの削除
             _notesData = NotesData[0];
             while (_notesData.Value.GetTime() / 100f + missGap < gameDirector.musicTime)
             {
-                Destroy(_notesData.Key);
+                _notesData.Key.GetComponent<SpriteRenderer>().enabled = false;
                 NotesData.RemoveAt(0);
 
                 Instantiate(judgeMiss,
@@ -335,6 +358,7 @@ public class NotesDirector : MonoBehaviour
                 _notesData = NotesData[0];
             }
 
+            // Hold, Flickの処理
             int index = 0;
             while (NotesData.Count > index && NotesData[index].Value.GetTime() / 100f < gameDirector.musicTime)
             {
@@ -359,11 +383,12 @@ public class NotesDirector : MonoBehaviour
                         Vector3 notePos = new Vector3(-6f + (n.GetEndLane() + n.GetStartLane()) * 0.5f, 0.5f, 0);
                         NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
                         char kind = NotesData[index].Value.GetKind();
+                        int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
                         NotesData.RemoveAt(index);
 
                         if (ki == 'H')
                             cri.se.Play(1);
-                        NoteJudge(0f, notePos, kind);
+                        NoteJudge(0f, notePos, kind, wi);
                     }
                     else
                     {
@@ -389,10 +414,11 @@ public class NotesDirector : MonoBehaviour
                     {
                         Vector3 notePos = new Vector3(-6f + (n.GetEndLane() + n.GetStartLane()) * 0.5f, 0.5f, 0);
                         NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
+                        int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
                         NotesData.RemoveAt(index);
 
                         cri.se.Play(0);
-                        NoteJudge(0f, notePos, 'F');
+                        NoteJudge(0f, notePos, 'F', wi);
                     }
                     else
                     {
@@ -427,6 +453,24 @@ public class NotesDirector : MonoBehaviour
             scoreC = (float)maxCombo / total;
             // Debug.Log($"{maxCombo} / {total} = {scoreC}");
             score = (int)(scoreN * 900000 + scoreC * 100000);
+        }
+        
+        // AP, フルコン中のJustFlameの色
+        if (isFull == 2)
+        {
+            if (great + bad + miss > 0)
+            {
+                isFull = 1;
+                justFlame.color = new Color(0f, 59f / 255f, 1f, 1f);
+            }
+        }
+        else if (isFull == 1)
+        {
+            if (bad + miss > 0)
+            {
+                isFull = 0;
+                justFlame.color = new Color(1f, 71f / 255f, 208f / 255f, 1f);
+            }
         }
     }
 }

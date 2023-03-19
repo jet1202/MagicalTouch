@@ -44,7 +44,7 @@ public class TouchDirector : MonoBehaviour
                 {
                     laneTouching[touchlane] = true;
                     Vector2 move = touch.delta;
-                    if (move.x * move.x + move.y * move.y >= 500)
+                    if (move.x * move.x + move.y * move.y >= 250)
                         laneFlicking[touchlane] = true;
                 }
                 if (touch.began)
