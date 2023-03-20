@@ -10,6 +10,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private TouchDirector touchDirector;
     [SerializeField] private ImportData importData;
+    [SerializeField] private DamageController damageController;
     [SerializeField] private Cri cri;
     
     [SerializeField] private GameObject normalNote;
@@ -352,6 +353,8 @@ public class NotesDirector : MonoBehaviour
                         0), Quaternion.identity);
                 combo = 0;
                 miss++;
+                damageController.Damage();
+                Debug.Log("Damage");
                 //Debug.Log("Miss");
 
                 if (NotesData.Count == 0) break;
