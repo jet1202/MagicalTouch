@@ -34,6 +34,9 @@ public class NotesDirector : MonoBehaviour
     public int bpm;
     public float offset;
     public float timing;
+
+    public Speed[] speedData;
+    public Bpm[] bpmData;
     
     private float Speed;
     private const float missGap = 0.20f;
@@ -70,13 +73,23 @@ public class NotesDirector : MonoBehaviour
         // データをImport
         Speed = GetComponent<NotesController>().Speed;
 
+        // Sheet
         IEnumerator corutine = importData.ImportSheet(title, difficulty);
         yield return StartCoroutine(corutine);
         List<Note> notesSheetA = (List<Note>)corutine.Current;
 
+        // Base
         corutine = importData.ImportBase(title);
         yield return StartCoroutine(corutine);
         Base baseData = (Base)corutine.Current;
+        
+        // Addition
+        corutine = importData.ImportAddition(title, difficulty);
+        yield return StartCoroutine(corutine);
+        AdditionData additionData = (AdditionData)corutine.Current;
+        speedData = additionData.speedItem;
+        bpmData = additionData.bpmItem;
+
         bpm = baseData.bpm;
         timing = 30f / bpm;
         offset = baseData.offset;

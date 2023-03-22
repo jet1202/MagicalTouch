@@ -8,6 +8,7 @@ public class ImportData : MonoBehaviour
 {
     private Base _baseData;
     private List<Note> _notesData;
+    private AdditionData _additionData;
 
     public IEnumerator ImportBase(string name)
     {
@@ -26,6 +27,10 @@ public class ImportData : MonoBehaviour
             _baseData.bpm = saveData.bpm;
             _baseData.offset = saveData.offset;
         }
+        else
+        {
+            throw new Exception();
+        }
 
         yield return _baseData;
     }
@@ -41,6 +46,25 @@ public class ImportData : MonoBehaviour
         yield return StartCoroutine(getData(url));
 
         yield return _notesData;
+    }
+
+    public IEnumerator ImportAddition(string name, string difficulty)
+    {
+        _additionData = new AdditionData();
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}Speed.json";
+        
+        UnityWebRequest req = UnityWebRequest.Get(url);
+        yield return req.SendWebRequest();
+        if (req.result != UnityWebRequest.Result.ConnectionError)
+        {
+            string jsonStr = req.downloadHandler.text;
+
+            AdditionData saveData = JsonUtility.FromJson<AdditionData>(jsonStr);
+
+            _additionData = saveData;
+        }
+        
+        yield return _additionData;
     }
 
     IEnumerator getData(string filename)
@@ -61,22 +85,9 @@ public class ImportData : MonoBehaviour
                 _notesData.Add(note);
             }
         }
-    }
-
-    public IEnumerator AudioImport(string name)
-    {
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/Audio.ogg";
-        UnityWebRequest req = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.OGGVORBIS);
-        yield return req.SendWebRequest();
-
-        if (req.result == UnityWebRequest.Result.ConnectionError)
+        else
         {
-            yield return false;
-            yield break;
+            throw new Exception();
         }
-        
-        AudioClip audioClip = DownloadHandlerAudioClip.GetContent(req);
-        GetComponent<AudioSource>().clip = audioClip;
-        yield return true;
     }
 }

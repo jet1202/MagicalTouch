@@ -69,3 +69,25 @@ public class NoteSave
     public char kind;
     public float length;
 }
+
+[Serializable]
+public class Speed
+{
+    public int time;
+    public int speed;
+    public bool isVariation;
+}
+
+[Serializable]
+public class Bpm
+{
+    public int time;
+    public int bpm;
+}
+
+[Serializable]
+public class AdditionData
+{
+    public Speed[] speedItem;
+    public Bpm[] bpmItem;
+}
