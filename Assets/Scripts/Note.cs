@@ -63,11 +63,12 @@ public class NoteSaveData
 [Serializable]
 public class NoteSave
 {
-    public float time;
+    public int number;
+    public int time100;
     public int startLane;
     public int endLane;
     public char kind;
-    public float length;
+    public int length100;
 }
 
 [Serializable]
