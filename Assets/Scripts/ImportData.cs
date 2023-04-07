@@ -51,7 +51,7 @@ public class ImportData : MonoBehaviour
     public IEnumerator ImportAddition(string name, string difficulty)
     {
         _additionData = new AdditionData();
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}Speed.json";
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}Addition.json";
         
         UnityWebRequest req = UnityWebRequest.Get(url);
         yield return req.SendWebRequest();

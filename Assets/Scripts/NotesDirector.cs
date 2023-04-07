@@ -31,13 +31,12 @@ public class NotesDirector : MonoBehaviour
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
-    public int bpm;
-    public float offset;
-    public float timing;
 
     public Speed[] speedData;
     public Bpm[] bpmData;
-    
+
+    private List<float> MaintainJudge;
+
     private float Speed;
     private const float missGap = 0.20f;
     private KeyValuePair<GameObject, Note> _notesData;
@@ -77,11 +76,6 @@ public class NotesDirector : MonoBehaviour
         IEnumerator corutine = importData.ImportSheet(title, difficulty);
         yield return StartCoroutine(corutine);
         List<Note> notesSheetA = (List<Note>)corutine.Current;
-
-        // Base
-        corutine = importData.ImportBase(title);
-        yield return StartCoroutine(corutine);
-        Base baseData = (Base)corutine.Current;
         
         // Addition
         corutine = importData.ImportAddition(title, difficulty);
@@ -89,15 +83,34 @@ public class NotesDirector : MonoBehaviour
         AdditionData additionData = (AdditionData)corutine.Current;
         speedData = additionData.speedItem;
         bpmData = additionData.bpmItem;
-
-        bpm = baseData.bpm;
-        timing = 30f / bpm;
-        offset = baseData.offset;
         
         cri.SetBgm(title);
+
+        // Maintainの判定をリストに格納
+        MaintainJudge = new List<float>();
+        int b;
+        float t, nex;
+        int leng = bpmData.Length;
+        for (int i = 0; i < leng; i++)
+        {
+            b = bpmData[i].bpm;
+            t = bpmData[i].time;
+        
+            if (i == leng - 1)
+                nex = cri.GetLen() / 1000f;
+            else
+                nex = bpmData[i + 1].time;
+            
+            Debug.Log(nex);
+        
+            for (float j = t; j < nex; j += 30f / b)
+            {
+                MaintainJudge.Add(j);
+            }
+        }
         
         // ノーツの設定(Longノーツの中継判定地点を作る), ノーツ数計算
-        int leng = notesSheetA.Count;
+        leng = notesSheetA.Count;
         Note n;
         for (int i = 0; i < leng; i++)
         {
@@ -123,10 +136,22 @@ public class NotesDirector : MonoBehaviour
             total++;
             totalN10 += 2;
 
-            float nextTiming = (float)(Math.Round((n.GetTime() / 100f - offset) / timing + 1.1f) * timing) + offset;
-            for (float j = nextTiming; j < (n.GetTime() + n.GetLength()) / 100f - 0.1f; j += timing)
+            int fir;
+            for (int j = 0;; j++)
             {
-                notesSheetA.Add(new Note((int)Math.Floor(j * 100), n.GetStartLane(), n.GetEndLane(), 'M', 0));
+                if (MaintainJudge[j] > (n.GetTime() + 10) / 100f)
+                {
+                    fir = j;
+                    break;
+                }
+            }
+            
+            for (int j = fir;; j++)
+            {
+                if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 10) / 100f)
+                    break;
+                
+                notesSheetA.Add(new Note((int)Math.Floor(MaintainJudge[j] * 100), n.GetStartLane(), n.GetEndLane(), 'M', 0));
                 total++;
                 totalN10 += 2;
             }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using CriWare;
@@ -33,5 +34,20 @@ public class Cri : MonoBehaviour
         bgm = new GameObject().AddComponent<CriAtomSource>();
         bgm.loop = false;
         bgm.cueSheet = title;
+        // bgm.cueName = title;
+    }
+
+    public float GetLen()
+    {
+        CriAtomExAcb _exAcb = CriAtom.GetAcb(bgm.cueSheet);
+        CriAtomEx.CueInfo cueInfo;
+
+        Debug.Log(bgm.cueName);
+        if (_exAcb.GetCueInfo(bgm.cueSheet, out cueInfo))
+        {
+            return cueInfo.length;
+        }
+
+        throw new Exception("取得できない");
     }
 }
