@@ -68,7 +68,7 @@ public class TouchDirector : MonoBehaviour
 
     int TouchLane(Vector2 touchPos)
     {
-        float posX = touchPos.x / _width * 14f;
+        float posX = touchPos.x / _width * 26f;
         float posY = touchPos.y / _height;
         if (posY < 0.5)
         {
@@ -76,30 +76,42 @@ public class TouchDirector : MonoBehaviour
             {
                 case 0:
                 case 1:
-                    return 0;
                 case 2:
-                    return 1;
+                    return 0;
                 case 3:
-                    return 2;
                 case 4:
-                    return 3;
+                    return 1;
                 case 5:
-                    return 4;
                 case 6:
-                    return 5;
+                    return 2;
                 case 7:
-                    return 6;
                 case 8:
-                    return 7;
+                    return 3;
                 case 9:
-                    return 8;
                 case 10:
-                    return 9;
+                    return 4;
                 case 11:
-                    return 10;
                 case 12:
+                    return 5;
                 case 13:
                 case 14:
+                    return 6;
+                case 15:
+                case 16:
+                    return 7;
+                case 17:
+                case 18:
+                    return 8;
+                case 19:
+                case 20:
+                    return 9;
+                case 21:
+                case 22:
+                    return 10;
+                case 23:
+                case 24:
+                case 25:
+                case 26:
                     return 11;
             }
         }

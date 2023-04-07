@@ -58,7 +58,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1483687571
   m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &3754304327409708209
@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 7536670074350313370}
   - component: {fileID: 9150931673110731485}
   - component: {fileID: 5880260410966071230}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Judge_Perfect
   m_TagString: Untagged
   m_Icon: {fileID: 0}

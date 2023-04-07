@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 1695119350121634433}
   - component: {fileID: 139405216523050950}
   - component: {fileID: 3353781088047551141}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Judge_Bad
   m_TagString: Untagged
   m_Icon: {fileID: 0}

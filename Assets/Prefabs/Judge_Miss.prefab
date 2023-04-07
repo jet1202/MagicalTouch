@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 2843627243598201408}
   - component: {fileID: 3539712442682443527}
   - component: {fileID: 2196586571569826404}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Judge_Miss
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -20,6 +20,10 @@ public class GameDirector : MonoBehaviour
     private bool isAudio = false;
 
     public bool isOk = false;
+    
+    int frameCount;
+    float prevTime;
+    float fps;
 
     void Awake()
     {
@@ -29,13 +33,22 @@ public class GameDirector : MonoBehaviour
 
     private void Start()
     {
-        // audioSource = this.GetComponent<AudioSource>();
+        frameCount = 0;
+        prevTime = 0.0f;
     }
 
     void Update()
     {
-        if (isOk)
-            timeText.text = $"{cri.bgm.time / 1000f}";
+        frameCount++;
+        float time = Time.realtimeSinceStartup - prevTime;
+ 
+        if (time >= 0.5f) {
+            fps = frameCount / time;
+            timeText.text = $"{fps} fps";
+ 
+            frameCount = 0;
+            prevTime = Time.realtimeSinceStartup;
+        }
 
         if (!isAudio)
         {

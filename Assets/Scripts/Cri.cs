@@ -34,7 +34,6 @@ public class Cri : MonoBehaviour
         bgm = new GameObject().AddComponent<CriAtomSource>();
         bgm.loop = false;
         bgm.cueSheet = title;
-        // bgm.cueName = title;
     }
 
     public float GetLen()
@@ -42,7 +41,6 @@ public class Cri : MonoBehaviour
         CriAtomExAcb _exAcb = CriAtom.GetAcb(bgm.cueSheet);
         CriAtomEx.CueInfo cueInfo;
 
-        Debug.Log(bgm.cueName);
         if (_exAcb.GetCueInfo(bgm.cueSheet, out cueInfo))
         {
             return cueInfo.length;
