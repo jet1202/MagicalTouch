@@ -8,10 +8,12 @@ using UnityEngine.UI;
 public class GameDirector : MonoBehaviour
 {
     [SerializeField] private NotesDirector notesDirector;
+    [SerializeField] private NotesController notesController;
     [SerializeField] private Cri cri;
     [SerializeField] private Text timeText;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI comboText;
+    [SerializeField] private Text progressText;
     
     private AudioSource audioSource;
     public bool isPlaying = false;
@@ -41,6 +43,7 @@ public class GameDirector : MonoBehaviour
 
     void Update()
     {
+        // fps表示
         frameCount++;
         float time = Time.realtimeSinceStartup - prevTime;
  
@@ -52,6 +55,18 @@ public class GameDirector : MonoBehaviour
             prevTime = Time.realtimeSinceStartup;
         }
 
+        // 判定、現在スピード、BPMの表示
+        float t = isOk ? cri.bgm.time / 1000f : 0;
+        progressText.text = 
+            $"Time : {t}\n" +
+            $"BPM  : {notesDirector.nowBpm}\n" +
+            $"Speed: {notesController.nowSpeed}\n\n" +
+            $"Excellent: {notesDirector.excellent}\n" +
+            $"Perfect  : {notesDirector.perfect}\n" +
+            $"Great    : {notesDirector.great}\n" +
+            $"Bad      : {notesDirector.bad}\n" +
+            $"Miss     : {notesDirector.miss}\n";
+        
         if (!isAudio)
         {
             if (musicTime > 0)

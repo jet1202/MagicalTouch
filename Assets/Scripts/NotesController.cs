@@ -13,6 +13,8 @@ public class NotesController : MonoBehaviour
     public float[] accDis;
 
     private int speedProgress = -1;
+
+    public float nowSpeed = 0;
     
     void Start()
     {
@@ -47,9 +49,15 @@ public class NotesController : MonoBehaviour
             if (speedData[speedProgress].isVariation)
             {
                 float t = time - speedData[speedProgress].time100 / 100f;
-                pos += t * Math.Min(speedData[speedProgress].speed100 / 100f, time);
-                pos += t * (Math.Abs(speedData[speedProgress].speed100 - speedData[speedProgress + 1].speed100) /
-                    (float)(speedData[speedProgress + 1].time100 - speedData[speedProgress].time100) * t) / 2f;
+                pos += t * speedData[speedProgress].speed100 / 100f;
+                float s = (speedData[speedProgress + 1].speed100 - speedData[speedProgress].speed100) / 
+                          (float)(speedData[speedProgress + 1].time100 - speedData[speedProgress].time100) * t;
+                pos += t * s / 2f;
+
+                if (gameDirector.isOk)
+                {
+                    nowSpeed = speedData[speedProgress].speed100 / 100f + s;
+                }
             }
             else
             {

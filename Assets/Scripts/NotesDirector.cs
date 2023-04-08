@@ -62,11 +62,14 @@ public class NotesDirector : MonoBehaviour
     
     // 判定
     private int isFull = 2;
-    private int excellent = 0;
-    private int perfect = 0;
-    private int great = 0;
-    private int bad = 0;
-    private int miss = 0;
+    public int excellent = 0;
+    public int perfect = 0;
+    public int great = 0;
+    public int bad = 0;
+    public int miss = 0;
+
+    private int bpmProg = 0;
+    public int nowBpm = 0;
 
     IEnumerator Start()
     {
@@ -103,8 +106,6 @@ public class NotesDirector : MonoBehaviour
                 nex = cri.GetLen() / 1000f;
             else
                 nex = bpmData[i + 1].time;
-            
-            Debug.Log(nex);
         
             for (float j = t; j < nex; j += 30f / b)
             {
@@ -201,7 +202,7 @@ public class NotesDirector : MonoBehaviour
 
                 GameObject ins = Instantiate(pushLine, this.transform);
 
-                float time = data.GetTime() * Speed / 100;
+                float time = TimeTo(data.GetTime() / 100f) * Speed;
                 var positions = new Vector3[]
                 {
                     new Vector3(-6f + beforeData.GetEndLane(), 0f, time),
@@ -264,9 +265,9 @@ public class NotesDirector : MonoBehaviour
 
         if (noteData.Value.GetKind() == 'L')
         {
-            float length = noteData.Value.GetLength() / 100f;
-            noteData.Key.transform.GetChild(0).transform.localPosition = new Vector3(0f, length / 2 * Speed, 0f);
-            noteData.Key.transform.GetChild(0).transform.localScale = new Vector3(sizex, length * Speed, 1f);
+            float length = TimeTo((noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f) * Speed - time;
+            noteData.Key.transform.GetChild(0).transform.localPosition = new Vector3(0f, length / 2, 0f);
+            noteData.Key.transform.GetChild(0).transform.localScale = new Vector3(sizex, length, 1f);
         }
     }
 
@@ -401,7 +402,7 @@ public class NotesDirector : MonoBehaviour
             s = 0;
             combo = 0;
         }
-        Debug.Log(_judgeMassage);
+        // Debug.Log(_judgeMassage);
         ins.GetComponent<SpriteRenderer>().color = color;
 
         // スコア加算
@@ -427,7 +428,7 @@ public class NotesDirector : MonoBehaviour
                 combo = 0;
                 miss++;
                 damageController.Damage();
-                Debug.Log("Damage");
+                // Debug.Log("Damage");
                 //Debug.Log("Miss");
 
                 if (NotesData.Count == 0) break;
@@ -547,6 +548,13 @@ public class NotesDirector : MonoBehaviour
                 isFull = 0;
                 justFlame.color = new Color(1f, 71f / 255f, 208f / 255f, 1f);
             }
+        }
+        
+        // 現在BPM
+        if (bpmProg < bpmData.Length && bpmData[bpmProg].time / 100f < gameDirector.musicTime)
+        {
+            nowBpm = bpmData[bpmProg].bpm;
+            bpmProg++;
         }
     }
 }
