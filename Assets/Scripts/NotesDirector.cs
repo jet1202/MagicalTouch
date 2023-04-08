@@ -10,6 +10,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private TouchDirector touchDirector;
     [SerializeField] private ImportData importData;
+    [SerializeField] private NotesController notesController;
     [SerializeField] private DamageController damageController;
     [SerializeField] private Cri cri;
     
@@ -84,6 +85,8 @@ public class NotesDirector : MonoBehaviour
         speedData = additionData.speedItem;
         bpmData = additionData.bpmItem;
         
+        notesController.BpmDataImport(speedData);
+
         cri.SetBgm(title);
 
         // Maintainの判定をリストに格納
@@ -218,11 +221,43 @@ public class NotesDirector : MonoBehaviour
         Debug.Log($"Load Finished. Total:{total}, TotalN:{totalN10}");
     }
 
+    private float TimeTo(float time)
+    {
+        int len = speedData.Length;
+        int pro = 0;
+        for (int i = 0; i < len; i++)
+        {
+            if (speedData[i].time100 >= time * 100)
+            {
+                break;
+            }
+
+            pro = i;
+        }
+        
+        float pos = notesController.accDis[pro];
+
+        if (speedData[pro].isVariation)
+        {
+            float t = time - speedData[pro].time100 / 100f;
+            pos += t * Math.Min(speedData[pro].speed100 / 100f, time);
+            pos += t * (Math.Abs(speedData[pro].speed100 - speedData[pro + 1].speed100) /
+                (float)(speedData[pro + 1].time100 - speedData[pro].time100) * t) / 2f;
+        }
+        else
+        {
+            float t = time - speedData[pro].time100 / 100f;
+            pos += t * speedData[pro].speed100 / 100f;
+        }
+
+        return pos;
+    }
+
     private void NoteSettings(KeyValuePair<GameObject, Note> noteData)
     {
         float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.5f;
         float sizex = noteData.Value.GetEndLane() - noteData.Value.GetStartLane();
-        float time = noteData.Value.GetTime() * Speed / 100;
+        float time = TimeTo(noteData.Value.GetTime() / 100f) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
         noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);

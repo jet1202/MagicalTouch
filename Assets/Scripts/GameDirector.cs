@@ -27,6 +27,8 @@ public class GameDirector : MonoBehaviour
 
     void Awake()
     {
+        Application.targetFrameRate = 60;
+        
         Time.timeScale = 1;
         musicTime = -waitTime;
     }

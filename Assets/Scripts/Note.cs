@@ -74,8 +74,8 @@ public class NoteSave
 [Serializable]
 public class Speed
 {
-    public int time;
-    public int speed;
+    public int time100;
+    public int speed100;
     public bool isVariation;
 }
 

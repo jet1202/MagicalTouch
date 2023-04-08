@@ -631,6 +631,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameDirector: {fileID: 745814838}
   Speed: 50
+  speedData: []
+  accDis: []
 --- !u!114 &311307477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,6 +648,7 @@ MonoBehaviour:
   gameDirector: {fileID: 745814838}
   touchDirector: {fileID: 121340878}
   importData: {fileID: 745814840}
+  notesController: {fileID: 311307476}
   damageController: {fileID: 1275019552}
   cri: {fileID: 380982849}
   normalNote: {fileID: 3401851094058923445, guid: f3ca527d61247c54f97662e6bb5cbc78,
