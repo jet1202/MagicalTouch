@@ -44,7 +44,7 @@ public class NotesDirector : MonoBehaviour
     private KeyValuePair<GameObject, int> _linesData;
     private string _judgeMassage;
 
-    private string title = "Test";
+    private string title = "YAMINABE";
     private string difficulty = "Expert";
     private bool isPushLine = true;
     
@@ -472,7 +472,17 @@ public class NotesDirector : MonoBehaviour
                         index++;
                     }
                 }
-                else if (ki == 'F')
+                else
+                {
+                    index++;
+                }
+            }
+
+            index = 0;
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 6) / 100f < gameDirector.musicTime)
+            {
+                char ki = NotesData[index].Value.GetKind();
+                if (ki == 'F')
                 {
                     var n = NotesData[index].Value;
                     var isFlicks = touchDirector.laneFlicking;
