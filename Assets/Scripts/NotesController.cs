@@ -63,6 +63,11 @@ public class NotesController : MonoBehaviour
             {
                 float t = time - speedData[speedProgress].time100 / 100f;
                 pos += t * speedData[speedProgress].speed100 / 100f;
+                
+                if (gameDirector.isOk)
+                {
+                    nowSpeed = speedData[speedProgress].speed100 / 100f;
+                }
             }
         }
 

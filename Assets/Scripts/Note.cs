@@ -82,7 +82,7 @@ public class Speed
 [Serializable]
 public class Bpm
 {
-    public int time;
+    public int time100;
     public int bpm;
 }
 

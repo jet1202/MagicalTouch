@@ -100,14 +100,14 @@ public class NotesDirector : MonoBehaviour
         for (int i = 0; i < leng; i++)
         {
             b = bpmData[i].bpm;
-            t = bpmData[i].time;
+            t = bpmData[i].time100 / 100f;
         
             if (i == leng - 1)
                 nex = cri.GetLen() / 1000f;
             else
-                nex = bpmData[i + 1].time;
+                nex = bpmData[i + 1].time100 / 100f;
         
-            for (float j = t; j < nex; j += 30f / b)
+            for (float j = t; j < nex; j += 60f / b)
             {
                 MaintainJudge.Add(j);
             }
@@ -143,7 +143,7 @@ public class NotesDirector : MonoBehaviour
             int fir;
             for (int j = 0;; j++)
             {
-                if (MaintainJudge[j] > (n.GetTime() + 10) / 100f)
+                if (MaintainJudge[j] > (n.GetTime() + 1) / 100f)
                 {
                     fir = j;
                     break;
@@ -152,7 +152,7 @@ public class NotesDirector : MonoBehaviour
             
             for (int j = fir;; j++)
             {
-                if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 10) / 100f)
+                if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 1) / 100f)
                     break;
                 
                 notesSheetA.Add(new Note((int)Math.Floor(MaintainJudge[j] * 100), n.GetStartLane(), n.GetEndLane(), 'M', 0));
@@ -318,10 +318,11 @@ public class NotesDirector : MonoBehaviour
             {
                 break;
             }
-            
+
+            if (data.GetKind() == 'F') break;
             if (data.GetKind() != 'N' && data.GetKind() != 'L') continue;
 
-            if (data.GetStartLane() - 1 <= laneNumber && laneNumber <= data.GetEndLane())
+            if (data.GetStartLane() <= laneNumber && laneNumber < data.GetEndLane())
             {
                 isGetNote = true;
                 break;
@@ -561,7 +562,7 @@ public class NotesDirector : MonoBehaviour
         }
         
         // 現在BPM
-        if (bpmProg < bpmData.Length && bpmData[bpmProg].time / 100f < gameDirector.musicTime)
+        if (bpmProg < bpmData.Length && bpmData[bpmProg].time100 / 100f < gameDirector.musicTime)
         {
             nowBpm = bpmData[bpmProg].bpm;
             bpmProg++;
