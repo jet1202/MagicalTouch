@@ -39,7 +39,7 @@ public class NotesDirector : MonoBehaviour
     private List<float> MaintainJudge;
 
     private float Speed;
-    private const float missGap = 0.20f;
+    private const float missGap = 0.15f;
     private KeyValuePair<GameObject, Note> _notesData;
     private KeyValuePair<GameObject, int> _linesData;
     private string _judgeMassage;
@@ -377,7 +377,7 @@ public class NotesDirector : MonoBehaviour
             excellent++;
             combo++;
         }
-        else if (gap < 0.06f)
+        else if (gap < 0.05f)
         {
             Instantiate(judgePerfect, appearPos, Quaternion.identity);
             color = new Color(1f, 1f, 0f, 1f);
@@ -385,7 +385,7 @@ public class NotesDirector : MonoBehaviour
             perfect++;
             combo++;
         }
-        else if (gap < 0.15f)
+        else if (gap < 0.10f)
         {
             Instantiate(judgeGreat, appearPos, Quaternion.identity);
             color = new Color(95f / 255f, 184f / 255f, 1f, 1f);
