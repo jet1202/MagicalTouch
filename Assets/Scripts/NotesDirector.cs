@@ -44,9 +44,9 @@ public class NotesDirector : MonoBehaviour
     private KeyValuePair<GameObject, int> _linesData;
     private string _judgeMassage;
 
-    private string title = "YAMINABE";
-    private string difficulty = "Expert";
-    private bool isPushLine = true;
+    [SerializeField] private string title;
+    [SerializeField] private string difficulty;
+    [SerializeField] private bool isPushLine;
     
     // ノーツ数
     private int total;
@@ -241,8 +241,8 @@ public class NotesDirector : MonoBehaviour
         if (speedData[pro].isVariation)
         {
             float t = time - speedData[pro].time100 / 100f;
-            pos += t * Math.Min(speedData[pro].speed100 / 100f, time);
-            pos += t * (Math.Abs(speedData[pro].speed100 - speedData[pro + 1].speed100) /
+            pos += t * speedData[pro].speed100 / 100f;
+            pos += t * ((speedData[pro + 1].speed100 - speedData[pro].speed100) /
                 (float)(speedData[pro + 1].time100 - speedData[pro].time100) * t) / 2f;
         }
         else
@@ -421,6 +421,8 @@ public class NotesDirector : MonoBehaviour
             while (_notesData.Value.GetTime() / 100f + missGap < gameDirector.musicTime)
             {
                 _notesData.Key.GetComponent<SpriteRenderer>().enabled = false;
+                if (_notesData.Value.GetKind() == 'F')
+                    _notesData.Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                 NotesData.RemoveAt(0);
 
                 Instantiate(judgeMiss,
@@ -502,6 +504,7 @@ public class NotesDirector : MonoBehaviour
                     {
                         Vector3 notePos = new Vector3(-6f + (n.GetEndLane() + n.GetStartLane()) * 0.5f, 0.5f, 0);
                         NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
+                        NotesData[index].Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                         int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
                         NotesData.RemoveAt(index);
 
