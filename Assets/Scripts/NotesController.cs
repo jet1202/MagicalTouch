@@ -9,7 +9,7 @@ public class NotesController : MonoBehaviour
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] public float Speed;
 
-    public Speed[] speedData;
+    public SpeedItem[] speedData;
     public float[] accDis;
 
     private int speedProgress = -1;
@@ -74,7 +74,7 @@ public class NotesController : MonoBehaviour
         return pos;
     }
 
-    public void BpmDataImport(Speed[] data)
+    public void BpmDataImport(SpeedItem[] data)
     {
         speedData = data;
         int leng = speedData.Length;

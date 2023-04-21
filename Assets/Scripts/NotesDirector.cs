@@ -33,8 +33,8 @@ public class NotesDirector : MonoBehaviour
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
 
-    public Speed[] speedData;
-    public Bpm[] bpmData;
+    public SpeedItem[] speedData;
+    public BpmItem[] bpmData;
 
     private List<float> MaintainJudge;
 
@@ -81,10 +81,15 @@ public class NotesDirector : MonoBehaviour
         yield return StartCoroutine(corutine);
         List<Note> notesSheetA = (List<Note>)corutine.Current;
         
+        // Slide
+        corutine = importData.ImportSlide();
+        yield return StartCoroutine(corutine);
+        SlideSave[] slideData = (SlideSave[])corutine.Current;
+        
         // Addition
         corutine = importData.ImportAddition(title, difficulty);
         yield return StartCoroutine(corutine);
-        AdditionData additionData = (AdditionData)corutine.Current;
+        NoteAddition additionData = (NoteAddition)corutine.Current;
         speedData = additionData.speedItem;
         bpmData = additionData.bpmItem;
         

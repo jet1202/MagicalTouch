@@ -47,17 +47,10 @@ public class Note
 }
 
 [Serializable]
-public class Base
-{
-    public string filePath;
-    public int bpm;
-    public float offset;
-}
-
-[Serializable]
 public class NoteSaveData
 {
     public NoteSave[] item;
+    public SlideSave[] slideItem;
 }
 
 [Serializable]
@@ -72,7 +65,7 @@ public class NoteSave
 }
 
 [Serializable]
-public class Speed
+public class SpeedItem
 {
     public int time100;
     public int speed100;
@@ -80,15 +73,32 @@ public class Speed
 }
 
 [Serializable]
-public class Bpm
+public class BpmItem
 {
     public int time100;
     public int bpm;
 }
 
 [Serializable]
-public class AdditionData
+public class NoteAddition
 {
-    public Speed[] speedItem;
-    public Bpm[] bpmItem;
+    public SpeedItem[] speedItem;
+    public BpmItem[] bpmItem;
+}
+
+[Serializable]
+public class SlideSave
+{
+    public int number;
+    public SlideMaintain[] item;
+}
+
+[Serializable]
+public class SlideMaintain
+{
+    public int time100;
+    public int startLine;
+    public int endLine;
+    public bool isJudge;
+    public bool isVariation;
 }

@@ -6,34 +6,9 @@ using UnityEngine.Networking;
 
 public class ImportData : MonoBehaviour
 {
-    private Base _baseData;
     private List<Note> _notesData;
-    private AdditionData _additionData;
-
-    public IEnumerator ImportBase(string name)
-    {
-        string url = Application.streamingAssetsPath + $"\\SongData\\{name}\\base.json";
-        
-        UnityWebRequest req = UnityWebRequest.Get(url);
-        yield return req.SendWebRequest();
-        if (req.result != UnityWebRequest.Result.ConnectionError)
-        {
-            string jsonStr = req.downloadHandler.text;
-
-            var saveData = JsonUtility.FromJson<Base>(jsonStr);
-
-            _baseData = new Base();
-            _baseData.filePath = saveData.filePath;
-            _baseData.bpm = saveData.bpm;
-            _baseData.offset = saveData.offset;
-        }
-        else
-        {
-            throw new Exception();
-        }
-
-        yield return _baseData;
-    }
+    private NoteAddition _additionData;
+    private SlideSave[] _slideData;
 
     public IEnumerator ImportSheet(string name, string difficulty)
     {
@@ -48,9 +23,14 @@ public class ImportData : MonoBehaviour
         yield return _notesData;
     }
 
+    public IEnumerator ImportSlide()
+    {
+        yield return _slideData;
+    }
+
     public IEnumerator ImportAddition(string name, string difficulty)
     {
-        _additionData = new AdditionData();
+        _additionData = new NoteAddition();
         string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}Addition.json";
         
         UnityWebRequest req = UnityWebRequest.Get(url);
@@ -59,7 +39,7 @@ public class ImportData : MonoBehaviour
         {
             string jsonStr = req.downloadHandler.text;
 
-            AdditionData saveData = JsonUtility.FromJson<AdditionData>(jsonStr);
+            NoteAddition saveData = JsonUtility.FromJson<NoteAddition>(jsonStr);
 
             _additionData = saveData;
         }
@@ -77,6 +57,8 @@ public class ImportData : MonoBehaviour
 
             NoteSaveData saveData = JsonUtility.FromJson<NoteSaveData>(jsonStr);
 
+            _slideData = saveData.slideItem;
+            
             Note note;
             foreach (var n in saveData.item)
             {
