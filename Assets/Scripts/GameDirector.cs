@@ -100,7 +100,10 @@ public class GameDirector : MonoBehaviour
             }
             else
             {
-                cri.bgm.Pause(true);
+                if (isAudio)
+                {
+                    cri.bgm.Pause(true);
+                }
             }
         }
     }
