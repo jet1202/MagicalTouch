@@ -18,6 +18,8 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject holdNote;
     [SerializeField] private GameObject flickNote;
     [SerializeField] private GameObject longNote;
+    [SerializeField] private GameObject slideNote;
+    [SerializeField] private GameObject slideMaintainNote;
     [SerializeField] private GameObject maintainNote;
     [SerializeField] private GameObject pushLine;
 
@@ -84,7 +86,7 @@ public class NotesDirector : MonoBehaviour
         // Slide
         corutine = importData.ImportSlide();
         yield return StartCoroutine(corutine);
-        SlideSave[] slideData = (SlideSave[])corutine.Current;
+        Dictionary<Note, SlideMaintain[]> slideData = (Dictionary<Note, SlideMaintain[]>)corutine.Current;
         
         // Addition
         corutine = importData.ImportAddition(title, difficulty);
@@ -92,6 +94,8 @@ public class NotesDirector : MonoBehaviour
         NoteAddition additionData = (NoteAddition)corutine.Current;
         speedData = additionData.speedItem;
         bpmData = additionData.bpmItem;
+        
+        Destroy(importData);
         
         notesController.BpmDataImport(speedData);
 
@@ -141,7 +145,9 @@ public class NotesDirector : MonoBehaviour
             if (n.GetKind() != 'L') continue;
             
             // 終点('T')の判定
-            notesSheetA.Add(new Note(n.GetTime() + n.GetLength(), n.GetStartLane(), n.GetEndLane(), 'T', 0));
+            if (n.GetLength() <= 100) continue;
+            
+            notesSheetA.Add(new Note(n.GetTime() + n.GetLength() - 100, n.GetStartLane(), n.GetEndLane(), 'T', 0));
             total++;
             totalN10 += 2;
 
@@ -166,6 +172,23 @@ public class NotesDirector : MonoBehaviour
             }
         }
         
+        // slideの設定、ノーツ数計算
+        if (slideData != null)
+        {
+            foreach (var s in slideData)
+            {
+                n = s.Key;
+                notesSheetA.Add(new Note(n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), n.GetLength()));
+                total++;
+                totalN10 += 10;
+
+                foreach (var sm in s.Value)
+                {
+                    notesSheetA.Add(new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0));
+                }
+            }
+        }
+
         // 整列
         var notesData = notesSheetA.OrderBy(x => x.GetTime()).ThenBy(x => x.GetStartLane());
         List<Note> notesSheet = new List<Note>();
@@ -297,6 +320,12 @@ public class NotesDirector : MonoBehaviour
             case 'T':
                 k = maintainNote;
                 break;
+            case 'S':
+                k = slideNote;
+                break;
+            case 'B':
+                k = slideMaintainNote;
+                break;
             default:
                 k = normalNote;
                 break;
@@ -325,7 +354,7 @@ public class NotesDirector : MonoBehaviour
             }
 
             if (data.GetKind() == 'F') break;
-            if (data.GetKind() != 'N' && data.GetKind() != 'L') continue;
+            if (data.GetKind() != 'N' && data.GetKind() != 'L' && data.GetKind() != 'S') continue;
 
             if (data.GetStartLane() <= laneNumber && laneNumber < data.GetEndLane())
             {
@@ -363,6 +392,7 @@ public class NotesDirector : MonoBehaviour
             case 'N':
             case 'F':
             case 'L':
+            case 'S':
                 s = 10;
                 break;
             case 'H':
@@ -370,6 +400,7 @@ public class NotesDirector : MonoBehaviour
                 break;
             case 'M':
             case 'T':
+            case 'B':
                 s = 2;
                 break;
         }
@@ -448,7 +479,7 @@ public class NotesDirector : MonoBehaviour
             while (NotesData.Count > index && NotesData[index].Value.GetTime() / 100f < gameDirector.musicTime)
             {
                 char ki = NotesData[index].Value.GetKind();
-                if (ki == 'H' || ki == 'M' || ki == 'T')
+                if (ki == 'H' || ki == 'M' || ki == 'T' || ki == 'B')
                 {
                     var n = NotesData[index].Value;
                     var isTaps = touchDirector.laneTouching;
@@ -545,9 +576,7 @@ public class NotesDirector : MonoBehaviour
         {
             // スコア計算
             scoreN = (float)notesN10 / totalN10;
-            // Debug.Log($"{notesN10 / 10f} / {totalN10 / 10f} = {scoreN}");
             scoreC = (float)maxCombo / total;
-            // Debug.Log($"{maxCombo} / {total} = {scoreC}");
             score = (int)(scoreN * 900000 + scoreC * 100000);
         }
         

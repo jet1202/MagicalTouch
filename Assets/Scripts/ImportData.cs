@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,7 +9,8 @@ public class ImportData : MonoBehaviour
 {
     private List<Note> _notesData;
     private NoteAddition _additionData;
-    private SlideSave[] _slideData;
+    private Dictionary<int, SlideMaintain[]> _slideMaintainData;
+    private Dictionary<Note, SlideMaintain[]> _slideData;
 
     public IEnumerator ImportSheet(string name, string difficulty)
     {
@@ -57,13 +59,24 @@ public class ImportData : MonoBehaviour
 
             NoteSaveData saveData = JsonUtility.FromJson<NoteSaveData>(jsonStr);
 
-            _slideData = saveData.slideItem;
-            
+            _slideMaintainData = new Dictionary<int, SlideMaintain[]>();
+            if (saveData.slideItem != null)
+            {
+                foreach (var ss in saveData.slideItem)
+                {
+                    _slideMaintainData.Add(ss.number, ss.item);
+                }
+            }
+
+            // notesDataとslidesDataにデータを格納
             Note note;
             foreach (var n in saveData.item)
             {
                 note = new Note(n.time100, n.startLane, n.endLane, n.kind, n.length100);
-                _notesData.Add(note);
+                if (n.kind == 'S')
+                    _slideData.Add(note, _slideMaintainData[n.number]);
+                else
+                    _notesData.Add(note);
             }
         }
         else
