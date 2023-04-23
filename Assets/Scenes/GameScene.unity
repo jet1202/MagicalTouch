@@ -660,8 +660,10 @@ MonoBehaviour:
     type: 3}
   longNote: {fileID: 8434124444890167761, guid: 91376a9b5aa9eff4387184cd1273b44d,
     type: 3}
-  slideNote: {fileID: 0}
-  slideMaintainNote: {fileID: 0}
+  slideNote: {fileID: 6838575676586949595, guid: 8ada9c25d8c27fc4aad025a7433cfbee,
+    type: 3}
+  slideMaintainNote: {fileID: 338555087718982254, guid: 1214dc1e71b77d441820726d16d3c132,
+    type: 3}
   maintainNote: {fileID: 8781556880654120215, guid: 5e2d4ad6a44b49842b906b1f7a1b7723,
     type: 3}
   pushLine: {fileID: 4080413076315708716, guid: c7b554de7ac747d4bbb98bfc75477a94,
@@ -683,7 +685,7 @@ MonoBehaviour:
   bpmData: []
   title: YAMINABE
   difficulty: Expert
-  isPushLine: 0
+  isPushLine: 1
   combo: 0
   score: 0
   excellent: 0

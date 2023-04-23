@@ -10,7 +10,7 @@ public class ImportData : MonoBehaviour
     private List<Note> _notesData;
     private NoteAddition _additionData;
     private Dictionary<int, SlideMaintain[]> _slideMaintainData;
-    private Dictionary<Note, SlideMaintain[]> _slideData;
+    private List<KeyValuePair<Note, SlideMaintain[]>> _slideData;
 
     public IEnumerator ImportSheet(string name, string difficulty)
     {
@@ -70,11 +70,15 @@ public class ImportData : MonoBehaviour
 
             // notesDataとslidesDataにデータを格納
             Note note;
+            _slideData = new List<KeyValuePair<Note, SlideMaintain[]>>();
             foreach (var n in saveData.item)
             {
                 note = new Note(n.time100, n.startLane, n.endLane, n.kind, n.length100);
                 if (n.kind == 'S')
-                    _slideData.Add(note, _slideMaintainData[n.number]);
+                {
+                    var data = _slideMaintainData[n.number];
+                    _slideData.Add(new KeyValuePair<Note, SlideMaintain[]>(note, data));
+                }
                 else
                     _notesData.Add(note);
             }

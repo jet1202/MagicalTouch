@@ -86,7 +86,7 @@ public class NotesDirector : MonoBehaviour
         // Slide
         corutine = importData.ImportSlide();
         yield return StartCoroutine(corutine);
-        Dictionary<Note, SlideMaintain[]> slideData = (Dictionary<Note, SlideMaintain[]>)corutine.Current;
+        List<KeyValuePair<Note, SlideMaintain[]>> slideData = (List<KeyValuePair<Note, SlideMaintain[]>>)corutine.Current;
         
         // Addition
         corutine = importData.ImportAddition(title, difficulty);
@@ -145,16 +145,16 @@ public class NotesDirector : MonoBehaviour
             if (n.GetKind() != 'L') continue;
             
             // 終点('T')の判定
-            if (n.GetLength() <= 100) continue;
+            if (n.GetLength() <= 10) continue;
             
-            notesSheetA.Add(new Note(n.GetTime() + n.GetLength() - 100, n.GetStartLane(), n.GetEndLane(), 'T', 0));
+            notesSheetA.Add(new Note(n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T', 0));
             total++;
             totalN10 += 2;
 
             int fir;
             for (int j = 0;; j++)
             {
-                if (MaintainJudge[j] > (n.GetTime() + 1) / 100f)
+                if (MaintainJudge[j] > (n.GetTime() + 11) / 100f)
                 {
                     fir = j;
                     break;
