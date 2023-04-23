@@ -173,19 +173,29 @@ public class NotesDirector : MonoBehaviour
         }
         
         // slideの設定、ノーツ数計算
+        Dictionary<int, SlideMaintain[]> slideMaintains = new Dictionary<int, SlideMaintain[]>();
         if (slideData != null)
         {
+            int i = 0;
             foreach (var s in slideData)
             {
                 n = s.Key;
-                notesSheetA.Add(new Note(n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), n.GetLength()));
+                notesSheetA.Add(new Note(n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), i));
+                slideMaintains.Add(i, s.Value);
                 total++;
                 totalN10 += 10;
 
                 foreach (var sm in s.Value)
                 {
-                    notesSheetA.Add(new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0));
+                    if (sm.isJudge)
+                    {
+                        notesSheetA.Add(new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0));
+                        total++;
+                        totalN10 += 2;
+                    }
                 }
+
+                i++;
             }
         }
 
@@ -204,6 +214,10 @@ public class NotesDirector : MonoBehaviour
             GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), this.transform);
             _notesData = new KeyValuePair<GameObject, Note>(ins, notesSheet[i]);
             NoteSettings(_notesData);
+            if (_notesData.Value.GetKind() == 'S')
+            {
+                SlideSettings(_notesData.Key, _notesData.Value, slideMaintains[_notesData.Value.GetLength()]);
+            }
             NotesData.Add(_notesData);
         }
         
@@ -297,6 +311,69 @@ public class NotesDirector : MonoBehaviour
             noteData.Key.transform.GetChild(0).transform.localPosition = new Vector3(0f, length / 2, 0f);
             noteData.Key.transform.GetChild(0).transform.localScale = new Vector3(sizex, length, 1f);
         }
+    }
+
+    private void SlideSettings(GameObject obj, Note slide, SlideMaintain[] maintains)
+    {
+        // slideのFieldの描画
+        
+        if (maintains == null) return;
+
+        List<Vector3> verts = new List<Vector3>();
+        List<int> triangles = new List<int>();
+
+        float lastTime = TimeTo(slide.GetTime() / 100f);
+        float lastLane = (slide.GetStartLane() + slide.GetEndLane()) / 2f;
+        Vector3 lastPosF = new Vector3(slide.GetStartLane() - lastLane, 0f, 0);
+        Vector3 lastPosL = new Vector3(slide.GetEndLane() - lastLane, 0f, 0);
+        
+        verts.Add(lastPosF);
+        verts.Add(lastPosL);
+        
+        int leng = maintains.Length;
+        for (int i = 0; i < leng; i++)
+        {
+            var m = maintains[i];
+
+            Vector3 nextPosF = new Vector3(m.startLine - lastLane, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed);
+            Vector3 nextPosL = new Vector3(m.endLine - lastLane, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed);
+
+            int l = verts.Count;
+            triangles.Add(l - 2);
+            triangles.Add(l);
+            triangles.Add(l - 1);
+            triangles.Add(l - 1);
+            triangles.Add(l);
+            triangles.Add(l + 1);
+            if (m.isVariation)
+            {
+                verts.Add(nextPosF);
+                verts.Add(nextPosL);
+            }
+            else
+            {
+                verts.Add(new Vector3(lastPosF.x, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed));
+                verts.Add(new Vector3(lastPosL.x, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed));
+                if (i != leng - 1)
+                {
+                    verts.Add(nextPosF);
+                    verts.Add(nextPosL);
+                }
+            }
+
+            lastPosF = nextPosF;
+            lastPosL = nextPosL;
+        }
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = verts.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.RecalculateNormals();
+
+        obj.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh = mesh;
+        
+        Debug.Log(string.Join(", ", verts.ToArray()));
+        Debug.Log(string.Join(", ", triangles.ToArray()));
     }
 
     GameObject NoteKind(char kind)
@@ -502,7 +579,7 @@ public class NotesDirector : MonoBehaviour
                         int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
                         NotesData.RemoveAt(index);
 
-                        if (ki == 'H')
+                        if (ki == 'H' || ki == 'B')
                             cri.se.Play(1);
                         NoteJudge(0f, notePos, kind, wi);
                     }
