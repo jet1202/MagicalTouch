@@ -371,9 +371,6 @@ public class NotesDirector : MonoBehaviour
         mesh.RecalculateNormals();
 
         obj.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh = mesh;
-        
-        Debug.Log(string.Join(", ", verts.ToArray()));
-        Debug.Log(string.Join(", ", triangles.ToArray()));
     }
 
     GameObject NoteKind(char kind)
