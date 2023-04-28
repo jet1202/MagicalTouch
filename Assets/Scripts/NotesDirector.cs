@@ -34,6 +34,7 @@ public class NotesDirector : MonoBehaviour
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
+    private List<KeyValuePair<GameObject, float>> TrashData = new List<KeyValuePair<GameObject, float>>();
 
     public SpeedItem[] speedData;
     public BpmItem[] bpmData;
@@ -44,6 +45,7 @@ public class NotesDirector : MonoBehaviour
     private const float missGap = 0.15f;
     private KeyValuePair<GameObject, Note> _notesData;
     private KeyValuePair<GameObject, int> _linesData;
+    private KeyValuePair<GameObject, float> _trashData;
     private string _judgeMassage;
 
     [SerializeField] private string title;
@@ -193,6 +195,12 @@ public class NotesDirector : MonoBehaviour
                         total++;
                         totalN10 += 2;
                     }
+                    else
+                    {
+                        GameObject ins = Instantiate(NoteKind('B'), this.transform);
+                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)));
+                        TrashData.Add(new KeyValuePair<GameObject, float>(ins, (n.GetTime() + sm.time100) / 100f));
+                    }
                 }
 
                 i++;
@@ -220,6 +228,8 @@ public class NotesDirector : MonoBehaviour
             }
             NotesData.Add(_notesData);
         }
+
+        TrashData = new List<KeyValuePair<GameObject, float>>(TrashData.OrderBy(x => x.Value));
         
         // 同時押しラインの生成
         if (isPushLine)
@@ -308,8 +318,9 @@ public class NotesDirector : MonoBehaviour
         if (noteData.Value.GetKind() == 'L')
         {
             float length = TimeTo((noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f) * Speed - time;
-            noteData.Key.transform.GetChild(0).transform.localPosition = new Vector3(0f, length / 2, 0f);
-            noteData.Key.transform.GetChild(0).transform.localScale = new Vector3(sizex, length, 1f);
+            noteData.Key.transform.GetChild(0).localPosition = new Vector3(0f, length / 2, 0f);
+            noteData.Key.transform.GetChild(0).localScale = new Vector3(sizex, length, 1f);
+            TrashData.Add(new KeyValuePair<GameObject, float>(noteData.Key.transform.GetChild(0).gameObject, (noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f));
         }
     }
 
@@ -335,16 +346,17 @@ public class NotesDirector : MonoBehaviour
         {
             var m = maintains[i];
 
-            Vector3 nextPosF = new Vector3(m.startLine - lastLane, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed);
-            Vector3 nextPosL = new Vector3(m.endLine - lastLane, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed);
+            Vector3 nextPosF = new Vector3(m.startLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed);
+            Vector3 nextPosL = new Vector3(m.endLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed);
 
             int l = verts.Count;
-            triangles.Add(l - 2);
-            triangles.Add(l);
-            triangles.Add(l - 1);
-            triangles.Add(l - 1);
-            triangles.Add(l);
-            triangles.Add(l + 1);
+            List<int> parallelogram = new List<int>();
+            parallelogram.Add(l - 2);
+            parallelogram.Add(l);
+            parallelogram.Add(l - 1);
+            parallelogram.Add(l - 1);
+            parallelogram.Add(l);
+            parallelogram.Add(l + 1);
             if (m.isVariation)
             {
                 verts.Add(nextPosF);
@@ -352,14 +364,18 @@ public class NotesDirector : MonoBehaviour
             }
             else
             {
-                verts.Add(new Vector3(lastPosF.x, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed));
-                verts.Add(new Vector3(lastPosL.x, 0f, (TimeTo(m.time100 / 100f + lastTime) - lastTime) * Speed));
+                verts.Add(new Vector3(lastPosF.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed));
+                verts.Add(new Vector3(lastPosL.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed));
                 if (i != leng - 1)
                 {
                     verts.Add(nextPosF);
                     verts.Add(nextPosL);
                 }
             }
+
+            if (lastPosF.z - nextPosF.z > 0)
+                parallelogram.Reverse();
+            triangles.AddRange(parallelogram);
 
             lastPosF = nextPosF;
             lastPosL = nextPosL;
@@ -371,6 +387,7 @@ public class NotesDirector : MonoBehaviour
         mesh.RecalculateNormals();
 
         obj.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh = mesh;
+        TrashData.Add(new KeyValuePair<GameObject, float>(obj.transform.GetChild(0).gameObject, (slide.GetTime() + maintains.Last().time100) / 100f));
     }
 
     GameObject NoteKind(char kind)
@@ -643,6 +660,24 @@ public class NotesDirector : MonoBehaviour
 
                 if (LinesData.Count == 0) break;
                 _linesData = LinesData[0];
+            }
+        }
+
+        if (TrashData.Count != 0)
+        {
+            _trashData = TrashData[0];
+            while (_trashData.Value + missGap < gameDirector.musicTime)
+            {
+                var sp = _trashData.Key.GetComponent<SpriteRenderer>();
+                var me = _trashData.Key.GetComponent<MeshRenderer>();
+                if (sp != null)
+                    sp.enabled = false;
+                if (me != null)
+                    me.enabled = false;
+                TrashData.RemoveAt(0);
+
+                if (TrashData.Count == 0) break;
+                _trashData = TrashData[0];
             }
         }
 
