@@ -1,0 +1,15 @@
+{
+    "speedItem": [
+        {
+            "time100": 0,
+            "speed100": 100,
+            "isVariation": false
+        }
+    ],
+    "bpmItem": [
+        {
+            "time100": 0,
+            "bpm": 225
+        }
+    ]
+}
