@@ -32,6 +32,8 @@ public class NotesDirector : MonoBehaviour
     
     [SerializeField] private SpriteRenderer justFlame;
     
+    [SerializeField] private List<GameObject> laneArray;
+    
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
     private List<KeyValuePair<GameObject, float>> TrashData = new List<KeyValuePair<GameObject, float>>();
@@ -470,6 +472,7 @@ public class NotesDirector : MonoBehaviour
 
     void NoteJudge(float gap, Vector3 appearPos, char kind, int wi)
     {
+        // ノーツの判定、スコア加算、Effect(判定文字表示、エフェクト)表示
         appearPos = new Vector3(appearPos.x, 0f, 0f);
         
         GameObject ins = Instantiate(effectObject, appearPos, quaternion.identity);

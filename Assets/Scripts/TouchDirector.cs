@@ -10,7 +10,6 @@ using Vector2 = UnityEngine.Vector2;
 public class TouchDirector : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
-    [SerializeField] private List<GameObject> laneArray;
     [SerializeField] private NotesDirector _notesDirector;
     public bool[] laneTouching = new bool[24];
     public bool[] laneFlicking = new bool[24];
@@ -50,17 +49,6 @@ public class TouchDirector : MonoBehaviour
                 if (touch.began)
                     _notesDirector.BeginTouch(touchlane, touch.startTime);
             }
-
-            // for (int i = 0; i < 24; i++)
-            // {
-            //     if (laneTouching[i] != lastLaneTouching[i])
-            //     {
-            //         if (laneTouching[i])
-            //             laneArray[i/2].GetComponent<MeshRenderer>().enabled = true;
-            //         else
-            //             laneArray[i/2].GetComponent<MeshRenderer>().enabled = false;
-            //     }
-            // }
 
             lastLaneTouching = laneTouching;
         }

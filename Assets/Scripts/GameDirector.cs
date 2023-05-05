@@ -46,6 +46,7 @@ public class GameDirector : MonoBehaviour
         frameCount = 0;
         prevTime = 0.0f;
 
+        infoPanel.SetActive(true);
         panelColor = infoPanel.GetComponent<Image>().color;
         tween = infoPanel.GetComponent<Image>().DOFade(endValue: 100f / 255f, duration: 1f).SetEase(Ease.InQuad)
             .SetLoops(-1, LoopType.Yoyo);
