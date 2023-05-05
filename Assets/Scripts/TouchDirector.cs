@@ -51,16 +51,16 @@ public class TouchDirector : MonoBehaviour
                     _notesDirector.BeginTouch(touchlane, touch.startTime);
             }
 
-            for (int i = 0; i < 24; i++)
-            {
-                if (laneTouching[i] != lastLaneTouching[i])
-                {
-                    if (laneTouching[i])
-                        laneArray[i/2].GetComponent<MeshRenderer>().enabled = true;
-                    else
-                        laneArray[i/2].GetComponent<MeshRenderer>().enabled = false;
-                }
-            }
+            // for (int i = 0; i < 24; i++)
+            // {
+            //     if (laneTouching[i] != lastLaneTouching[i])
+            //     {
+            //         if (laneTouching[i])
+            //             laneArray[i/2].GetComponent<MeshRenderer>().enabled = true;
+            //         else
+            //             laneArray[i/2].GetComponent<MeshRenderer>().enabled = false;
+            //     }
+            // }
 
             lastLaneTouching = laneTouching;
         }

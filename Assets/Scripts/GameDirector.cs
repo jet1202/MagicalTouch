@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameDirector : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class GameDirector : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI comboText;
     [SerializeField] private Text progressText;
+    [SerializeField] private GameObject infoPanel;
     
     private AudioSource audioSource;
     public bool isPlaying = false;
@@ -22,10 +24,14 @@ public class GameDirector : MonoBehaviour
     private bool isAudio = false;
 
     public bool isOk = false;
+    public bool isStart = false;
     
     int frameCount;
     float prevTime;
     float fps;
+
+    private Tween tween;
+    private Color panelColor;
 
     void Awake()
     {
@@ -39,6 +45,10 @@ public class GameDirector : MonoBehaviour
     {
         frameCount = 0;
         prevTime = 0.0f;
+
+        panelColor = infoPanel.GetComponent<Image>().color;
+        tween = infoPanel.GetComponent<Image>().DOFade(endValue: 100f / 255f, duration: 1f).SetEase(Ease.InQuad)
+            .SetLoops(-1, LoopType.Yoyo);
     }
 
     void Update()
@@ -56,7 +66,7 @@ public class GameDirector : MonoBehaviour
         }
 
         // 判定、現在スピード、BPMの表示
-        float t = isOk ? cri.bgm.time / 1000f : 0;
+        float t = isStart ? cri.bgm.time / 1000f : 0;
         progressText.text = 
             $"Time : {t}\n" +
             $"BPM  : {notesDirector.nowBpm}\n" +
@@ -86,7 +96,7 @@ public class GameDirector : MonoBehaviour
 
     public void StartStopButtonTap()
     {
-        if (isOk)
+        if (isStart)
         {
             isPlaying = !isPlaying;
             if (isPlaying)
@@ -105,6 +115,26 @@ public class GameDirector : MonoBehaviour
                     cri.bgm.Pause(true);
                 }
             }
+        }
+    }
+
+    public void StartButtonTap()
+    {
+        if (isOk)
+        {
+            isStart = true;
+            isPlaying = true;
+            
+            waitTime = Time.realtimeSinceStartup - musicTime;
+
+            tween.Kill();
+            infoPanel.GetComponent<RectTransform>().GetChild(0).gameObject.SetActive(false);
+            infoPanel.GetComponent<RectTransform>().GetChild(1).gameObject.SetActive(false);
+            infoPanel.GetComponent<Image>().DOFade(endValue: 0f, duration: 1f).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                infoPanel.GetComponent<Image>().color = panelColor;
+                infoPanel.SetActive(false);
+            });
         }
     }
 }
