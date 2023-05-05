@@ -12,9 +12,9 @@ public class TouchDirector : MonoBehaviour
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private List<GameObject> laneArray;
     [SerializeField] private NotesDirector _notesDirector;
-    public bool[] laneTouching = new bool[12];
-    public bool[] laneFlicking = new bool[12];
-    private bool[] lastLaneTouching = new bool[12];
+    public bool[] laneTouching = new bool[24];
+    public bool[] laneFlicking = new bool[24];
+    private bool[] lastLaneTouching = new bool[24];
     private ReadOnlyArray<Touch> activeTouchList;
     private int _height, _width, touchlane;
 
@@ -35,8 +35,8 @@ public class TouchDirector : MonoBehaviour
         {
             // それぞれのタッチがどのレーンをタッチしているのか認識
             activeTouchList = Touch.activeTouches;
-            laneTouching = new bool[12];
-            laneFlicking = new bool[12];
+            laneTouching = new bool[24];
+            laneFlicking = new bool[24];
             foreach (var touch in activeTouchList)
             {
                 touchlane = TouchLane(touch.screenPosition);
@@ -44,21 +44,21 @@ public class TouchDirector : MonoBehaviour
                 {
                     laneTouching[touchlane] = true;
                     Vector2 move = touch.delta;
-                    if (move.x * move.x + move.y * move.y >= 250)
+                    if (move.x * move.x + move.y * move.y >= 200)
                         laneFlicking[touchlane] = true;
                 }
                 if (touch.began)
                     _notesDirector.BeginTouch(touchlane, touch.startTime);
             }
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 24; i++)
             {
                 if (laneTouching[i] != lastLaneTouching[i])
                 {
                     if (laneTouching[i])
-                        laneArray[i].GetComponent<MeshRenderer>().enabled = true;
+                        laneArray[i/2].GetComponent<MeshRenderer>().enabled = true;
                     else
-                        laneArray[i].GetComponent<MeshRenderer>().enabled = false;
+                        laneArray[i/2].GetComponent<MeshRenderer>().enabled = false;
                 }
             }
 
@@ -70,51 +70,63 @@ public class TouchDirector : MonoBehaviour
     {
         float posX = touchPos.x / _width * 26f;
         float posY = touchPos.y / _height;
-        if (posY < 0.5)
-        {
+        // if (posY < 0.5)
+        // {
             switch ((int)posX)
             {
                 case 0:
                 case 1:
-                case 2:
                     return 0;
-                case 3:
-                case 4:
+                case 2:
                     return 1;
-                case 5:
-                case 6:
+                case 3:
                     return 2;
-                case 7:
-                case 8:
+                case 4:
                     return 3;
-                case 9:
-                case 10:
+                case 5:
                     return 4;
-                case 11:
-                case 12:
+                case 6:
                     return 5;
-                case 13:
-                case 14:
+                case 7:
                     return 6;
-                case 15:
-                case 16:
+                case 8:
                     return 7;
-                case 17:
-                case 18:
+                case 9:
                     return 8;
-                case 19:
-                case 20:
+                case 10:
                     return 9;
-                case 21:
-                case 22:
+                case 11:
                     return 10;
+                case 12:
+                    return 11;
+                case 13:
+                    return 12;
+                case 14:
+                    return 13;
+                case 15:
+                    return 14;
+                case 16:
+                    return 15;
+                case 17:
+                    return 16;
+                case 18:
+                    return 17;
+                case 19:
+                    return 18;
+                case 20:
+                    return 19;
+                case 21:
+                    return 20;
+                case 22:
+                    return 21;
                 case 23:
+                    return 22;
                 case 24:
                 case 25:
                 case 26:
-                    return 11;
+                    return 23;
             }
-        }
+        // }
         return -1;
     }
 }

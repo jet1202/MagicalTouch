@@ -447,7 +447,7 @@ public class NotesDirector : MonoBehaviour
             if (data.GetKind() == 'F') break;
             if (data.GetKind() != 'N' && data.GetKind() != 'L' && data.GetKind() != 'S') continue;
 
-            if (data.GetStartLane() <= laneNumber && laneNumber < data.GetEndLane())
+            if (data.GetStartLane() * 2 <= laneNumber + 1 && laneNumber - 1 < data.GetEndLane() * 2)
             {
                 isGetNote = true;
                 break;
@@ -576,7 +576,7 @@ public class NotesDirector : MonoBehaviour
                     var isTaps = touchDirector.laneTouching;
 
                     bool tap = false;
-                    for (int i = Mathf.Max(n.GetStartLane() - 1, 0); i <= Mathf.Min(n.GetEndLane(), 11); i++)
+                    for (int i = Mathf.Max(n.GetStartLane() * 2 - 1, 0); i <= Mathf.Min(n.GetEndLane() * 2, 23); i++)
                     {
                         if (isTaps[i])
                         {
@@ -618,7 +618,7 @@ public class NotesDirector : MonoBehaviour
                     var isFlicks = touchDirector.laneFlicking;
 
                     bool flick = false;
-                    for (int i = Mathf.Max(n.GetStartLane() - 1, 0); i <= Mathf.Min(n.GetEndLane(), 11); i++)
+                    for (int i = Mathf.Max(n.GetStartLane() * 2 - 1, 0); i <= Mathf.Min(n.GetEndLane() * 2, 23); i++)
                     {
                         if (isFlicks[i])
                         {
