@@ -197,9 +197,9 @@ public class NotesDirector : MonoBehaviour
                     }
                     else
                     {
-                        GameObject ins = Instantiate(NoteKind('B'), this.transform);
-                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)));
-                        TrashData.Add(new KeyValuePair<GameObject, float>(ins, (n.GetTime() + sm.time100) / 100f));
+                        // GameObject ins = Instantiate(NoteKind('B'), this.transform);
+                        // NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)));
+                        // TrashData.Add(new KeyValuePair<GameObject, float>(ins, (n.GetTime() + sm.time100) / 100f));
                     }
                 }
 
@@ -245,7 +245,7 @@ public class NotesDirector : MonoBehaviour
                 }
                 char kind = data.GetKind();
                 char beforeKind = beforeData.GetKind();
-                if (kind == 'M' || kind == 'T' || beforeKind == 'M' || beforeKind == 'T' ||
+                if (kind == 'M' || kind == 'T' || kind == 'B' || beforeKind == 'M' || beforeKind == 'T' || beforeKind == 'B' ||
                     beforeData.GetTime() != data.GetTime() || beforeData.GetEndLane() >= data.GetStartLane())
                 {
                     beforeData = data;
