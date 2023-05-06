@@ -10,26 +10,22 @@ public class PaddleController : MonoBehaviour
     public float width;
 
     private SpriteRenderer spriteRenderer;
-    private float len;
-    private float cur = 0;
 
-    private void Start()
+    private void OnEnable()
     {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
+        
         spriteRenderer.size = new Vector2(width, 1);
-
-        AnimatorStateInfo animatorStateInfo = GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-        len = animatorStateInfo.length;
+        GetComponent<Animator>().SetTrigger("Anim");
     }
 
     void Update()
     {
         spriteRenderer.size = new Vector2(width + mov, 1 + mov);
+    }
 
-        cur += Time.deltaTime;
-        if (len <= cur)
-        {
-            Destroy(this.gameObject);
-        }
+    public void FinishAnimPaddle()
+    {
+        transform.parent.GetComponent<MyObjectPool>().RemoveObject(this.gameObject);
     }
 }

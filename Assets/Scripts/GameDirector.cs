@@ -72,7 +72,7 @@ public class GameDirector : MonoBehaviour
             $"Time : {t}\n" +
             $"BPM  : {notesDirector.nowBpm}\n" +
             $"Speed: {notesController.nowSpeed}\n\n" +
-            $"Excellent: {notesDirector.excellent}\n" +
+            $"Excellent: {notesDirector.perfectP}\n" +
             $"Perfect  : {notesDirector.perfect}\n" +
             $"Great    : {notesDirector.great}\n" +
             $"Bad      : {notesDirector.bad}\n" +

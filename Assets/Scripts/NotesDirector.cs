@@ -23,12 +23,8 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject maintainNote;
     [SerializeField] private GameObject pushLine;
 
-    [SerializeField] private GameObject judgeExcellent;
-    [SerializeField] private GameObject judgePerfect;
-    [SerializeField] private GameObject judgeGreat;
-    [SerializeField] private GameObject judgeBad;
-    [SerializeField] private GameObject judgeMiss;
-    [SerializeField] private GameObject paddleObject;
+    [SerializeField] private GameObject judgePool;
+    [SerializeField] private GameObject paddlePool;
     
     [SerializeField] private SpriteRenderer justFlame;
     
@@ -68,7 +64,7 @@ public class NotesDirector : MonoBehaviour
     
     // 判定
     private int isFull = 2;
-    public int excellent = 0;
+    public int perfectP = 0;
     public int perfect = 0;
     public int great = 0;
     public int bad = 0;
@@ -473,11 +469,17 @@ public class NotesDirector : MonoBehaviour
     {
         // ノーツの判定、スコア加算、Effect(判定文字表示、エフェクト)表示
         Vector3 appearPos = new Vector3(-6f + (start + end) * 0.5f, 0f, 0);;
-        
-        GameObject ins = Instantiate(paddleObject, appearPos, quaternion.identity);
-        ins.transform.rotation = new Quaternion(0.7071068f, 0, 0, 0.7071068f);
-        ins.GetComponent<PaddleController>().width = wi;
-        Color color = new Color();
+
+        GameObject Pins = paddlePool.GetComponent<MyObjectPool>().SetObject();
+        Pins.transform.position = appearPos;
+        Pins.transform.rotation = new Quaternion(0.7071068f, 0, 0, 0.7071068f);
+        Pins.GetComponent<PaddleController>().width = wi;
+        Color Pcolor = new Color();
+
+        GameObject Jins = judgePool.GetComponent<MyObjectPool>().SetObject();
+        Jins.transform.position = appearPos;
+        Jins.transform.rotation = Quaternion.identity;
+        char judgeKind = 'M';
         
         int s = 0;
         switch (kind)
@@ -500,40 +502,41 @@ public class NotesDirector : MonoBehaviour
         
         if (gap < 0.02f)
         {
-            Instantiate(judgeExcellent, appearPos, Quaternion.identity);
-            color = new Color(1f, 1f, 0f, 1f);
-            _judgeMassage = gap + " Excellent";
-            excellent++;
+            judgeKind = 'P';
+            Pcolor = new Color(1f, 1f, 0f, 1f);
+            // _judgeMassage = gap + " Excellent";
+            perfectP++;
             combo++;
         }
         else if (gap < 0.05f)
         {
-            Instantiate(judgePerfect, appearPos, Quaternion.identity);
-            color = new Color(1f, 1f, 0f, 1f);
-            _judgeMassage = gap + " Perfect";
+            judgeKind = 'P';
+            Pcolor = new Color(1f, 1f, 0f, 1f);
+            // _judgeMassage = gap + " Perfect";
             perfect++;
             combo++;
         }
         else if (gap < 0.10f)
         {
-            Instantiate(judgeGreat, appearPos, Quaternion.identity);
-            color = new Color(95f / 255f, 184f / 255f, 1f, 1f);
-            _judgeMassage = gap + " Great";
+            judgeKind = 'G';
+            Pcolor = new Color(95f / 255f, 184f / 255f, 1f, 1f);
+            // _judgeMassage = gap + " Great";
             great++;
             s -= 4;
             combo++;
         }
         else
         {
-            Instantiate(judgeBad, appearPos, Quaternion.identity);
-            color = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
-            _judgeMassage = gap + " Bad";
+            judgeKind = 'B';
+            Pcolor = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
+            // _judgeMassage = gap + " Bad";
             bad++;
             s = 0;
             combo = 0;
         }
         // Debug.Log(_judgeMassage);
-        ins.GetComponent<SpriteRenderer>().color = color;
+        Pins.GetComponent<SpriteRenderer>().color = Pcolor;
+        Jins.GetComponent<JudgeController>().Setting(judgeKind);
 
         // スコア加算
         notesN10 += s;
@@ -554,9 +557,12 @@ public class NotesDirector : MonoBehaviour
                     _notesData.Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                 NotesData.RemoveAt(0);
 
-                Instantiate(judgeMiss,
+                GameObject jIns = judgePool.GetComponent<MyObjectPool>().SetObject();
+                jIns.transform.position =
                     new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f,
-                        0), Quaternion.identity);
+                        0f);
+                jIns.transform.rotation = Quaternion.identity;
+                jIns.GetComponent<JudgeController>().Setting('M');
                 combo = 0;
                 miss++;
                 damageController.Damage();
