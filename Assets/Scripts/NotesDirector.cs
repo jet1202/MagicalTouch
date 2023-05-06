@@ -28,11 +28,11 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject judgeGreat;
     [SerializeField] private GameObject judgeBad;
     [SerializeField] private GameObject judgeMiss;
-    [SerializeField] private GameObject effectObject;
+    [SerializeField] private GameObject paddleObject;
     
     [SerializeField] private SpriteRenderer justFlame;
     
-    [SerializeField] private List<GameObject> laneArray;
+    [SerializeField] private List<MeshRenderer> laneArray;
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
@@ -459,25 +459,24 @@ public class NotesDirector : MonoBehaviour
         // タップしたノーツの判定
         if (isGetNote)
         {
-            Vector3 notePos = new Vector3(-6f + (NotesData[i].Value.GetEndLane() + NotesData[i].Value.GetStartLane()) * 0.5f, 0.5f, 0);
             char kind = NotesData[i].Value.GetKind();
             int wi = NotesData[i].Value.GetEndLane() - NotesData[i].Value.GetStartLane();
             NotesData[i].Key.GetComponent<SpriteRenderer>().enabled = false;
             NotesData.RemoveAt(i);
 
             cri.se.Play(1);
-            NoteJudge(Mathf.Abs(gap), notePos, kind, wi);
+            NoteJudge(Mathf.Abs(gap), NotesData[i].Value.GetEndLane(), NotesData[i].Value.GetStartLane(), kind, wi);
         }
     }
 
-    void NoteJudge(float gap, Vector3 appearPos, char kind, int wi)
+    void NoteJudge(float gap, int start, int end, char kind, int wi)
     {
         // ノーツの判定、スコア加算、Effect(判定文字表示、エフェクト)表示
-        appearPos = new Vector3(appearPos.x, 0f, 0f);
+        Vector3 appearPos = new Vector3(-6f + (start + end) * 0.5f, 0f, 0);;
         
-        GameObject ins = Instantiate(effectObject, appearPos, quaternion.identity);
+        GameObject ins = Instantiate(paddleObject, appearPos, quaternion.identity);
         ins.transform.rotation = new Quaternion(0.7071068f, 0, 0, 0.7071068f);
-        ins.GetComponent<EffectController>().width = wi;
+        ins.GetComponent<PaddleController>().width = wi;
         Color color = new Color();
         
         int s = 0;
@@ -590,7 +589,6 @@ public class NotesDirector : MonoBehaviour
 
                     if (tap)
                     {
-                        Vector3 notePos = new Vector3(-6f + (n.GetEndLane() + n.GetStartLane()) * 0.5f, 0.5f, 0);
                         NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
                         char kind = NotesData[index].Value.GetKind();
                         int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
@@ -598,7 +596,7 @@ public class NotesDirector : MonoBehaviour
 
                         if (ki == 'H' || ki == 'B')
                             cri.se.Play(1);
-                        NoteJudge(0f, notePos, kind, wi);
+                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), kind, wi);
                     }
                     else
                     {
@@ -632,14 +630,13 @@ public class NotesDirector : MonoBehaviour
 
                     if (flick)
                     {
-                        Vector3 notePos = new Vector3(-6f + (n.GetEndLane() + n.GetStartLane()) * 0.5f, 0.5f, 0);
                         NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
                         NotesData[index].Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                         int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
                         NotesData.RemoveAt(index);
 
                         cri.se.Play(0);
-                        NoteJudge(0f, notePos, 'F', wi);
+                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), 'F', wi);
                     }
                     else
                     {

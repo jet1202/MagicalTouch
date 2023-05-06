@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 
-public class EffectController : MonoBehaviour
+public class PaddleController : MonoBehaviour
 {
     public float mov = 0;
     public float width;
