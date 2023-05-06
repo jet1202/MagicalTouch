@@ -44,7 +44,6 @@ public class JudgeController : MonoBehaviour
 
     public void FinishAnimJudge()
     {
-        Debug.Log("Finish");
         transform.parent.GetComponent<MyObjectPool>().RemoveObject(this.gameObject);
     }
 }

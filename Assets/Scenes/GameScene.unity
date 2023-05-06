@@ -286,6 +286,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDirector: {fileID: 745814838}
+  laneArray:
+  - {fileID: 1724811088}
+  - {fileID: 1143344703}
+  - {fileID: 1274282045}
+  - {fileID: 933769856}
+  - {fileID: 1889317706}
+  - {fileID: 1216932518}
+  - {fileID: 1974727928}
+  - {fileID: 477652220}
+  - {fileID: 1397037490}
+  - {fileID: 732290611}
+  - {fileID: 917238058}
+  - {fileID: 320572723}
   _notesDirector: {fileID: 311307477}
   laneTouching: 000000000000000000000000
   laneFlicking: 000000000000000000000000
@@ -703,7 +716,6 @@ MonoBehaviour:
   judgePool: {fileID: 201828477}
   paddlePool: {fileID: 1156729019}
   justFlame: {fileID: 1873982661}
-  laneArray: []
   speedData: []
   bpmData: []
   title: YAMINABE

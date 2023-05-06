@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using DG.Tweening;
 
 public class NotesDirector : MonoBehaviour
 {
@@ -27,8 +28,6 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject paddlePool;
     
     [SerializeField] private SpriteRenderer justFlame;
-    
-    [SerializeField] private List<MeshRenderer> laneArray;
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
@@ -470,12 +469,14 @@ public class NotesDirector : MonoBehaviour
         // ノーツの判定、スコア加算、Effect(判定文字表示、エフェクト)表示
         Vector3 appearPos = new Vector3(-6f + (start + end) * 0.5f, 0f, 0);;
 
+        // Paddle
         GameObject Pins = paddlePool.GetComponent<MyObjectPool>().SetObject();
         Pins.transform.position = appearPos;
         Pins.transform.rotation = new Quaternion(0.7071068f, 0, 0, 0.7071068f);
         Pins.GetComponent<PaddleController>().width = wi;
         Color Pcolor = new Color();
 
+        // Judge
         GameObject Jins = judgePool.GetComponent<MyObjectPool>().SetObject();
         Jins.transform.position = appearPos;
         Jins.transform.rotation = Quaternion.identity;
