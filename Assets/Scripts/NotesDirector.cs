@@ -28,6 +28,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject paddlePool;
     
     [SerializeField] private SpriteRenderer justFlame;
+    [SerializeField] private List<MeshRenderer> laneArray;
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
@@ -481,6 +482,8 @@ public class NotesDirector : MonoBehaviour
         Jins.transform.position = appearPos;
         Jins.transform.rotation = Quaternion.identity;
         char judgeKind = 'M';
+
+        bool isEColor = false;
         
         int s = 0;
         switch (kind)
@@ -531,6 +534,7 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'B';
             Pcolor = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
             // _judgeMassage = gap + " Bad";
+            isEColor = true;
             bad++;
             s = 0;
             combo = 0;
@@ -542,6 +546,19 @@ public class NotesDirector : MonoBehaviour
         // スコア加算
         notesN10 += s;
         if (maxCombo < combo) maxCombo = combo;
+        
+        if (isEColor)
+            LaneEffect(start, end, new Color(0f, 1f, 0f, 70f / 255f));
+    }
+
+    private void LaneEffect(int start, int end, Color color)
+    {
+        for (int i = start; i < end; i++)
+        {
+            laneArray[i].material.DOKill();
+            laneArray[i].material.color = color;
+            laneArray[i].material.DOFade(0f, 0.5f).SetEase(Ease.InQuart);
+        }
     }
     
 
@@ -559,9 +576,11 @@ public class NotesDirector : MonoBehaviour
                 NotesData.RemoveAt(0);
 
                 GameObject jIns = judgePool.GetComponent<MyObjectPool>().SetObject();
+                int s = _notesData.Value.GetStartLane();
+                int e = _notesData.Value.GetEndLane();
                 jIns.transform.position =
-                    new Vector3(-6f + (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) * 0.5f, 0.5f,
-                        0f);
+                    new Vector3(-6f + (s + e) * 0.5f, 0.5f, 0f);
+                LaneEffect(s, e, new Color(1f, 0f, 0f, 70f / 255f));
                 jIns.transform.rotation = Quaternion.identity;
                 jIns.GetComponent<JudgeController>().Setting('M');
                 combo = 0;
