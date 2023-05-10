@@ -457,11 +457,13 @@ public class NotesDirector : MonoBehaviour
         if (isGetNote)
         {
             char kind = NotesData[i].Value.GetKind();
+            int s = Notesdata[i].Value.GetStartLane();
+            int e = Notesdata[i].Value.GetEndLane();
             NotesData[i].Key.GetComponent<SpriteRenderer>().enabled = false;
             NotesData.RemoveAt(i);
 
             cri.se.Play(1);
-            NoteJudge(Mathf.Abs(gap), NotesData[i].Value.GetStartLane(), NotesData[i].Value.GetEndLane(), kind);
+            NoteJudge(Mathf.Abs(gap), s, e, kind);
         }
     }
 
