@@ -716,6 +716,8 @@ MonoBehaviour:
   - {fileID: 732290613}
   - {fileID: 917238060}
   - {fileID: 320572725}
+  twinkleEffect: {fileID: 8480302070179110385, guid: 50e873317bf54a740b3ca93ea6b67c53,
+    type: 3}
   speedData: []
   bpmData: []
   title: YAMINABE

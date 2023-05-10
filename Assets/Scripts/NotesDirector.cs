@@ -457,19 +457,19 @@ public class NotesDirector : MonoBehaviour
         if (isGetNote)
         {
             char kind = NotesData[i].Value.GetKind();
-            int wi = NotesData[i].Value.GetEndLane() - NotesData[i].Value.GetStartLane();
             NotesData[i].Key.GetComponent<SpriteRenderer>().enabled = false;
             NotesData.RemoveAt(i);
 
             cri.se.Play(1);
-            NoteJudge(Mathf.Abs(gap), NotesData[i].Value.GetEndLane(), NotesData[i].Value.GetStartLane(), kind, wi);
+            NoteJudge(Mathf.Abs(gap), NotesData[i].Value.GetStartLane(), NotesData[i].Value.GetEndLane(), kind);
         }
     }
 
-    void NoteJudge(float gap, int start, int end, char kind, int wi)
+    void NoteJudge(float gap, int start, int end, char kind)
     {
         // ノーツの判定、スコア加算、Effect(判定文字表示、twinkle)表示
-        Vector3 appearPos = new Vector3(-6f + (start + end) * 0.5f, 0f, 0);;
+        Vector3 appearPos = new Vector3(-6f + (start + end) * 0.5f, 0f, 0);
+        var wi = end - start;
 
         // Paddle
         GameObject Pins = paddlePool.GetComponent<MyObjectPool>().SetObject();
@@ -484,7 +484,8 @@ public class NotesDirector : MonoBehaviour
         Jins.transform.rotation = Quaternion.identity;
         char judgeKind = 'M';
 
-        bool isEColor = false;
+        Color eColor = Color.black;
+        Color tColor = Color.black;
         
         int s = 0;
         switch (kind)
@@ -509,7 +510,7 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
-            // _judgeMassage = gap + " Excellent";
+            tColor = new Color(1f, 1f, 0f, 1f);
             perfectP++;
             combo++;
         }
@@ -517,7 +518,7 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
-            // _judgeMassage = gap + " Perfect";
+            tColor = new Color(1f, 1f, 0f, 1f);
             perfect++;
             combo++;
         }
@@ -525,7 +526,8 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'G';
             Pcolor = new Color(95f / 255f, 184f / 255f, 1f, 1f);
-            // _judgeMassage = gap + " Great";
+            tColor = new Color(50f / 255f, 150f / 255f, 1f, 1f);
+            // eColor = new Color(0f, 70f / 255f, 1f, 70f / 255f);
             great++;
             s -= 4;
             combo++;
@@ -534,13 +536,11 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'B';
             Pcolor = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
-            // _judgeMassage = gap + " Bad";
-            isEColor = true;
+            eColor = new Color(0f, 1f, 0f, 70f / 255f);
             bad++;
             s = 0;
             combo = 0;
         }
-        // Debug.Log(_judgeMassage);
         Pins.GetComponent<SpriteRenderer>().color = Pcolor;
         Jins.GetComponent<JudgeController>().Setting(judgeKind);
 
@@ -548,8 +548,20 @@ public class NotesDirector : MonoBehaviour
         notesN10 += s;
         if (maxCombo < combo) maxCombo = combo;
         
-        if (isEColor)
+        if (eColor != Color.black)
             LaneEffect(start, end, new Color(0f, 1f, 0f, 70f / 255f));
+
+        if (tColor != Color.black)
+        {
+            GameObject twinkleIns = Instantiate(twinkleEffect);
+            twinkleIns.transform.position = appearPos;
+            var sys = twinkleIns.GetComponent<ParticleSystem>();
+            var main = sys.main;
+            main.startColor = new ParticleSystem.MinMaxGradient(tColor);
+            var shape = sys.shape;
+            shape.scale = new Vector3(wi, 0.5f, 0.1f);
+            sys.Play();
+        }
     }
 
     private void LaneEffect(int start, int end, Color color)
@@ -618,12 +630,11 @@ public class NotesDirector : MonoBehaviour
                     {
                         NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
                         char kind = NotesData[index].Value.GetKind();
-                        int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
                         NotesData.RemoveAt(index);
 
                         if (ki == 'H' || ki == 'B')
                             cri.se.Play(1);
-                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), kind, wi);
+                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), kind);
                     }
                     else
                     {
@@ -659,11 +670,10 @@ public class NotesDirector : MonoBehaviour
                     {
                         NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
                         NotesData[index].Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-                        int wi = NotesData[index].Value.GetEndLane() - NotesData[index].Value.GetStartLane();
                         NotesData.RemoveAt(index);
 
                         cri.se.Play(0);
-                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), 'F', wi);
+                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), 'F');
                     }
                     else
                     {
