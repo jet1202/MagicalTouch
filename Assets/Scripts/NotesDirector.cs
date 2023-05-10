@@ -29,6 +29,7 @@ public class NotesDirector : MonoBehaviour
     
     [SerializeField] private SpriteRenderer justFlame;
     [SerializeField] private List<MeshRenderer> laneArray;
+    [SerializeField] private GameObject twinkleEffect;
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
@@ -467,7 +468,7 @@ public class NotesDirector : MonoBehaviour
 
     void NoteJudge(float gap, int start, int end, char kind, int wi)
     {
-        // ノーツの判定、スコア加算、Effect(判定文字表示、エフェクト)表示
+        // ノーツの判定、スコア加算、Effect(判定文字表示、twinkle)表示
         Vector3 appearPos = new Vector3(-6f + (start + end) * 0.5f, 0f, 0);;
 
         // Paddle

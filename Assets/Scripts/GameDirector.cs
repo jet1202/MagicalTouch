@@ -35,7 +35,11 @@ public class GameDirector : MonoBehaviour
 
     void Awake()
     {
+#if !UNITY_EDITOR && PLATFORM_ANDROID
         Application.targetFrameRate = 60;
+#else
+        Application.targetFrameRate = -1;
+#endif
         
         Time.timeScale = 1;
         musicTime = -waitTime;
