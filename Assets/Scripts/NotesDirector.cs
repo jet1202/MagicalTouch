@@ -457,8 +457,8 @@ public class NotesDirector : MonoBehaviour
         if (isGetNote)
         {
             char kind = NotesData[i].Value.GetKind();
-            int s = Notesdata[i].Value.GetStartLane();
-            int e = Notesdata[i].Value.GetEndLane();
+            int s = NotesData[i].Value.GetStartLane();
+            int e = NotesData[i].Value.GetEndLane();
             NotesData[i].Key.GetComponent<SpriteRenderer>().enabled = false;
             NotesData.RemoveAt(i);
 
