@@ -442,13 +442,12 @@ public class NotesDirector : MonoBehaviour
             {
                 break;
             }
-
-            if (data.GetKind() == 'F') break;
             if (data.GetKind() != 'N' && data.GetKind() != 'L' && data.GetKind() != 'S') continue;
 
             if (data.GetStartLane() * 2 <= laneNumber + 1 && laneNumber - 1 < data.GetEndLane() * 2)
             {
-                isGetNote = true;
+                if (data.GetKind() != 'F')
+                    isGetNote = true;
                 break;
             }
         }
