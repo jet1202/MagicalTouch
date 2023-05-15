@@ -562,6 +562,7 @@ public class NotesDirector : MonoBehaviour
             main.startColor = new ParticleSystem.MinMaxGradient(tColor);
             var shape = sys.shape;
             shape.scale = new Vector3(wi, 0.5f, 0.1f);
+            sys.emission.SetBurst(0, new ParticleSystem.Burst(0, wi * 10));
             sys.Play();
         }
     }
