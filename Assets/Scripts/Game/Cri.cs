@@ -12,14 +12,14 @@ public class Cri : MonoBehaviour
     void Start()
     {
         // acf設定
-        string path = Application.streamingAssetsPath + "/Audio/MagicalTouch.acf";
+        string path = Application.streamingAssetsPath + "/Main/MagicalTouch.acf";
         CriAtomEx.RegisterAcf(null, path);
         
         // CriAtom作成
         new GameObject().AddComponent<CriAtom>();
         
         // SE acb追加
-        CriAtom.AddCueSheet("SE", "Audio/SE.acb", null, null);
+        CriAtom.AddCueSheet("SE", "Main/SE.acb", null, null);
         
         se = new GameObject().AddComponent<CriAtomSource>();
         se.loop = false;
@@ -29,7 +29,7 @@ public class Cri : MonoBehaviour
     public void SetBgm(string title)
     {
         // bgm acb追加
-        CriAtom.AddCueSheet(title, $"Audio/{title}/{title}.acb", $"Audio/{title}/{title}.awb", null);
+        CriAtom.AddCueSheet(title, $"SongData/{title}/{title}.acb", $"SongData/{title}/{title}.awb", null);
 
         bgm = new GameObject().AddComponent<CriAtomSource>();
         bgm.loop = false;

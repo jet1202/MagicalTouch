@@ -15,7 +15,7 @@ public class ImportData : MonoBehaviour
     public IEnumerator ImportSheet(string name, string difficulty)
     {
         _notesData = new List<Note>();
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}.json";
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Data.json";
 
         // var formatter = new BinaryFormatter();
         // FileStream fs = new FileStream(url, FileMode.Open);
@@ -33,7 +33,7 @@ public class ImportData : MonoBehaviour
     public IEnumerator ImportAddition(string name, string difficulty)
     {
         _additionData = new NoteAddition();
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}Addition.json";
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Addition.json";
         
         UnityWebRequest req = UnityWebRequest.Get(url);
         yield return req.SendWebRequest();
