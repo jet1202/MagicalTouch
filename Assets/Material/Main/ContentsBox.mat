@@ -118,7 +118,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _color: {r: 0.4764151, g: 1, b: 0.5613673, a: 0}
+    - _color: {r: 0.47450984, g: 1, b: 0.5110409, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4399485560187965325
 MonoBehaviour:
