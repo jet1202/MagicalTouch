@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public static class PublicData
+public static class GameData
 {
     // gameData
     public static string title;

@@ -1640,7 +1640,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.65
+  m_fontSize: 41.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3181,6 +3181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   importScore: {fileID: 728151960}
+  scrollController: {fileID: 0}
   songList: []
   isOk: 0
 --- !u!4 &728151962

@@ -29,5 +29,8 @@ public class SongList
 {
     public string title;
     public string id;
-    public string[] difficult;
+    public int[] difficult;
+    public int[] constant;
+    public string division;
+    public int number;
 }
