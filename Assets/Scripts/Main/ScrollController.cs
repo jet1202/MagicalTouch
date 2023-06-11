@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 using static SelectData;
 
 public class ScrollController : MonoBehaviour
@@ -22,6 +23,10 @@ public class ScrollController : MonoBehaviour
     private float _scrollNumber;
     private int number = 0;
     private int leng;
+    private Tween t;
+
+    public bool isScrollDragging = false;
+    public bool isFieldDragging = false;
     
     private static readonly int Color1 = Shader.PropertyToID("_color");
     private static readonly int Image1 = Shader.PropertyToID("_Image");
@@ -160,6 +165,15 @@ public class ScrollController : MonoBehaviour
 
         boxDisplay[cube] = number;
     }
+    
+    void SongChange()
+    {
+        for (int i = number - 5; i < number + 7; i++)
+        {
+            int c = i % 12;
+            CubeChange(c, i);
+        }
+    }
 
     public void BarChange(float position)
     {
@@ -174,12 +188,18 @@ public class ScrollController : MonoBehaviour
             SongChange();
     }
 
-    void SongChange()
+    public void adjustPosition()
     {
-        for (int i = number - 5; i < number + 7; i++)
-        {
-            int c = i % 12;
-            CubeChange(c, i);
-        }
+        float ini = _scrollNumber / (leng - 1);
+        t = DOTween.To(
+            () => ini,
+            (x) =>
+            {
+                scrollbar.value = x;
+                _scrollNumber = x;
+            },
+            number / (float)(leng - 1),
+            0.3f
+            );
     }
 }
