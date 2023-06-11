@@ -23,7 +23,11 @@ public class ScrollController : MonoBehaviour
     private float _scrollNumber;
     private int number = 0;
     private int leng;
-    private Tween t;
+    public Tweener t;
+
+    public float friction = 0.1f;
+    public float stopForce = 1f;
+    public float inertia = 0;
 
     public bool isScrollDragging = false;
     public bool isFieldDragging = false;
@@ -121,6 +125,7 @@ public class ScrollController : MonoBehaviour
         }
     }
 
+    // Cubeに変更を反映
     void CubeChange(int cube, int number)
     {
         if (cube < 0) cube += 12;
@@ -177,6 +182,17 @@ public class ScrollController : MonoBehaviour
 
     public void BarChange(float position)
     {
+        if (position > 1f)
+        {
+            scrollbar.value = 1f;
+            return;
+        }
+        if (position < 0f)
+        {
+            scrollbar.value = 0f;
+            return;
+        }
+
         _scrollNumber = position * (leng - 1);
         int Bnumber = number;
         number = (int)Math.Round(_scrollNumber);
@@ -201,5 +217,20 @@ public class ScrollController : MonoBehaviour
             number / (float)(leng - 1),
             0.3f
             );
+    }
+
+    private void Update()
+    {
+        if (Math.Abs(inertia) > 0f)
+        {
+            scrollbar.value -= inertia * (1f / 30f) / (leng - 1);
+            inertia /= 1f + friction;
+
+            if (Math.Abs(inertia) < stopForce)
+            {
+                inertia = 0f;
+                adjustPosition();
+            }
+        }
     }
 }
