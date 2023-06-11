@@ -34,7 +34,7 @@ public class MainDirector : MonoBehaviour
                 displaySong.Add(songList[i]);
         }
         
-        scrollController.Setting(displaySong);
+        yield return StartCoroutine(scrollController.Setting(displaySong));
 
         isOk = true;
     }

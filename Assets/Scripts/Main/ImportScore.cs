@@ -28,4 +28,22 @@ public class ImportScore : MonoBehaviour
             Debug.Log("error");
         }
     }
+
+    public IEnumerator ImportJacket(string name)
+    {
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/jacket.png";
+
+        UnityWebRequest req = UnityWebRequestTexture.GetTexture(url);
+        yield return req.SendWebRequest();
+        if (req.result != UnityWebRequest.Result.ConnectionError)
+        {
+            var myTexture = ((DownloadHandlerTexture)req.downloadHandler).texture;
+
+            yield return myTexture;
+        }
+        else
+        {
+            Debug.Log("error");
+        }
+    }
 }

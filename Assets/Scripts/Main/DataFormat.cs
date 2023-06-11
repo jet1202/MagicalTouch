@@ -34,3 +34,16 @@ public class SongList
     public string division;
     public int number;
 }
+
+public class SongDataList
+{
+    public string title;
+    public string id;
+    public int[] difficult;
+    public int[] constant;
+    public string division;
+    public int number;
+
+    public int[] score;
+    public Texture image;
+}
