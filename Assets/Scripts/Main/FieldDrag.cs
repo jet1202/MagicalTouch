@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -16,7 +17,6 @@ public class FieldDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         scrollController.isFieldDragging = true;
         scrollController.t.Kill();
-        Debug.Log("FieldDragStart");
     }
 
     public void OnDrag(PointerEventData e)
@@ -24,9 +24,9 @@ public class FieldDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         _delta = e.delta;
         if (direction == -1)
         {
-            // if (_delta.y > _delta.x)
-            //     direction = 0; // 縦方向のスクロール
-            // else
+            if (Math.Abs(_delta.y) > Math.Abs(_delta.x))
+                direction = 0; // 縦方向のスクロール
+            else
                 direction = 1; // 横方向のスクロール
         }
 

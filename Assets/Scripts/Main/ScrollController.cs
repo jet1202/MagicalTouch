@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 using static SelectData;
 
 public class ScrollController : MonoBehaviour
@@ -112,17 +113,7 @@ public class ScrollController : MonoBehaviour
         }
         songList = new List<SongDataList>(s);
         
-        ReflectDisplay();
-    }
-
-    // 難易度変更、ソートを反映
-    public void ReflectDisplay()
-    {
-        for (int i = number - 5; i < number + 7; i++)
-        {
-            int c = i % 12;
-            CubeChange(c, i);
-        }
+        SongChange();
     }
 
     // Cubeに変更を反映
@@ -173,11 +164,42 @@ public class ScrollController : MonoBehaviour
     
     void SongChange()
     {
+        // 反対側のCubeの画像を変更
         for (int i = number - 5; i < number + 7; i++)
         {
             int c = i % 12;
             CubeChange(c, i);
         }
+        
+        // Song詳細情報を表示
+        var title = songData.transform.GetChild(1);
+        var difficulty = songData.transform.GetChild(2);
+        var composer = songData.transform.GetChild(3);
+        
+        Color color;
+        switch (SelectData.difficulty)
+        {
+            case DifficultyMode.Normal:
+                color = new Color(100f / 255f, 255f / 255f, 100f / 255f);
+                break;
+            case DifficultyMode.Hard:
+                color = new Color(100f / 255f, 100f / 255f, 255f / 255f);
+                break;
+            case DifficultyMode.Expert:
+                color = new Color(255f / 255f, 255f / 255f, 100f / 255f);
+                break;
+            case DifficultyMode.Impossible:
+                color = new Color(255f / 255f, 100f / 255f, 100f / 255f);
+                break;
+            default:
+                color = new Color(100f / 255f, 100f / 255f, 100f / 255f);
+                break;
+        }
+
+        title.GetComponent<TextMeshProUGUI>().text = songList[number].title;
+        difficulty.GetChild(0).GetComponent<Image>().color = color;
+        difficulty.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+            (songList[number].constant[(int)mode] / 10).ToString();
     }
 
     public void BarChange(float position)
