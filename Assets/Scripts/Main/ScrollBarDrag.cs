@@ -11,13 +11,15 @@ public class ScrollBarDrag : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     public void OnBeginDrag(PointerEventData e)
     {
         scrollController.isScrollDragging = true;
-        scrollController.t.Kill();
+        scrollController.isScrolling = false;
+        scrollController.horizontalTweener.Kill();
+        scrollController.verticalTweener.Complete();
     }
 
     public void OnEndDrag(PointerEventData e)
     {
         scrollController.isScrollDragging = false;
-        scrollController.adjustPosition();
+        scrollController.AdjustPosition();
     }
     
 }

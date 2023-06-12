@@ -24,14 +24,17 @@ public class ScrollController : MonoBehaviour
     private float _scrollNumber;
     private int number = 0;
     private int leng;
-    public Tweener t;
+    public Tweener horizontalTweener;
+    public Tweener verticalTweener;
 
     public float friction = 0.1f;
-    public float stopForce = 1f;
+    public float stopForce = 0.3f;
     public float inertia = 0;
+    public float cubeRotate = 0f;
 
     public bool isScrollDragging = false;
     public bool isFieldDragging = false;
+    public bool isScrolling = false;
     
     private static readonly int Color1 = Shader.PropertyToID("_color");
     private static readonly int Image1 = Shader.PropertyToID("_Image");
@@ -80,7 +83,7 @@ public class ScrollController : MonoBehaviour
     }
 
     // Difficulty is changed
-    private void ChangeDifficulty(int d)
+    public void ChangeDifficulty(int d)
     {
         difficulty = (DifficultyMode)Enum.ToObject(typeof(DifficultyMode), d);
         ListSort();
@@ -226,10 +229,10 @@ public class ScrollController : MonoBehaviour
             SongChange();
     }
 
-    public void adjustPosition()
+    public void AdjustPosition()
     {
         float ini = _scrollNumber / (leng - 1);
-        t = DOTween.To(
+        horizontalTweener = DOTween.To(
             () => ini,
             (x) =>
             {
@@ -239,6 +242,40 @@ public class ScrollController : MonoBehaviour
             number / (float)(leng - 1),
             0.3f
             );
+    }
+
+    public void AdjustDifficulty(int e)
+    {
+        verticalTweener = DOTween.To(
+            () => cubeRotate,
+            (x) =>
+            {
+                cubeRotate = x;
+                for (int i = 0; i < 12; i++)
+                {
+                    Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
+                    var lot = boxes[i].transform.localRotation;
+                    boxes[i].transform.localRotation = localAngle;
+                    boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
+                }
+            },
+            e,
+            0.3f
+            );
+    }
+
+    public void CubeRotation(float del)
+    {
+        cubeRotate += del;
+        for (int i = 0; i < 12; i++)
+        {
+            Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
+            var lot = boxes[i].transform.localRotation;
+            boxes[i].transform.localRotation = localAngle;
+            boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
+        }
+
+        Debug.Log($"cubeRotate: {cubeRotate}");
     }
 
     private void Update()
@@ -251,7 +288,8 @@ public class ScrollController : MonoBehaviour
             if (Math.Abs(inertia) < stopForce)
             {
                 inertia = 0f;
-                adjustPosition();
+                isScrolling = false;
+                AdjustPosition();
             }
         }
     }
