@@ -23,7 +23,7 @@ public class ScrollController : MonoBehaviour
     [SerializeField] private Texture defaultImage;
 
     private float _scrollNumber;
-    private int number = 0;
+    private int number;
     private int leng;
     public Tweener horizontalTweener;
     public Tweener verticalTweener;
@@ -65,7 +65,14 @@ public class ScrollController : MonoBehaviour
             songList.Add(n);
         }
 
-        number = 0; // いずれどの場所にいたかを保存できるようにしたい
+        AdjustNumber(0); // いずれどこにおいていたかを保存できるようにしたい
+
+        ListSort();
+    }
+
+    private void AdjustNumber(int num)
+    {
+        number = num;
         leng = songList.Count;
         _scrollNumber = number;
         Debug.Log($"number: {number}, leng: {leng}");
@@ -73,8 +80,6 @@ public class ScrollController : MonoBehaviour
         scrollbar.value = (float)number / (leng - 1);
         
         sortText.text = mode.ToString();
-
-        ListSort();
     }
 
     // Sort mode is changed
@@ -83,7 +88,7 @@ public class ScrollController : MonoBehaviour
         int m = ((int)mode + 1) % 4;
         SortMode modeEnum = (SortMode)Enum.ToObject(typeof(SortMode), m);
         mode = modeEnum;
-        sortText.text = mode.ToString();
+        
         ListSort();
     }
 
@@ -99,6 +104,7 @@ public class ScrollController : MonoBehaviour
     void ListSort()
     {
         string nowSong = songList[number].id;
+        int num;
         
         // sort
         IOrderedEnumerable<SongDataList> s;
@@ -121,8 +127,12 @@ public class ScrollController : MonoBehaviour
                 break;
         }
         songList = new List<SongDataList>(s);
+
+        num = songList.FindIndex(n => nowSong == n.id);
         
         boxDisplay = Enumerable.Repeat<int>(-2, 12).ToArray();
+        
+        AdjustNumber(num);
         SongChange();
     }
 
