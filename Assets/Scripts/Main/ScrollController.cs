@@ -108,16 +108,16 @@ public class ScrollController : MonoBehaviour
                 s = songList.OrderBy(x => x.number);
                 break;
             case SortMode.Name:
-                s = songList.OrderBy(x => x.title);
+                s = songList.OrderBy(x => x.title).ThenBy(x => x.number);
                 break;
             case SortMode.Difficulty:
-                s = songList.OrderBy(x => x.constant[(int)difficulty]);
+                s = songList.OrderBy(x => x.constant[(int)difficulty]).ThenBy(x => x.number);
                 break;
             case SortMode.Score:
                 s = songList.OrderBy(x => x.id); // Scoreの反映
                 break;
             default:
-                s = songList.OrderBy(x => x.id);
+                s = songList.OrderBy(x => x.number);
                 break;
         }
         songList = new List<SongDataList>(s);
@@ -183,11 +183,11 @@ public class ScrollController : MonoBehaviour
         
         // Song詳細情報を表示
         var title = songData.transform.GetChild(1);
-        var difficulty = songData.transform.GetChild(2);
+        var difficulty2 = songData.transform.GetChild(2);
         var composer = songData.transform.GetChild(3);
         
         Color color;
-        switch (SelectData.difficulty)
+        switch (difficulty)
         {
             case DifficultyMode.Normal:
                 color = new Color(100f / 255f, 255f / 255f, 100f / 255f);
@@ -207,9 +207,9 @@ public class ScrollController : MonoBehaviour
         }
 
         title.GetComponent<TextMeshProUGUI>().text = songList[number].title;
-        difficulty.GetChild(0).GetComponent<Image>().color = color;
-        difficulty.GetChild(1).GetComponent<TextMeshProUGUI>().text =
-            (songList[number].constant[(int)mode] / 10).ToString();
+        difficulty2.GetChild(0).GetComponent<Image>().color = color;
+        difficulty2.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+            (songList[number].constant[(int)difficulty] / 10).ToString();
     }
 
     public void BarChange(float position)
