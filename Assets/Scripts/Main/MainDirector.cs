@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO.IsolatedStorage;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MainDirector : MonoBehaviour

@@ -13,6 +13,7 @@ public class ScrollController : MonoBehaviour
     [SerializeField] private GameObject CenterBoxes;
     [SerializeField] private Scrollbar scrollbar;
     [SerializeField] private GameObject songData;
+    [SerializeField] private TextMeshProUGUI sortText;
     
     [SerializeField] private ImportScore importScore;
     [SerializeField] private List<GameObject> boxes;
@@ -70,15 +71,19 @@ public class ScrollController : MonoBehaviour
         Debug.Log($"number: {number}, leng: {leng}");
         scrollbar.size = 1f / (leng - 1);
         scrollbar.value = (float)number / (leng - 1);
+        
+        sortText.text = mode.ToString();
 
         ListSort();
     }
 
     // Sort mode is changed
-    private void sortList(int m)
+    public void SortChange()
     {
+        int m = ((int)mode + 1) % 4;
         SortMode modeEnum = (SortMode)Enum.ToObject(typeof(SortMode), m);
         mode = modeEnum;
+        sortText.text = mode.ToString();
         ListSort();
     }
 
@@ -86,6 +91,7 @@ public class ScrollController : MonoBehaviour
     public void ChangeDifficulty(int d)
     {
         difficulty = (DifficultyMode)Enum.ToObject(typeof(DifficultyMode), d);
+        Debug.Log($"difficulty = {(int)difficulty}, {difficulty.ToString()}");
         ListSort();
     }
 
@@ -105,7 +111,7 @@ public class ScrollController : MonoBehaviour
                 s = songList.OrderBy(x => x.title);
                 break;
             case SortMode.Difficulty:
-                s = songList.OrderBy(x => x.difficult[(int)difficulty]);
+                s = songList.OrderBy(x => x.constant[(int)difficulty]);
                 break;
             case SortMode.Score:
                 s = songList.OrderBy(x => x.id); // Scoreの反映
@@ -116,6 +122,7 @@ public class ScrollController : MonoBehaviour
         }
         songList = new List<SongDataList>(s);
         
+        boxDisplay = Enumerable.Repeat<int>(-2, 12).ToArray();
         SongChange();
     }
 
@@ -274,8 +281,6 @@ public class ScrollController : MonoBehaviour
             boxes[i].transform.localRotation = localAngle;
             boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
         }
-
-        Debug.Log($"cubeRotate: {cubeRotate}");
     }
 
     private void Update()
