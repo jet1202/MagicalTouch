@@ -35,7 +35,7 @@ public class ImportScore : MonoBehaviour
 
         UnityWebRequest req = UnityWebRequestTexture.GetTexture(url);
         yield return req.SendWebRequest();
-        if (req.result != UnityWebRequest.Result.ConnectionError)
+        if (req.result == UnityWebRequest.Result.Success)
         {
             var myTexture = ((DownloadHandlerTexture)req.downloadHandler).texture;
 
@@ -44,6 +44,7 @@ public class ImportScore : MonoBehaviour
         else
         {
             Debug.Log("error");
+            yield return null;
         }
     }
 }

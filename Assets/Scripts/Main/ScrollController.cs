@@ -58,7 +58,11 @@ public class ScrollController : MonoBehaviour
             
             IEnumerator corutine = importScore.ImportJacket(n.id);
             yield return StartCoroutine(corutine);
-            var t = (Texture)corutine.Current;
+            Texture t;
+            if (corutine.Current == null)
+                t = defaultImage;
+            else
+                t = (Texture)corutine.Current;
             n.image = t;
             n.score = new int[]{0, 0, 0, 0}; // Score反映
             
@@ -75,7 +79,7 @@ public class ScrollController : MonoBehaviour
         number = num;
         leng = songList.Count;
         _scrollNumber = number;
-        Debug.Log($"number: {number}, leng: {leng}");
+        // Debug.Log($"number: {number}, leng: {leng}");
         scrollbar.size = 1f / (leng - 1);
         scrollbar.value = (float)number / (leng - 1);
         
@@ -96,7 +100,7 @@ public class ScrollController : MonoBehaviour
     public void ChangeDifficulty(int d)
     {
         difficulty = (DifficultyMode)Enum.ToObject(typeof(DifficultyMode), d);
-        Debug.Log($"difficulty = {(int)difficulty}, {difficulty.ToString()}");
+        // Debug.Log($"difficulty = {(int)difficulty}, {difficulty.ToString()}");
         ListSort();
     }
 

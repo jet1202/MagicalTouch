@@ -7,6 +7,7 @@ public class MainDirector : MonoBehaviour
 {
     [SerializeField] private ImportScore importScore;
     [SerializeField] private ScrollController scrollController;
+    [SerializeField] private GameObject mask;
 
     public SongList[] songList;
     private string division;
@@ -35,5 +36,7 @@ public class MainDirector : MonoBehaviour
         yield return StartCoroutine(scrollController.Setting(displaySong));
 
         isOk = true;
+        
+        mask.SetActive(false);
     }
 }
