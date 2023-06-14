@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -33,6 +34,8 @@ public class ImportScore : MonoBehaviour
     {
         string url = Application.streamingAssetsPath + $"/SongData/{name}/jacket.png";
 
+        Debug.Log($"url: {url}, Exists: {System.IO.File.Exists(url)}");
+
         UnityWebRequest req = UnityWebRequestTexture.GetTexture(url);
         yield return req.SendWebRequest();
         if (req.result == UnityWebRequest.Result.Success)
@@ -43,7 +46,7 @@ public class ImportScore : MonoBehaviour
         }
         else
         {
-            Debug.Log("error");
+            Debug.Log($"Error: result -> ${req.result}, msg -> ${req.error}");
             yield return null;
         }
     }
