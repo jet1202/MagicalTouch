@@ -115,7 +115,7 @@ public class NotesDirector : MonoBehaviour
                 nex = cri.GetLen() / 1000f;
             else
                 nex = bpmData[i + 1].time100 / 100f;
-        
+
             for (float j = t; j < nex; j += 60f / b)
             {
                 MaintainJudge.Add(j);
@@ -460,7 +460,7 @@ public class NotesDirector : MonoBehaviour
             NotesData[i].Key.GetComponent<SpriteRenderer>().enabled = false;
             NotesData.RemoveAt(i);
 
-            cri.se.Play(1);
+            cri.se.Play(0);
             NoteJudge(Mathf.Abs(gap), s, e, kind);
         }
     }
@@ -673,7 +673,7 @@ public class NotesDirector : MonoBehaviour
                         NotesData[index].Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                         NotesData.RemoveAt(index);
 
-                        cri.se.Play(0);
+                        cri.se.Play(2);
                         NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), 'F');
                     }
                     else

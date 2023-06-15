@@ -8,11 +8,12 @@ public class Cri : MonoBehaviour
 {
     public CriAtomSource se;
     public CriAtomSource bgm;
+    public CriAtomEx.CueInfo bgmInfo;
     
     void Start()
     {
         // acf設定
-        string path = Application.streamingAssetsPath + "/Main/MagicalTouch.acf";
+        string path = Application.streamingAssetsPath + "/Main/K-Rhythm.acf";
         CriAtomEx.RegisterAcf(null, path);
         
         // CriAtom作成
@@ -34,18 +35,17 @@ public class Cri : MonoBehaviour
         bgm = new GameObject().AddComponent<CriAtomSource>();
         bgm.loop = false;
         bgm.cueSheet = title;
+        
+        CriAtomExAcb _exAcb = CriAtom.GetAcb(title);
+        
+        if (!_exAcb.GetCueInfo(0, out bgmInfo))
+        {
+            throw new Exception("取得できない");
+        }
     }
 
     public float GetLen()
     {
-        CriAtomExAcb _exAcb = CriAtom.GetAcb(bgm.cueSheet);
-        CriAtomEx.CueInfo cueInfo;
-
-        if (_exAcb.GetCueInfo(bgm.cueSheet, out cueInfo))
-        {
-            return cueInfo.length;
-        }
-
-        throw new Exception("取得できない");
+        return bgmInfo.length;
     }
 }
