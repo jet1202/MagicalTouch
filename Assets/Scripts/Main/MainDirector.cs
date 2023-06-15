@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class MainDirector : MonoBehaviour
 {
@@ -13,11 +15,14 @@ public class MainDirector : MonoBehaviour
     private string division;
 
     public bool isOk = false;
-    
+
     IEnumerator Start()
     {
+        mask.SetActive(true);
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
+
         songList = Array.Empty<SongList>();
-        
+
         IEnumerator corutine = importScore.ImportSongData();
         yield return StartCoroutine(corutine);
         songList = (SongList[])corutine.Current;
@@ -32,11 +37,12 @@ public class MainDirector : MonoBehaviour
             if (songList[i].division == division)
                 displaySong.Add(songList[i]);
         }
-        
+
         yield return StartCoroutine(scrollController.Setting(displaySong));
 
         isOk = true;
-        
-        mask.SetActive(false);
-    }
+
+        mask.GetComponent<Image>().DOFade(0f, 0.7f)
+            .OnComplete(() => mask.SetActive(false));
+}
 }
