@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEngine.SceneManagement;
 
 public class MainDirector : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class MainDirector : MonoBehaviour
 
     [SerializeField] private ImportScore importScore;
     [SerializeField] private ScrollController scrollController;
+    [SerializeField] private SubDirector subDirector;
     [SerializeField] private GameObject mask;
 
     public SongList[] songList;
@@ -68,6 +68,7 @@ public class MainDirector : MonoBehaviour
                     subCanvas.SetActive(true);
                     mainCamera.SetActive(false);
                     subCamera.SetActive(true);
+                    subDirector.MoveAnimation();
                 });
     }
 }

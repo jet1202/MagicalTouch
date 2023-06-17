@@ -16,6 +16,7 @@ public class GameDirector : MonoBehaviour
     [SerializeField] private TextMeshProUGUI comboText;
     [SerializeField] private Text progressText;
     [SerializeField] private GameObject infoPanel;
+    [SerializeField] private GameObject mask;
     
     private AudioSource audioSource;
     public bool isPlaying = false;

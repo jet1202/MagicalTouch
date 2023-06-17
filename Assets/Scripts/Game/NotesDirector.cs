@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class NotesDirector : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private SpriteRenderer justFlame;
     [SerializeField] private List<MeshRenderer> laneArray;
     [SerializeField] private GameObject twinkleEffect;
+
+    [SerializeField] private GameObject mask;
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
@@ -79,6 +82,9 @@ public class NotesDirector : MonoBehaviour
         title = GameData.title;
         id = GameData.id;
         difficulty = GameData.difficult;
+        
+        mask.SetActive(true);
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
         
         // データをImport
         Speed = GetComponent<NotesController>().Speed;
@@ -275,6 +281,7 @@ public class NotesDirector : MonoBehaviour
 
         gameDirector.isOk = true;
         Debug.Log($"Load Finished. Total:{total}, TotalN:{totalN10}");
+        mask.GetComponent<Image>().DOFade(0f, 1f).OnComplete(() => mask.SetActive(false));
     }
 
     private float TimeTo(float time)

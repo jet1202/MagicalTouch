@@ -330,9 +330,7 @@ public class ScrollController : MonoBehaviour
 
     public void PlayButtonPush()
     {
-        Debug.Log("StartClick");
         bool isPlayOk = isScrolling || isScrollDragging || isFieldDragging;
-        Debug.Log(isPlayOk);
         if (!isPlayOk)
         {
             // スクロールの途中ではない

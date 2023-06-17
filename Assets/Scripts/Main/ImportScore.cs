@@ -66,6 +66,7 @@ public class ImportScore : MonoBehaviour
         else
         {
             Debug.Log("error");
+            yield return null;
         }
     }
 }
