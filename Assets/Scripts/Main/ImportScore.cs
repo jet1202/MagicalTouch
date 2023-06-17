@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -48,6 +46,26 @@ public class ImportScore : MonoBehaviour
         {
             Debug.Log($"Error: result -> ${req.result}, msg -> ${req.error}");
             yield return null;
+        }
+    }
+
+    public IEnumerator ImportInfo(string name)
+    {
+        string url = Application.streamingAssetsPath + $"/SongData/{name}";
+        
+        UnityWebRequest req = UnityWebRequest.Get(url);
+        yield return req.SendWebRequest();
+        if (req.result != UnityWebRequest.Result.ConnectionError)
+        {
+            string jsonStr = req.downloadHandler.text;
+
+            SongInfo data = JsonUtility.FromJson<SongInfo>(jsonStr);
+
+            yield return data;
+        }
+        else
+        {
+            Debug.Log("error");
         }
     }
 }

@@ -13,7 +13,7 @@ public class MainDirector : MonoBehaviour
     [SerializeField] private GameObject mainCamera;
     [SerializeField] private GameObject subCamera;
 
-        [SerializeField] private ImportScore importScore;
+    [SerializeField] private ImportScore importScore;
     [SerializeField] private ScrollController scrollController;
     [SerializeField] private GameObject mask;
 
@@ -62,6 +62,12 @@ public class MainDirector : MonoBehaviour
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
         mask.GetComponent<Image>().DOFade(1f, 0.7f)
-            .OnComplete(() => SceneManager.LoadScene("GameScene"));
+            .OnComplete(() =>
+                {
+                    contentCanvas.SetActive(false);
+                    subCanvas.SetActive(true);
+                    mainCamera.SetActive(false);
+                    subCamera.SetActive(true);
+                });
     }
 }

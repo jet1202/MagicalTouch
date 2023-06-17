@@ -6,7 +6,6 @@ using UnityEngine;
 [Serializable]
 public class SaveSongData
 {
-    public string Difficult { get; set; }
     public int Score { get; set; }
     public int Accuracy { get; set; } // 100倍
 }
@@ -14,7 +13,7 @@ public class SaveSongData
 [Serializable]
 public class SaveSong
 {
-    public string Title { get; set; }
+    public string Id { get; set; }
     public SaveSongData[] Data { get; set; }
 }
 
@@ -46,4 +45,10 @@ public class SongDataList
 
     public int[] score;
     public Texture image;
+}
+
+[Serializable]
+public class SongInfo
+{
+    public string data;
 }

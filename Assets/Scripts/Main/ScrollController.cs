@@ -11,6 +11,7 @@ using static SelectData;
 public class ScrollController : MonoBehaviour
 {
     [SerializeField] private MainDirector mainDirector;
+    [SerializeField] private SubDirector subDirector;
     [SerializeField] private GameObject CenterBoxes;
     [SerializeField] private Scrollbar scrollbar;
     [SerializeField] private GameObject songData;
@@ -22,6 +23,8 @@ public class ScrollController : MonoBehaviour
     private List<SongDataList> songList;
 
     [SerializeField] private Texture defaultImage;
+
+    [SerializeField] private GameObject subBoard;
 
     private float _scrollNumber;
     private int number;
@@ -170,21 +173,11 @@ public class ScrollController : MonoBehaviour
         Material top = box.transform.GetChild(2).GetComponent<Renderer>().material;
         Material back = box.transform.GetChild(3).GetComponent<Renderer>().material;
         Material bottom = box.transform.GetChild(0).GetComponent<Renderer>().material;
-
-        front.SetColor(Color1, new Color(100f / 255f, 255f / 255f, 100f / 255f));
-        top.SetColor(Color1, new Color(100f / 255f, 100f / 255f, 255f / 255f));
-        back.SetColor(Color1, new Color(255f / 255f, 255f / 255f, 100f / 255f));
-        bottom.SetColor(Color1, new Color(255f / 255f, 100f / 255f, 100f / 255f));
         
-        front.SetTexture(Image1, image);
-        top.SetTexture(Image1, image);
-        back.SetTexture(Image1, image);
-        bottom.SetTexture(Image1, image);
-        
-        front.SetFloat(ImageSize, size);
-        top.SetFloat(ImageSize, size);
-        back.SetFloat(ImageSize, size);
-        bottom.SetFloat(ImageSize, size);
+        SetCube(front, DifficultyMode.Normal, image, size);
+        SetCube(top, DifficultyMode.Hard, image, size);
+        SetCube(back, DifficultyMode.Expert, image, size);
+        SetCube(bottom, DifficultyMode.Impossible, image, size);
 
         boxDisplay[cube] = number;
     }
@@ -204,24 +197,7 @@ public class ScrollController : MonoBehaviour
         var composer = songData.transform.GetChild(3);
         
         Color color;
-        switch (difficulty)
-        {
-            case DifficultyMode.Normal:
-                color = new Color(100f / 255f, 255f / 255f, 100f / 255f);
-                break;
-            case DifficultyMode.Hard:
-                color = new Color(100f / 255f, 100f / 255f, 255f / 255f);
-                break;
-            case DifficultyMode.Expert:
-                color = new Color(255f / 255f, 255f / 255f, 100f / 255f);
-                break;
-            case DifficultyMode.Impossible:
-                color = new Color(255f / 255f, 100f / 255f, 100f / 255f);
-                break;
-            default:
-                color = new Color(100f / 255f, 100f / 255f, 100f / 255f);
-                break;
-        }
+        color = GetColor(difficulty);
         
         title.GetComponent<TextMeshProUGUI>().text = songList[number].title;
         difficulty2.GetChild(0).GetComponent<Image>().color = color;
@@ -320,6 +296,38 @@ public class ScrollController : MonoBehaviour
         }
     }
 
+    public Color GetColor(DifficultyMode m)
+    {
+        Color color = new Color();
+        switch (m)
+        {
+            case DifficultyMode.Normal:
+                color = new Color(100f / 255f, 255f / 255f, 100f / 255f);
+                break;
+            case DifficultyMode.Hard:
+                color = new Color(100f / 255f, 100f / 255f, 255f / 255f);
+                break;
+            case DifficultyMode.Expert:
+                color = new Color(255f / 255f, 255f / 255f, 100f / 255f);
+                break;
+            case DifficultyMode.Impossible:
+                color = new Color(255f / 255f, 100f / 255f, 100f / 255f);
+                break;
+            default:
+                color = new Color(100f / 255f, 100f / 255f, 100f / 255f);
+                break;
+        }
+
+        return color;
+    }
+
+    private void SetCube(Material m, DifficultyMode d, Texture t, float s)
+    {
+        m.SetColor(Color1, GetColor(d));
+        m.SetTexture(Image1, t);
+        m.SetFloat(ImageSize, s);
+    }
+
     public void PlayButtonPush()
     {
         Debug.Log("StartClick");
@@ -337,6 +345,12 @@ public class ScrollController : MonoBehaviour
                 GameData.difficult = difficulty.ToString();
                 
                 mainDirector.MoveGame();
+
+                Material m = subBoard.GetComponent<Renderer>().material;
+                SetCube(m, difficulty, song.image, 0.85f);
+
+                IEnumerator corutine = subDirector.MoveGameFromSelect(song);
+                StartCoroutine(corutine);
             }
         }
     }
