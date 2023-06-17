@@ -32,7 +32,7 @@ public class ImportScore : MonoBehaviour
 
     public IEnumerator ImportJacket(string name)
     {
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/jacket.png";
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/jacket.jpg";
 
         Debug.Log($"url: {url}, Exists: {System.IO.File.Exists(url)}");
 

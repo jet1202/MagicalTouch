@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class MainDirector : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class MainDirector : MonoBehaviour
         songList = (SongList[])corutine.Current;
 
         // division = SelectData.division;
-        division = "Test";
+        division = "unofficial";
 
         List<SongList> displaySong = new List<SongList>();
         int leng = songList.Length;
@@ -44,5 +45,13 @@ public class MainDirector : MonoBehaviour
 
         mask.GetComponent<Image>().DOFade(0f, 0.7f)
             .OnComplete(() => mask.SetActive(false));
-}
+    }
+
+    public void MoveGame()
+    {
+        mask.SetActive(true);
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.GetComponent<Image>().DOFade(1f, 0.7f)
+            .OnComplete(() => SceneManager.LoadScene("GameScene"));
+    }
 }

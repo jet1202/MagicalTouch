@@ -10,6 +10,7 @@ using static SelectData;
 
 public class ScrollController : MonoBehaviour
 {
+    [SerializeField] private MainDirector mainDirector;
     [SerializeField] private GameObject CenterBoxes;
     [SerializeField] private Scrollbar scrollbar;
     [SerializeField] private GameObject songData;
@@ -51,9 +52,9 @@ public class ScrollController : MonoBehaviour
             SongDataList n = new SongDataList();
             n.title = s.title;
             n.id = s.id;
-            n.difficult = s.difficult;
             n.constant = s.constant;
             n.division = s.division;
+            n.composer = s.composer;
             n.number = s.number;
             
             IEnumerator corutine = importScore.ImportJacket(n.id);
@@ -69,7 +70,8 @@ public class ScrollController : MonoBehaviour
             songList.Add(n);
         }
 
-        AdjustNumber(0); // いずれどこにおいていたかを保存できるようにしたい
+        // いずれどこにおいていたかを保存できるようにしたい
+        AdjustNumber(0);
 
         ListSort();
     }
@@ -81,7 +83,8 @@ public class ScrollController : MonoBehaviour
         _scrollNumber = number;
         // Debug.Log($"number: {number}, leng: {leng}");
         scrollbar.size = 1f / (leng - 1);
-        scrollbar.value = (float)number / (leng - 1);
+        scrollbar.value =
+            leng - 1 == 0 ? 0f : (float)number / (leng - 1);
         
         sortText.text = mode.ToString();
     }
@@ -219,11 +222,13 @@ public class ScrollController : MonoBehaviour
                 color = new Color(100f / 255f, 100f / 255f, 100f / 255f);
                 break;
         }
-
+        
         title.GetComponent<TextMeshProUGUI>().text = songList[number].title;
         difficulty2.GetChild(0).GetComponent<Image>().color = color;
         difficulty2.GetChild(1).GetComponent<TextMeshProUGUI>().text =
-            (songList[number].constant[(int)difficulty] / 10).ToString();
+            songList[number].constant[(int)difficulty] != 0
+                ? (songList[number].constant[(int)difficulty] / 10).ToString()
+                : "-";
     }
 
     public void BarChange(float position)
@@ -252,7 +257,8 @@ public class ScrollController : MonoBehaviour
 
     public void AdjustPosition()
     {
-        float ini = _scrollNumber / (leng - 1);
+        float ini = leng - 1 == 0 ? 0f : _scrollNumber / (leng - 1);
+        float end = leng - 1 == 0 ? 0f : number / (float)(leng - 1);
         horizontalTweener = DOTween.To(
             () => ini,
             (x) =>
@@ -260,7 +266,7 @@ public class ScrollController : MonoBehaviour
                 scrollbar.value = x;
                 _scrollNumber = x;
             },
-            number / (float)(leng - 1),
+            end,
             0.3f
             );
     }
@@ -301,7 +307,7 @@ public class ScrollController : MonoBehaviour
     {
         if (Math.Abs(inertia) > 0f)
         {
-            scrollbar.value -= inertia * (1f / 30f) / (leng - 1);
+            scrollbar.value -= leng - 1 == 0 ? 0f :inertia * (1f / 30f) / (leng - 1);
             inertia /= 1f + friction;
 
             if (Math.Abs(inertia) < stopForce)
@@ -309,6 +315,27 @@ public class ScrollController : MonoBehaviour
                 inertia = 0f;
                 isScrolling = false;
                 AdjustPosition();
+            }
+        }
+    }
+
+    public void PlayButtonPush()
+    {
+        Debug.Log("StartClick");
+        bool isPlayOk = isScrolling || isScrollDragging || isFieldDragging;
+        Debug.Log(isPlayOk);
+        if (!isPlayOk)
+        {
+            // スクロールの途中ではない
+            var song = songList[number];
+            if (song.constant[(int)difficulty] != 0)
+            {
+                // 指定した曲の難易度の譜面が存在する
+                GameData.title = song.title;
+                GameData.id = song.id;
+                GameData.difficult = difficulty.ToString();
+                
+                mainDirector.MoveGame();
             }
         }
     }

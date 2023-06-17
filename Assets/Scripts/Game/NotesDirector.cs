@@ -46,8 +46,9 @@ public class NotesDirector : MonoBehaviour
     private KeyValuePair<GameObject, float> _trashData;
     private string _judgeMassage;
 
-    [SerializeField] private string title;
-    [SerializeField] private string difficulty;
+    private string title;
+    private string id;
+    private string difficulty;
     [SerializeField] private bool isPushLine;
     
     // ノーツ数
@@ -75,11 +76,15 @@ public class NotesDirector : MonoBehaviour
 
     IEnumerator Start()
     {
+        title = GameData.title;
+        id = GameData.id;
+        difficulty = GameData.difficult;
+        
         // データをImport
         Speed = GetComponent<NotesController>().Speed;
 
         // Sheet
-        IEnumerator corutine = importData.ImportSheet(title, difficulty);
+        IEnumerator corutine = importData.ImportSheet(id, difficulty);
         yield return StartCoroutine(corutine);
         List<Note> notesSheetA = (List<Note>)corutine.Current;
         
@@ -89,7 +94,7 @@ public class NotesDirector : MonoBehaviour
         List<KeyValuePair<Note, SlideMaintain[]>> slideData = (List<KeyValuePair<Note, SlideMaintain[]>>)corutine.Current;
         
         // Addition
-        corutine = importData.ImportAddition(title, difficulty);
+        corutine = importData.ImportAddition(id, difficulty);
         yield return StartCoroutine(corutine);
         NoteAddition additionData = (NoteAddition)corutine.Current;
         speedData = additionData.speedItem;
@@ -99,7 +104,7 @@ public class NotesDirector : MonoBehaviour
         
         notesController.BpmDataImport(speedData);
 
-        cri.SetBgm(title);
+        cri.SetBgm(id);
 
         // Maintainの判定をリストに格納
         MaintainJudge = new List<float>();
