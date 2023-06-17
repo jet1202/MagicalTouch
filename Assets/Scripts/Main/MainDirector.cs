@@ -8,7 +8,12 @@ using UnityEngine.SceneManagement;
 
 public class MainDirector : MonoBehaviour
 {
-    [SerializeField] private ImportScore importScore;
+    [SerializeField] private GameObject contentCanvas;
+    [SerializeField] private GameObject subCanvas;
+    [SerializeField] private GameObject mainCamera;
+    [SerializeField] private GameObject subCamera;
+
+        [SerializeField] private ImportScore importScore;
     [SerializeField] private ScrollController scrollController;
     [SerializeField] private GameObject mask;
 
@@ -19,6 +24,11 @@ public class MainDirector : MonoBehaviour
 
     IEnumerator Start()
     {
+        contentCanvas.SetActive(true);
+        subCanvas.SetActive(false);
+        mainCamera.SetActive(true);
+        subCamera.SetActive(false);
+        
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
 

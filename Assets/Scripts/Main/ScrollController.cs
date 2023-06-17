@@ -229,6 +229,7 @@ public class ScrollController : MonoBehaviour
             songList[number].constant[(int)difficulty] != 0
                 ? (songList[number].constant[(int)difficulty] / 10).ToString()
                 : "-";
+        composer.GetComponent<TextMeshProUGUI>().text = songList[number].composer;
     }
 
     public void BarChange(float position)
