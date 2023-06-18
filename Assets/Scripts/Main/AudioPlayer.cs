@@ -21,23 +21,14 @@ public class AudioPlayer : MonoBehaviour
         CriAtomEx.RegisterAcf(null, path);
         atomExPlayer = new CriAtomExPlayer();
         atomExPlayer.SetVolume(1.0f);
-
-        // _audioTweener = DOTween.Sequence();
-        // _audioTweener.Append(DOTween.To(() => 0f, (x) => atomExPlayer.SetVolume(x), 1f, 1f));
-        // _audioTweener.AppendInterval(10f);
-        // _audioTweener.Append(DOTween.To(() => 1f, (x) => atomExPlayer.SetVolume(x), 0f, 1f));
-        // _audioTweener.AppendCallback(() =>
-        // {
-        //     atomExPlayer.Stop();
-        //     atomExPlayer.SetStartTime(startTime);
-        //     atomExPlayer.Start();
-        //     Debug.Log("実行");
-        // });
-        // _audioTweener.SetLoops(-1, LoopType.Restart);
+        atomExPlayer.AttachFader();
+        atomExPlayer.SetFadeInTime(1000);
+        atomExPlayer.SetFadeOutTime(1000);
     }
 
     public IEnumerator SetMusic(string title, int s)
     {
+        _audioTweener.Kill();
         var cueSheet = CriAtom.AddCueSheet(title, $"SongData/{title}/{title}.acb", $"SongData/{title}/{title}.awb", null);
         while (cueSheet.IsLoading)
         {
@@ -59,6 +50,11 @@ public class AudioPlayer : MonoBehaviour
             atomExPlayer.Stop();
             atomExPlayer.SetStartTime(startTime);
             atomExPlayer.Start();
-        }).SetLoops(-1);
+        }).SetLoops(-1).Play();
+    }
+
+    public void StopBgm()
+    {
+        atomExPlayer.Stop();
     }
 }
