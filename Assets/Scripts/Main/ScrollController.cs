@@ -12,6 +12,7 @@ public class ScrollController : MonoBehaviour
 {
     [SerializeField] private MainDirector mainDirector;
     [SerializeField] private SubDirector subDirector;
+    [SerializeField] private AudioPlayer audioPlayer;
     [SerializeField] private GameObject CenterBoxes;
     [SerializeField] private Scrollbar scrollbar;
     [SerializeField] private GameObject songData;
@@ -59,6 +60,7 @@ public class ScrollController : MonoBehaviour
             n.division = s.division;
             n.composer = s.composer;
             n.number = s.number;
+            n.chorus = s.chorus;
             
             IEnumerator corutine = importScore.ImportJacket(n.id);
             yield return StartCoroutine(corutine);
@@ -282,7 +284,7 @@ public class ScrollController : MonoBehaviour
 
     private void Update()
     {
-        if (Math.Abs(inertia) > 0f)
+        if (isScrolling) // (Math.Abs(inertia) > 0f)
         {
             scrollbar.value -= leng - 1 == 0 ? 0f :inertia * (1f / 30f) / (leng - 1);
             inertia /= 1f + friction;
@@ -292,6 +294,7 @@ public class ScrollController : MonoBehaviour
                 inertia = 0f;
                 isScrolling = false;
                 AdjustPosition();
+                StartCoroutine(audioPlayer.SetMusic(songList[number].id, songList[number].chorus));
             }
         }
     }

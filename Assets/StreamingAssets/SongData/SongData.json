@@ -6,7 +6,8 @@
             "constant": [34, 78, 123, 161],
             "division": "Test",
             "composer": "Kyanack",
-            "number": 0
+            "number": 0,
+            "chorus": 0
         },
         {
             "title": "Test3",
@@ -14,7 +15,8 @@
             "constant": [14, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 2
+            "number": 2,
+            "chorus": 0
         },
         {
             "title": "Test4",
@@ -22,7 +24,8 @@
             "constant": [34, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 3
+            "number": 3,
+            "chorus": 0
         },
         {
             "title": "Test5",
@@ -30,7 +33,8 @@
             "constant": [44, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 4
+            "number": 4,
+            "chorus": 0
         },
         {
             "title": "Test7",
@@ -38,7 +42,8 @@
             "constant": [34, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 5
+            "number": 5,
+            "chorus": 0
         },
         {
             "title": "Test6",
@@ -46,7 +51,8 @@
             "constant": [54, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 6
+            "number": 6,
+            "chorus": 0
         },
         {
             "title": "Test8",
@@ -54,7 +60,8 @@
             "constant": [64, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 7
+            "number": 7,
+            "chorus": 0
         },
         {
             "title": "Test9",
@@ -62,7 +69,8 @@
             "constant": [74, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 8
+            "number": 8,
+            "chorus": 0
         },
         {
             "title": "Test10",
@@ -70,7 +78,8 @@
             "constant": [84, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 9
+            "number": 9,
+            "chorus": 0
         },
         {
             "title": "Test11",
@@ -78,7 +87,8 @@
             "constant": [94, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 10
+            "number": 10,
+            "chorus": 0
         },
         {
             "title": "Test12",
@@ -86,7 +96,8 @@
             "constant": [84, 68, 113, 151],
             "division": "Test",
             "composer": "None",
-            "number": 11
+            "number": 11,
+            "chorus": 0
         },
         {
             "title": "Twitter_37510notes",
@@ -94,7 +105,8 @@
             "constant": [0, 0, 123, 0],
             "division": "official",
             "composer": "trollman0129",
-            "number": 0
+            "number": 0,
+            "chorus": 124200
         },
         {
             "title": "Test2",
@@ -102,7 +114,8 @@
             "constant": [0, 0, 135, 0],
             "division": "official",
             "composer": "trollman0129",
-            "number": 1
+            "number": 1,
+            "chorus": 69000
         }
     ]
 }

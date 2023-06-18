@@ -32,6 +32,7 @@ public class SongList
     public string division;
     public string composer;
     public int number;
+    public int chorus;
 }
 
 public class SongDataList
@@ -42,6 +43,7 @@ public class SongDataList
     public string division;
     public string composer;
     public int number;
+    public int chorus;
 
     public int[] score;
     public Texture image;
