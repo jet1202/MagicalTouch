@@ -9,14 +9,6 @@
             "number": 0
         },
         {
-            "title": "Test2",
-            "id": "T2",
-            "constant": [24, 68, 113, 151],
-            "division": "Test",
-            "composer": "Trollman0129",
-            "number": 1
-        },
-        {
             "title": "Test3",
             "id": "T3",
             "constant": [14, 68, 113, 151],
@@ -99,10 +91,18 @@
         {
             "title": "Twitter_37510notes",
             "id": "TwiNote",
-            "constant": [0, 0, 128, 0],
-            "division": "unofficial",
+            "constant": [0, 0, 123, 0],
+            "division": "official",
             "composer": "trollman0129",
             "number": 0
+        },
+        {
+            "title": "Test2",
+            "id": "Test2",
+            "constant": [0, 0, 135, 0],
+            "division": "official",
+            "composer": "trollman0129",
+            "number": 1
         }
     ]
 }

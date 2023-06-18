@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDirector: {fileID: 745814838}
-  Speed: 60
+  Speed: 45
   speedData: []
   accDis: []
   nowSpeed: 0
