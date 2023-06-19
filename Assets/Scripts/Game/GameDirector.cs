@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class GameDirector : MonoBehaviour
 {
@@ -55,6 +56,8 @@ public class GameDirector : MonoBehaviour
         prevTime = 0.0f;
 
         infoPanel.SetActive(true);
+        infoPanel.transform.GetChild(1).gameObject.SetActive(true);
+        infoPanel.transform.GetChild(2).gameObject.SetActive(false);
         panelColor = infoPanel.GetComponent<Image>().color;
         tween = infoPanel.GetComponent<Image>().DOFade(endValue: 100f / 255f, duration: 1f).SetEase(Ease.InQuad)
             .SetLoops(-1, LoopType.Yoyo);
@@ -114,31 +117,23 @@ public class GameDirector : MonoBehaviour
 
     public void StartStopButtonTap()
     {
-        if (isStart)
+        if (isStart && isPlaying)
         {
+            if (isAudio)
+                cri.bgm.Pause(true);
+            
             isPlaying = !isPlaying;
-            if (isPlaying)
-            {
-                if (isAudio)
-                {
-                    cri.bgm.Pause(false);
-                }
-
-                waitTime = Time.realtimeSinceStartup - musicTime;
-            }
-            else
-            {
-                if (isAudio)
-                {
-                    cri.bgm.Pause(true);
-                }
-            }
+            
+            infoPanel.GetComponent<Image>().color = panelColor;
+            infoPanel.SetActive(true);
+            infoPanel.transform.GetChild(1).gameObject.SetActive(false);
+            infoPanel.transform.GetChild(2).gameObject.SetActive(true);
         }
     }
 
     public void StartButtonTap()
     {
-        if (isOk)
+        if (isOk && !isStart)
         {
             isStart = true;
             isPlaying = true;
@@ -154,5 +149,38 @@ public class GameDirector : MonoBehaviour
                 infoPanel.SetActive(false);
             });
         }
+    }
+
+    public void BackButtonTap()
+    {
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.SetActive(true);
+        mask.GetComponent<Image>().DOFade(1f, 2f).OnComplete(() =>
+        {
+            SceneManager.LoadScene("MainScene");
+        });
+    }
+
+    public void RestartButtonTap()
+    {
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.SetActive(true);
+        mask.GetComponent<Image>().DOFade(1f, 2f).OnComplete(() =>
+        {
+            SceneManager.LoadScene("GameScene");
+        });
+    }
+
+    public void PlayButtonTap()
+    {
+        if (isAudio)
+        {
+            cri.bgm.Pause(false);
+        }
+        waitTime = Time.realtimeSinceStartup - musicTime;
+        
+        infoPanel.GetComponent<Image>().color = panelColor;
+        infoPanel.SetActive(false);
+        isPlaying = true;
     }
 }

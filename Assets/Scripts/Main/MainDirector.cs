@@ -21,6 +21,17 @@ public class MainDirector : MonoBehaviour
     private string division;
 
     public bool isOk = false;
+    
+    void Awake()
+    {
+#if !UNITY_EDITOR && PLATFORM_ANDROID
+        Application.targetFrameRate = 60;
+#else
+        Application.targetFrameRate = -1;
+#endif
+        
+        Time.timeScale = 1;
+    }
 
     IEnumerator Start()
     {

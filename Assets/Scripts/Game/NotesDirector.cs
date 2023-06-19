@@ -659,7 +659,7 @@ public class NotesDirector : MonoBehaviour
             }
 
             index = 0;
-            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 6) / 100f < gameDirector.musicTime)
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < gameDirector.musicTime)
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'F')
