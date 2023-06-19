@@ -116,6 +116,15 @@
             "composer": "trollman0129",
             "number": 1,
             "chorus": 69000
+        },
+        {
+            "title": "XHRONOXAPSUL",
+            "id": "XHRONOXAPSUL",
+            "constant": [0, 0, 144, 0],
+            "division": "official",
+            "composer": "Silentroom",
+            "number": 2,
+            "chorus": 49500
         }
     ]
 }

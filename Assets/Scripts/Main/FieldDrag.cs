@@ -34,13 +34,13 @@ public class FieldDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         if (direction == 1)
         {
-            // 縦
+            // 横
             float d = _delta.x;
-            scrollbar.value -= d * (90f / 1200f) / 360f;
+            scrollbar.value -= scrollController.leng - 1 == 0 ? 0 : (d / 800f) / (scrollController.leng - 1);
         }
         else
         {
-            // 横
+            // 縦
             float d = _delta.y;
             scrollController.CubeRotation(d / 6);
         }

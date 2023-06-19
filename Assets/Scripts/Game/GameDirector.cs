@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CriWare;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,8 @@ public class GameDirector : MonoBehaviour
 
     private Tween tween;
     private Color panelColor;
+
+    private CriAtomSourceBase.Status status;
 
     void Awake()
     {
@@ -71,17 +74,20 @@ public class GameDirector : MonoBehaviour
             prevTime = Time.realtimeSinceStartup;
         }
 
+        status = cri.bgm == null ? CriAtomSourceBase.Status.Stop : cri.bgm.status;
+
         // 判定、現在スピード、BPMの表示
         float t = isStart ? cri.bgm.time / 1000f : 0;
         progressText.text = 
             $"Time : {t}\n" +
             $"BPM  : {notesDirector.nowBpm}\n" +
             $"Speed: {notesController.nowSpeed}\n\n" +
-            $"Excellent: {notesDirector.perfectP}\n" +
-            $"Perfect  : {notesDirector.perfect}\n" +
-            $"Great    : {notesDirector.great}\n" +
-            $"Bad      : {notesDirector.bad}\n" +
-            $"Miss     : {notesDirector.miss}\n";
+            $"Excellent: {notesDirector.point[0]}\n" +
+            $"Perfect  : {notesDirector.point[1]}\n" +
+            $"Great    : {notesDirector.point[2]}\n" +
+            $"Bad      : {notesDirector.point[3]}\n" +
+            $"Miss     : {notesDirector.point[4]}\n" +
+            $"Status   : {status.ToString()}";
         
         if (!isAudio)
         {
@@ -98,6 +104,12 @@ public class GameDirector : MonoBehaviour
 
         scoreText.text = notesDirector.score.ToString("D7");
         comboText.text = notesDirector.combo.ToString();
+        
+        // 終了判定
+        if (status == CriAtomSourceBase.Status.PlayEnd)
+        {
+            
+        }
     }
 
     public void StartStopButtonTap()

@@ -29,7 +29,7 @@ public class ScrollController : MonoBehaviour
 
     private float _scrollNumber;
     private int number;
-    private int leng;
+    public int leng;
     public Tweener horizontalTweener;
     public Tweener verticalTweener;
 

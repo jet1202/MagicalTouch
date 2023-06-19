@@ -4819,7 +4819,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf49c6e1ce1767d4db881d7065b59495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgm: {fileID: 0}
 --- !u!114 &720218011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6699,7 +6698,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableDebugPrintOnTerminal: 0
   enableForceCrashOnError: 0
-  dontDestroyOnLoad: 1
+  dontDestroyOnLoad: 0
   messageBufferCounts: 8
 --- !u!4 &971505370
 Transform:

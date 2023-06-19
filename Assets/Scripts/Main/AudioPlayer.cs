@@ -28,7 +28,10 @@ public class AudioPlayer : MonoBehaviour
 
     public IEnumerator SetMusic(string title, int s)
     {
+        if (title == nowCheetName) yield break;
+        
         _audioTweener.Kill();
+        atomExPlayer.Stop();
         var cueSheet = CriAtom.AddCueSheet(title, $"SongData/{title}/{title}.acb", $"SongData/{title}/{title}.awb", null);
         while (cueSheet.IsLoading)
         {
@@ -47,14 +50,14 @@ public class AudioPlayer : MonoBehaviour
         nowCheetName = title;
 
         _audioTweener = DOTween.Sequence().AppendInterval(10f).OnStepComplete(() => {
-            atomExPlayer.Stop();
             atomExPlayer.SetStartTime(startTime);
             atomExPlayer.Start();
-        }).SetLoops(-1).Play();
+        }).SetLoops(-1).SetLink(gameObject).Play();
     }
 
     public void StopBgm()
     {
         atomExPlayer.Stop();
+        _audioTweener.Kill();
     }
 }
