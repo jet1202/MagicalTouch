@@ -79,6 +79,9 @@ public class ScrollController : MonoBehaviour
         AdjustNumber(0);
 
         ListSort();
+        AdjustNumber(SelectData.number);
+        StartCoroutine(audioPlayer.SetMusic(songList[number].id, songList[number].chorus));
+        AdjustDifficulty(-90 * (int)difficulty, false);
     }
 
     private void AdjustNumber(int num)
@@ -250,24 +253,38 @@ public class ScrollController : MonoBehaviour
             );
     }
 
-    public void AdjustDifficulty(int e)
+    public void AdjustDifficulty(int e, bool isV)
     {
-        verticalTweener = DOTween.To(
-            () => cubeRotate,
-            (x) =>
-            {
-                cubeRotate = x;
-                for (int i = 0; i < 12; i++)
+        if (isV)
+        {
+            verticalTweener = DOTween.To(
+                () => cubeRotate,
+                (x) =>
                 {
-                    Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
-                    var lot = boxes[i].transform.localRotation;
-                    boxes[i].transform.localRotation = localAngle;
-                    boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
-                }
-            },
-            e,
-            0.3f
+                    cubeRotate = x;
+                    for (int i = 0; i < 12; i++)
+                    {
+                        Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
+                        var lot = boxes[i].transform.localRotation;
+                        boxes[i].transform.localRotation = localAngle;
+                        boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
+                    }
+                },
+                e,
+                0.3f
             );
+        }
+        else
+        {
+            cubeRotate = e;
+            for (int i = 0; i < 12; i++)
+            {
+                Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
+                var lot = boxes[i].transform.localRotation;
+                boxes[i].transform.localRotation = localAngle;
+                boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
+            }
+        }
     }
 
     public void CubeRotation(float del)
@@ -344,6 +361,7 @@ public class ScrollController : MonoBehaviour
                 GameData.title = song.title;
                 GameData.id = song.id;
                 GameData.difficult = difficulty.ToString();
+                SelectData.number = number;
                 
                 mainDirector.MoveGame();
 

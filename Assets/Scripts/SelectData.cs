@@ -22,6 +22,7 @@ public static class SelectData
     }
     
     public static string division;
+    public static int number;
     public static SortMode mode = SortMode.Default;
     public static DifficultyMode difficulty = DifficultyMode.Normal;
 }

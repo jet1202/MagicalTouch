@@ -74,7 +74,7 @@ public class FieldDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             n = -(d / 90) % 4;
             if (n < 0) n += 4;
             scrollController.ChangeDifficulty(n);
-            scrollController.AdjustDifficulty(d);
+            scrollController.AdjustDifficulty(d, true);
         }
 
         direction = -1;
