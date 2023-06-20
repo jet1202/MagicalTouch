@@ -111,7 +111,14 @@ public class GameDirector : MonoBehaviour
         // 終了判定
         if (status == CriAtomSourceBase.Status.PlayEnd)
         {
-            
+            Debug.Log("終了");
+            ResultData.point = notesDirector.point;
+            ResultData.score = notesDirector.score;
+            mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+            mask.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>
+            {
+                SceneManager.LoadScene("ResultScene");
+            });
         }
     }
 

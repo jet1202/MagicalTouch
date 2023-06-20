@@ -761,7 +761,5 @@ public class NotesDirector : MonoBehaviour
             nowBpm = bpmData[bpmProg].bpm;
             bpmProg++;
         }
-        
-        // 終了判定
     }
 }

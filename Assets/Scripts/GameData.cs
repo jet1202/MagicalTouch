@@ -7,9 +7,6 @@ public static class GameData
     public static string title;
     public static string id;
     public static string difficult;
-
-    // public static int score;
-    // public static int[] judgeScore = new int[5];
     
     // gameSettings
     public static bool isPushLine;
