@@ -114,7 +114,11 @@ public class GameDirector : MonoBehaviour
             Debug.Log("終了");
             ResultData.point = notesDirector.point;
             ResultData.score = notesDirector.score;
+            ResultData.difficult = GameData.difficult;
+            ResultData.difficulty = GameData.difficulty;
+            ResultData.title = GameData.title;
             mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+            mask.SetActive(true);
             mask.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>
             {
                 SceneManager.LoadScene("ResultScene");

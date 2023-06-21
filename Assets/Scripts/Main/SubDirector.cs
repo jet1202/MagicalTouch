@@ -62,7 +62,7 @@ public class SubDirector : MonoBehaviour
         // 動く前の位置につく
         back.GetComponent<Image>().fillAmount = 0f;
         difficulty.GetComponent<RectTransform>().localPosition += new Vector3(300, 0, 0);
-        info.GetComponent<RectTransform>().localPosition += new Vector3(480, 0, 0);
+        info.GetComponent<RectTransform>().localPosition += new Vector3(580, 0, 0);
         tips.GetComponent<RectTransform>().localPosition += new Vector3(0, -30, 0);
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
@@ -72,7 +72,7 @@ public class SubDirector : MonoBehaviour
     {
         back.GetComponent<Image>().DOFillAmount(1f, 1f).SetEase(Ease.OutQuint);
         difficulty.GetComponent<RectTransform>().DOLocalMove(new Vector3(-300, 0, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.2f).SetRelative(true);
-        info.GetComponent<RectTransform>().DOLocalMove(new Vector3(-480, 0, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.5f).SetRelative(true);
+        info.GetComponent<RectTransform>().DOLocalMove(new Vector3(-580, 0, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.5f).SetRelative(true);
         tips.GetComponent<RectTransform>().DOLocalMove(new Vector3(0, 30, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.3f).SetRelative(true);
 
         var boardSeq = DOTween.Sequence();

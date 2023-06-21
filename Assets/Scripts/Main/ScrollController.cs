@@ -361,6 +361,7 @@ public class ScrollController : MonoBehaviour
                 GameData.title = song.title;
                 GameData.id = song.id;
                 GameData.difficult = difficulty.ToString();
+                GameData.difficulty = song.constant[(int)difficulty];
                 SelectData.number = number;
                 
                 mainDirector.MoveGame();
