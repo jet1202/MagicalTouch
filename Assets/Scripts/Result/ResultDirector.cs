@@ -14,35 +14,53 @@ public class ResultDirector : MonoBehaviour
     [SerializeField] private GameObject backImage;
     [SerializeField] private GameObject image;
     [SerializeField] private GameObject mask;
+    [SerializeField] private Texture defaultJacket;
 
     private Texture jacket;
 
     private Transform title, difficulty, score, scoreDetail, rank;
     
-    void Start()
+    IEnumerator Start()
     {
+
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
+        mask.SetActive(true);
+        
         title = resultCanvas.transform.GetChild(0);
         difficulty = resultCanvas.transform.GetChild(1);
         score = resultCanvas.transform.GetChild(2);
         scoreDetail = resultCanvas.transform.GetChild(3);
         rank = resultCanvas.transform.GetChild(4);
-        
-        // 値を代入
+
+        // ロード
         title.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.title;
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.difficult;
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().color = setColor(ResultData.difficult);
         difficulty.GetChild(1).GetComponent<TextMeshProUGUI>().text = (ResultData.difficulty / 10).ToString();
-        score.GetComponent<TextMeshProUGUI>().text = ResultData.score.ToString("D8");
+        score.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.score.ToString("D8");
         scoreDetail.GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Join('\n', ResultData.point);
+        
+        IEnumerator corutine = GetComponent<ImportResult>().ImportJacket(ResultData.id);
+        yield return StartCoroutine(corutine);
+        if (corutine.Current == null)
+            jacket = defaultJacket;
+        else
+            jacket = (Texture)corutine.Current;
+        backImage.GetComponent<RawImage>().texture = jacket;
+        backImage.GetComponent<AspectRatioFitter>().aspectRatio = (float)jacket.height / jacket.width;
+
+        var m = image.GetComponent<Renderer>().material;
+        m.SetFloat("_ImageSize", 0.85f);
+        m.SetTexture("_Image", jacket);
+        m.SetColor("_color", setColor(ResultData.difficult));
 
         // 動く前の位置につく
         title.GetComponent<Image>().fillAmount = 0f;
-        difficulty.GetComponent<RectTransform>().localPosition += new Vector3(500, 0, 0);
-        score.GetComponent<RectTransform>().localPosition += new Vector3(500, 0, 0);
-        scoreDetail.GetComponent<RectTransform>().localPosition += new Vector3(500, 0, 0);
-
-        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
-        mask.SetActive(true);
+        difficulty.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
+        score.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
+        scoreDetail.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
+        rank.GetComponent<TextMeshProUGUI>().color = new Color(0f, 0f, 0f, 0f);
+        
         mask.GetComponent<Image>().DOFade(0f, 1f).OnComplete(() =>
         {
             mask.SetActive(false);
@@ -52,14 +70,15 @@ public class ResultDirector : MonoBehaviour
 
     public void MoveAnimation()
     {
-        title.GetComponent<Image>().DOFillAmount(1f, 1f).SetEase(Ease.OutQuint);
-        difficulty.GetComponent<RectTransform>().DOLocalMove(new Vector3(-500, 0, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.2f).SetRelative(true);
-        score.GetComponent<RectTransform>().DOLocalMove(new Vector3(-500, 0, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.5f).SetRelative(true);
-        scoreDetail.GetComponent<RectTransform>().DOLocalMove(new Vector3(-500, 0, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.3f).SetRelative(true);
+        title.GetComponent<Image>().DOFillAmount(1f, 1f).SetEase(Ease.OutExpo);
+        difficulty.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.2f).SetRelative(true);
+        score.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.5f).SetRelative(true);
+        scoreDetail.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.3f).SetRelative(true);
 
         var boardSeq = DOTween.Sequence();
-        boardSeq.Append(image.transform.DOLocalMove(new Vector3(-4.5f, 1f, 0f), 1f).SetEase(Ease.OutQuint));
-        boardSeq.Join(image.transform.DORotate(Vector3.up * 0f, 1f).SetEase(Ease.OutQuint));
+        boardSeq.AppendInterval(0.2f);
+        boardSeq.Append(image.transform.DOLocalMove(new Vector3(-4.5f, 1f, 0f), 1f).SetEase(Ease.OutExpo));
+        boardSeq.Join(image.transform.DORotate(Vector3.up * 0f, 1f).SetEase(Ease.OutExpo));
         boardSeq.Play();
     }
 
@@ -86,5 +105,25 @@ public class ResultDirector : MonoBehaviour
         }
 
         return color;
+    }
+
+    public void RestartButtonTap()
+    {
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.SetActive(true);
+        mask.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>
+        {
+            SceneManager.LoadScene("GameScene");
+        });
+    }
+
+    public void NextButtonTap()
+    {
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.SetActive(true);
+        mask.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>
+        {
+            SceneManager.LoadScene("MainScene");
+        });
     }
 }

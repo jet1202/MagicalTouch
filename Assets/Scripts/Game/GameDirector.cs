@@ -28,6 +28,7 @@ public class GameDirector : MonoBehaviour
 
     public bool isOk = false;
     public bool isStart = false;
+    public bool isEnd = false;
     
     int frameCount;
     float prevTime;
@@ -109,14 +110,15 @@ public class GameDirector : MonoBehaviour
         comboText.text = notesDirector.combo.ToString();
         
         // 終了判定
-        if (status == CriAtomSourceBase.Status.PlayEnd)
+        if (status == CriAtomSourceBase.Status.PlayEnd && !isEnd)
         {
-            Debug.Log("終了");
+            isEnd = true;
             ResultData.point = notesDirector.point;
             ResultData.score = notesDirector.score;
             ResultData.difficult = GameData.difficult;
             ResultData.difficulty = GameData.difficulty;
             ResultData.title = GameData.title;
+            ResultData.id = GameData.id;
             mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
             mask.SetActive(true);
             mask.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>

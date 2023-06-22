@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
 
 public class NotesDirector : MonoBehaviour
@@ -72,6 +73,11 @@ public class NotesDirector : MonoBehaviour
 
     private int bpmProg = 0;
     public int nowBpm = 0;
+
+    private void Awake()
+    {
+        TouchSimulation.Enable();
+    }
 
     IEnumerator Start()
     {
