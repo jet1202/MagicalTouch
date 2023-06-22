@@ -10,7 +10,7 @@ using static SelectData;
 
 public class ScrollController : MonoBehaviour
 {
-    [SerializeField] private MainDirector mainDirector;
+    [SerializeField] private SelectDirector selectDirector;
     [SerializeField] private SubDirector subDirector;
     [SerializeField] private AudioPlayer audioPlayer;
     [SerializeField] private GameObject CenterBoxes;
@@ -82,6 +82,7 @@ public class ScrollController : MonoBehaviour
         AdjustNumber(SelectData.number);
         StartCoroutine(audioPlayer.SetMusic(songList[number].id, songList[number].chorus));
         AdjustDifficulty(-90 * (int)difficulty, false);
+        SongChange();
     }
 
     private void AdjustNumber(int num)
@@ -206,6 +207,7 @@ public class ScrollController : MonoBehaviour
         
         title.GetComponent<TextMeshProUGUI>().text = songList[number].title;
         difficulty2.GetChild(0).GetComponent<Image>().color = color;
+        Debug.Log("s");
         difficulty2.GetChild(1).GetComponent<TextMeshProUGUI>().text =
             songList[number].constant[(int)difficulty] != 0
                 ? (songList[number].constant[(int)difficulty] / 10).ToString()
@@ -364,7 +366,7 @@ public class ScrollController : MonoBehaviour
                 GameData.difficulty = song.constant[(int)difficulty];
                 SelectData.number = number;
                 
-                mainDirector.MoveGame();
+                selectDirector.MoveGame();
 
                 Material m = subBoard.GetComponent<Renderer>().material;
                 SetCube(m, difficulty, song.image, 0.85f);

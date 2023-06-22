@@ -16,6 +16,7 @@ public class TouchDirector : MonoBehaviour
     private bool[] lastLaneTouching = new bool[24];
     private ReadOnlyArray<Touch> activeTouchList;
     private int _height, _width, touchlane;
+    private int moveAllow;
 
     private void Awake()
     {
@@ -26,6 +27,8 @@ public class TouchDirector : MonoBehaviour
     {
         _height = Screen.height;
         _width = Screen.width;
+        moveAllow = (_height / 80) * (_height / 80);
+        Debug.Log(moveAllow);
     }
 
     void Update()
@@ -43,7 +46,7 @@ public class TouchDirector : MonoBehaviour
                 {
                     laneTouching[touchlane] = true;
                     Vector2 move = touch.delta;
-                    if (move.x * move.x + move.y * move.y >= 200)
+                    if (move.x * move.x + move.y * move.y >= moveAllow)
                         laneFlicking[touchlane] = true;
                 }
                 if (touch.began)

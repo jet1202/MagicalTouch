@@ -12,7 +12,16 @@ public class FieldDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     [SerializeField] private Scrollbar scrollbar;
     private int direction = -1;
     private Vector2 _delta;
-    
+
+    private int _width;
+    private int _height;
+
+    private void Start()
+    {
+        _width = Screen.width;
+        _height = Screen.height;
+    }
+
     public void OnBeginDrag(PointerEventData e)
     {
         scrollController.isFieldDragging = true;
@@ -36,13 +45,13 @@ public class FieldDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         {
             // 横
             float d = _delta.x;
-            scrollbar.value -= scrollController.leng - 1 == 0 ? 0 : (d / 800f) / (scrollController.leng - 1);
+            scrollbar.value -= scrollController.leng - 1 == 0 ? 0 : ((d / _width) * 3f) / (scrollController.leng - 1);
         }
         else
         {
             // 縦
             float d = _delta.y;
-            scrollController.CubeRotation(d / 6);
+            scrollController.CubeRotation(d / _height * 3 * 90);
         }
     }
 

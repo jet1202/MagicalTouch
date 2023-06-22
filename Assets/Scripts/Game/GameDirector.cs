@@ -170,7 +170,7 @@ public class GameDirector : MonoBehaviour
         mask.SetActive(true);
         mask.GetComponent<Image>().DOFade(1f, 2f).OnComplete(() =>
         {
-            SceneManager.LoadScene("MainScene");
+            SceneManager.LoadScene("SelectScene");
         });
     }
 

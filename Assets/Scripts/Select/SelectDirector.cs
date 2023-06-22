@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class MainDirector : MonoBehaviour
+public class SelectDirector : MonoBehaviour
 {
     [SerializeField] private GameObject contentCanvas;
     [SerializeField] private GameObject subCanvas;

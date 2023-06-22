@@ -37,7 +37,7 @@ public class ResultDirector : MonoBehaviour
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.difficult;
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().color = setColor(ResultData.difficult);
         difficulty.GetChild(1).GetComponent<TextMeshProUGUI>().text = (ResultData.difficulty / 10).ToString();
-        score.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.score.ToString("D8");
+        score.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.score.ToString("D7");
         scoreDetail.GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Join('\n', ResultData.point);
         
         IEnumerator corutine = GetComponent<ImportResult>().ImportJacket(ResultData.id);
@@ -47,7 +47,7 @@ public class ResultDirector : MonoBehaviour
         else
             jacket = (Texture)corutine.Current;
         backImage.GetComponent<RawImage>().texture = jacket;
-        backImage.GetComponent<AspectRatioFitter>().aspectRatio = (float)jacket.height / jacket.width;
+        backImage.GetComponent<AspectRatioFitter>().aspectRatio = (float)jacket.width / jacket.height;
 
         var m = image.GetComponent<Renderer>().material;
         m.SetFloat("_ImageSize", 0.85f);
@@ -123,7 +123,7 @@ public class ResultDirector : MonoBehaviour
         mask.SetActive(true);
         mask.GetComponent<Image>().DOFade(1f, 1f).OnComplete(() =>
         {
-            SceneManager.LoadScene("MainScene");
+            SceneManager.LoadScene("SelectScene");
         });
     }
 }
