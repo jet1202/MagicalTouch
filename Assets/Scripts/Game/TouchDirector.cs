@@ -11,6 +11,7 @@ public class TouchDirector : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private NotesDirector _notesDirector;
+    [SerializeField] private NotesController notesController;
     public bool[] laneTouching = new bool[24];
     public bool[] laneFlicking = new bool[24];
     private bool[] lastLaneTouching = new bool[24];
@@ -70,65 +71,95 @@ public class TouchDirector : MonoBehaviour
 
     int TouchLane(Vector2 touchPos)
     {
-        float posX = touchPos.x / _width * 26f;
-        float posY = touchPos.y / _height;
-        // if (posY < 0.5)
-        // {
+        float posX = touchPos.x / _width * 28f;
+        float posY = touchPos.y / _height * 28f;
+        if (notesController.cameraMode == 0)
+        {
             switch ((int)posX)
             {
                 case 0:
                 case 1:
-                    return 0;
                 case 2:
-                    return 1;
+                    return 0;
                 case 3:
-                    return 2;
+                    return 1;
                 case 4:
-                    return 3;
+                    return 2;
                 case 5:
-                    return 4;
+                    return 3;
                 case 6:
-                    return 5;
+                    return 4;
                 case 7:
-                    return 6;
+                    return 5;
                 case 8:
-                    return 7;
+                    return 6;
                 case 9:
-                    return 8;
+                    return 7;
                 case 10:
-                    return 9;
+                    return 8;
                 case 11:
-                    return 10;
+                    return 9;
                 case 12:
-                    return 11;
+                    return 10;
                 case 13:
-                    return 12;
+                    return 11;
                 case 14:
-                    return 13;
+                    return 12;
                 case 15:
-                    return 14;
+                    return 13;
                 case 16:
-                    return 15;
+                    return 14;
                 case 17:
-                    return 16;
+                    return 15;
                 case 18:
-                    return 17;
+                    return 16;
                 case 19:
-                    return 18;
+                    return 17;
                 case 20:
-                    return 19;
+                    return 18;
                 case 21:
-                    return 20;
+                    return 19;
                 case 22:
-                    return 21;
+                    return 20;
                 case 23:
-                    return 22;
+                    return 21;
                 case 24:
+                    return 22;
                 case 25:
                 case 26:
+                case 27:
+                case 28:
                     return 23;
             }
-        // }
+        }
+        else
+        {
+            var y = 28 - (int)posY;
+            if (y < 5) return 0;
+            if (y < 6) return 1;
+            if (y < 7) return 2;
+            if (y < 8) return 3;
+            if (y < 9) return 4;
+            if (y < 10) return 5;
+            if (y < 11) return 6;
+            if (y < 12) return 7;
+            if (y < 13) return 8;
+            if (y < 14) return 9;
+            if (y < 15) return 10;
+            if (y < 16) return 11;
+            if (y < 17) return 12;
+            if (y < 18) return 13;
+            if (y < 19) return 14;
+            if (y < 20) return 15;
+            if (y < 21) return 16;
+            if (y < 22) return 17;
+            if (y < 23) return 18;
+            if (y < 24) return 19;
+            if (y < 25) return 20;
+            if (y < 26) return 21;
+            if (y < 27) return 22;
+            if (y < 29) return 23;
+        }
         return -1;
     }
 }

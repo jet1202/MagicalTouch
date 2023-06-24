@@ -50,6 +50,7 @@ public class NotesDirector : MonoBehaviour
     private KeyValuePair<GameObject, float> _trashData;
     private string _judgeMassage;
 
+    // 引き継ぎ設定
     private string title;
     private string id;
     private string difficulty;
@@ -282,7 +283,6 @@ public class NotesDirector : MonoBehaviour
         justFlame.color = new Color(1f, 1f, 0f, 1f);
 
         gameDirector.isOk = true;
-        Debug.Log($"Load Finished. Total:{total}, TotalN:{totalN10}");
         mask.GetComponent<Image>().DOFade(0f, 1f).OnComplete(() => mask.SetActive(false));
     }
 
@@ -325,7 +325,7 @@ public class NotesDirector : MonoBehaviour
         float time = TimeTo(noteData.Value.GetTime() / 100f) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
-        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
+        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 0.5f);
 
         if (noteData.Value.GetKind() == 'L')
         {

@@ -207,7 +207,6 @@ public class ScrollController : MonoBehaviour
         
         title.GetComponent<TextMeshProUGUI>().text = songList[number].title;
         difficulty2.GetChild(0).GetComponent<Image>().color = color;
-        Debug.Log("s");
         difficulty2.GetChild(1).GetComponent<TextMeshProUGUI>().text =
             songList[number].constant[(int)difficulty] != 0
                 ? (songList[number].constant[(int)difficulty] / 10).ToString()
