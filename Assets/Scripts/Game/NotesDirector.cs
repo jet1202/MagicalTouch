@@ -325,7 +325,7 @@ public class NotesDirector : MonoBehaviour
         float time = TimeTo(noteData.Value.GetTime() / 100f) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
-        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 0.5f);
+        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
 
         if (noteData.Value.GetKind() == 'L')
         {

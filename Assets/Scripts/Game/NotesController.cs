@@ -9,10 +9,6 @@ public class NotesController : MonoBehaviour
     
     // 引継ぎ設定
     [SerializeField] public float Speed;
-    
-    // public CameraItem[] cameraData;
-    // private int cameraProgress = -1;
-    public int cameraMode;
 
     public SpeedItem[] speedData;
     public float[] accDis;
