@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -9,6 +10,7 @@ public class ImportData : MonoBehaviour
 {
     private List<Note> _notesData;
     private NoteAddition _additionData;
+    private SubLaneSave _subLaneData;
     private Dictionary<int, SlideMaintain[]> _slideMaintainData;
     private List<KeyValuePair<Note, SlideMaintain[]>> _slideData;
 
@@ -16,6 +18,7 @@ public class ImportData : MonoBehaviour
     {
         _notesData = new List<Note>();
         string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Data.json";
+        Debug.Log($"Exists = {File.Exists(url)}, url = {url}");
 
         // var formatter = new BinaryFormatter();
         // FileStream fs = new FileStream(url, FileMode.Open);
@@ -34,58 +37,87 @@ public class ImportData : MonoBehaviour
     {
         _additionData = new NoteAddition();
         string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Addition.json";
-        
-        UnityWebRequest req = UnityWebRequest.Get(url);
-        yield return req.SendWebRequest();
-        if (req.result != UnityWebRequest.Result.ConnectionError)
+
+        using (UnityWebRequest req = UnityWebRequest.Get(url))
         {
-            string jsonStr = req.downloadHandler.text;
+            yield return req.SendWebRequest();
+            if (req.result != UnityWebRequest.Result.ConnectionError)
+            {
+                string jsonStr = req.downloadHandler.text;
 
-            NoteAddition saveData = JsonUtility.FromJson<NoteAddition>(jsonStr);
+                NoteAddition saveData = JsonUtility.FromJson<NoteAddition>(jsonStr);
 
-            _additionData = saveData;
+                _additionData = saveData;
+            }
+
+            yield return _additionData;
         }
-        
-        yield return _additionData;
+    }
+
+    public IEnumerator ImportSubLane(string name, string difficulty)
+    {
+        _subLaneData = new SubLaneSave();
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Addition.json";
+
+        using (UnityWebRequest req = UnityWebRequest.Get(url))
+        {
+            yield return req.SendWebRequest();
+            if (req.result != UnityWebRequest.Result.ConnectionError)
+            {
+                string jsonStr = req.downloadHandler.text;
+
+                SubLaneSave saveData = JsonUtility.FromJson<SubLaneSave>(jsonStr);
+
+                _subLaneData = saveData;
+
+                yield return _subLaneData;
+            }
+            else
+            {
+                yield return null;
+            }
+        }
     }
 
     IEnumerator getData(string filename)
     {
-        UnityWebRequest req = UnityWebRequest.Get(filename);
-        yield return req.SendWebRequest();
-        if (req.result != UnityWebRequest.Result.ConnectionError)
+        using (UnityWebRequest req = UnityWebRequest.Get(filename))
         {
-            string jsonStr = req.downloadHandler.text;
-
-            NoteSaveData saveData = JsonUtility.FromJson<NoteSaveData>(jsonStr);
-
-            _slideMaintainData = new Dictionary<int, SlideMaintain[]>();
-            if (saveData.slideItem != null)
+            yield return req.SendWebRequest();
+            if (req.result != UnityWebRequest.Result.ConnectionError)
             {
-                foreach (var ss in saveData.slideItem)
+                string jsonStr = req.downloadHandler.text;
+
+                NoteSaveData saveData = JsonUtility.FromJson<NoteSaveData>(jsonStr);
+
+                _slideMaintainData = new Dictionary<int, SlideMaintain[]>();
+                if (saveData.slideItem != null)
                 {
-                    _slideMaintainData.Add(ss.number, ss.item);
+                    foreach (var ss in saveData.slideItem)
+                    {
+                        _slideMaintainData.Add(ss.number, ss.item);
+                    }
+                }
+
+                // notesDataとslidesDataにデータを格納
+                Note note;
+                _slideData = new List<KeyValuePair<Note, SlideMaintain[]>>();
+                foreach (var n in saveData.item)
+                {
+                    note = new Note(n.time100, n.startLane, n.endLane, n.kind, n.length100);
+                    if (n.kind == 'S')
+                    {
+                        var data = _slideMaintainData[n.number];
+                        _slideData.Add(new KeyValuePair<Note, SlideMaintain[]>(note, data));
+                    }
+                    else
+                        _notesData.Add(note);
                 }
             }
-
-            // notesDataとslidesDataにデータを格納
-            Note note;
-            _slideData = new List<KeyValuePair<Note, SlideMaintain[]>>();
-            foreach (var n in saveData.item)
+            else
             {
-                note = new Note(n.time100, n.startLane, n.endLane, n.kind, n.length100);
-                if (n.kind == 'S')
-                {
-                    var data = _slideMaintainData[n.number];
-                    _slideData.Add(new KeyValuePair<Note, SlideMaintain[]>(note, data));
-                }
-                else
-                    _notesData.Add(note);
+                throw new Exception();
             }
-        }
-        else
-        {
-            throw new Exception();
         }
     }
 }

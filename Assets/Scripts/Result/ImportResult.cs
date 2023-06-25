@@ -9,17 +9,19 @@ public class ImportResult : MonoBehaviour
     {
         string url = Application.streamingAssetsPath + $"/SongData/{name}/jacket.jpg";
 
-        UnityWebRequest req = UnityWebRequestTexture.GetTexture(url);
-        yield return req.SendWebRequest();
-        if (req.result == UnityWebRequest.Result.Success)
+        using (UnityWebRequest req = UnityWebRequestTexture.GetTexture(url))
         {
-            var myTexture = ((DownloadHandlerTexture)req.downloadHandler).texture;
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                var myTexture = ((DownloadHandlerTexture)req.downloadHandler).texture;
 
-            yield return myTexture;
-        }
-        else
-        {
-            yield return null;
+                yield return myTexture;
+            }
+            else
+            {
+                yield return null;
+            }
         }
     }
 }

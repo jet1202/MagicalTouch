@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class SubDirector : MonoBehaviour
 {
-    [SerializeField] private GameObject subBoard;
+    [SerializeField] private GameObject subCube;
     [SerializeField] private GameObject subCanvas;
     [SerializeField] private GameObject mask;
     [SerializeField] private ImportScore importScore;
@@ -33,10 +33,10 @@ public class SubDirector : MonoBehaviour
         yield return StartCoroutine(corutine);
         songChart = (SongInfo)corutine.Current;
 
-        back = subCanvas.transform.GetChild(0);
-        difficulty = subCanvas.transform.GetChild(1);
-        info = subCanvas.transform.GetChild(2);
-        tips = subCanvas.transform.GetChild(3);
+        back = subCanvas.transform.GetChild(1);
+        difficulty = subCanvas.transform.GetChild(2);
+        info = subCanvas.transform.GetChild(3);
+        tips = subCanvas.transform.GetChild(4);
 
         back.GetChild(0).GetComponent<TextMeshProUGUI>().text = song.title;
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().text = difficult.ToString();
@@ -75,10 +75,10 @@ public class SubDirector : MonoBehaviour
         info.GetComponent<RectTransform>().DOLocalMove(new Vector3(-580, 0, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.5f).SetRelative(true);
         tips.GetComponent<RectTransform>().DOLocalMove(new Vector3(0, 30, 0), 1f).SetEase(Ease.OutQuint).SetDelay(0.3f).SetRelative(true);
 
+        subCube.GetComponent<Animator>().SetTrigger("AnimTrriger");
+        
         var boardSeq = DOTween.Sequence();
-        boardSeq.Append(subBoard.transform.DOLocalMove(new Vector3(-8f, 5f, 0f), 1f).SetEase(Ease.OutQuint));
-        boardSeq.Join(subBoard.transform.DORotate(Vector3.up * 0f + Vector3.right * 90f, 1f).SetEase(Ease.OutQuint));
-        boardSeq.AppendInterval(3f);
+        boardSeq.AppendInterval(5f);
         boardSeq.Append(mask.GetComponent<Image>().DOFade(1f, 1f));
         boardSeq.OnComplete(() => SceneManager.LoadScene("GameScene"));
         boardSeq.Play();

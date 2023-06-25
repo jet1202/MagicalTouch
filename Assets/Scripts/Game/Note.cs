@@ -102,3 +102,11 @@ public class SlideMaintain
     public bool isJudge;
     public bool isVariation;
 }
+
+[Serializable]
+public class SubLaneSave
+{
+    public int[] number;
+    public SpeedItem[] speedItem;
+    public int[] activeTime100;
+}

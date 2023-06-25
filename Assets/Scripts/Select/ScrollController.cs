@@ -25,7 +25,7 @@ public class ScrollController : MonoBehaviour
 
     [SerializeField] private Texture defaultImage;
 
-    [SerializeField] private GameObject subBoard;
+    [SerializeField] private GameObject subCube;
 
     private float _scrollNumber;
     private int number;
@@ -367,8 +367,17 @@ public class ScrollController : MonoBehaviour
                 
                 selectDirector.MoveGame();
 
-                Material m = subBoard.GetComponent<Renderer>().material;
-                SetCube(m, difficulty, song.image, 0.85f);
+                var s = subCube.transform;
+                Material m;
+                Texture t;
+                for (int i = 0; i < 6; i++)
+                {
+                    m = s.GetChild(i).GetComponent<Renderer>().material;
+                    if (i == 1) t = song.image;
+                    else t = defaultImage;
+                    SetCube(m, difficulty, t, 0.85f);
+                }
+                
                 audioPlayer.StopBgm();
 
                 IEnumerator corutine = subDirector.MoveGameFromSelect(song);

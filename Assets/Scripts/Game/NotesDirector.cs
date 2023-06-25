@@ -109,6 +109,8 @@ public class NotesDirector : MonoBehaviour
         speedData = additionData.speedItem;
         bpmData = additionData.bpmItem;
         
+        // subLane
+        
         Destroy(importData);
         
         notesController.BpmDataImport(speedData);
@@ -231,6 +233,7 @@ public class NotesDirector : MonoBehaviour
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
         {
+            // TODO: subの設定も作る
             GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), this.transform);
             _notesData = new KeyValuePair<GameObject, Note>(ins, notesSheet[i]);
             NoteSettings(_notesData);
