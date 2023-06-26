@@ -896,6 +896,7 @@ MonoBehaviour:
   notesController: {fileID: 311307476}
   damageController: {fileID: 1275019552}
   cri: {fileID: 2098207744}
+  subNotes: {fileID: 1323407775}
   normalNote: {fileID: 3401851094058923445, guid: f3ca527d61247c54f97662e6bb5cbc78,
     type: 3}
   holdNote: {fileID: 4384366980701419821, guid: 85c50a0f72986e84eb49dcd907ea08d2,
@@ -932,6 +933,7 @@ MonoBehaviour:
     type: 3}
   mask: {fileID: 1168233513}
   speedData: []
+  subSpeedData: []
   bpmData: []
   isPushLine: 1
   combo: 0
@@ -4011,6 +4013,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1323407776}
+  - component: {fileID: 1323407777}
   m_Layer: 0
   m_Name: subnotes
   m_TagString: Untagged
@@ -4033,6 +4036,23 @@ Transform:
   m_Father: {fileID: 1817767069}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1323407777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323407775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b7ac278810e244eb224176dadd88a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameDirector: {fileID: 745814838}
+  Speed: 50
+  speedData: []
+  accDis: []
+  nowSpeed: 0
 --- !u!1 &1337254078
 GameObject:
   m_ObjectHideFlags: 0
@@ -5586,7 +5606,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817767068}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5596,7 +5616,7 @@ Transform:
   - {fileID: 1323407776}
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1819987200
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,6 +15,8 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private NotesController notesController;
     [SerializeField] private DamageController damageController;
     [SerializeField] private Cri cri;
+
+    [SerializeField] private GameObject subNotes;
     
     [SerializeField] private GameObject normalNote;
     [SerializeField] private GameObject holdNote;
@@ -39,7 +41,10 @@ public class NotesDirector : MonoBehaviour
     private List<KeyValuePair<GameObject, float>> TrashData = new List<KeyValuePair<GameObject, float>>();
 
     public SpeedItem[] speedData;
+    public SpeedItem[] subSpeedData;
     public BpmItem[] bpmData;
+
+    private int[] subNumber;
 
     private List<float> MaintainJudge;
 
@@ -110,10 +115,27 @@ public class NotesDirector : MonoBehaviour
         bpmData = additionData.bpmItem;
         
         // subLane
+        corutine = importData.ImportSubLane(id, difficulty);
+        yield return StartCoroutine(corutine);
+        if (corutine.Current == null)
+        {
+            subNumber = Array.Empty<int>();
+            subSpeedData = new[] { new SpeedItem() };
+            subSpeedData[0].time100 = 0;
+            subSpeedData[0].speed100 = 100;
+            subSpeedData[0].isVariation = false;
+        }
+        else
+        {
+            var data = (SubLaneSave)corutine.Current;
+            subNumber = data.number;
+            subSpeedData = data.speedItem;
+        }
         
         Destroy(importData);
         
         notesController.BpmDataImport(speedData);
+        subNotes.GetComponent<NotesController>().BpmDataImport(subSpeedData);
 
         cri.SetBgm(id);
 
@@ -163,7 +185,7 @@ public class NotesDirector : MonoBehaviour
             // 終点('T')の判定
             if (n.GetLength() <= 10) continue;
             
-            notesSheetA.Add(new Note(n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T', 0));
+            notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T', 0));
             total++;
             totalN10 += 2;
 
@@ -182,7 +204,7 @@ public class NotesDirector : MonoBehaviour
                 if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 1) / 100f)
                     break;
                 
-                notesSheetA.Add(new Note((int)Math.Floor(MaintainJudge[j] * 100), n.GetStartLane(), n.GetEndLane(), 'M', 0));
+                notesSheetA.Add(new Note(n.GetNumber(), (int)Math.Floor(MaintainJudge[j] * 100), n.GetStartLane(), n.GetEndLane(), 'M', 0));
                 total++;
                 totalN10 += 2;
             }
@@ -196,7 +218,7 @@ public class NotesDirector : MonoBehaviour
             foreach (var s in slideData)
             {
                 n = s.Key;
-                notesSheetA.Add(new Note(n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), i));
+                notesSheetA.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), i));
                 slideMaintains.Add(i, s.Value);
                 total++;
                 totalN10 += 10;
@@ -205,7 +227,7 @@ public class NotesDirector : MonoBehaviour
                 {
                     if (sm.isJudge)
                     {
-                        notesSheetA.Add(new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0));
+                        notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0));
                         total++;
                         totalN10 += 2;
                     }
@@ -234,12 +256,14 @@ public class NotesDirector : MonoBehaviour
         for (int i = 0; i < len; i++)
         {
             // TODO: subの設定も作る
-            GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), this.transform);
+            bool isMain = !Array.Exists(subNumber, j => j == notesSheet[i].GetNumber());
+
+            GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), isMain ? this.transform : subNotes.transform);
             _notesData = new KeyValuePair<GameObject, Note>(ins, notesSheet[i]);
-            NoteSettings(_notesData);
+            NoteSettings(_notesData, isMain);
             if (_notesData.Value.GetKind() == 'S')
             {
-                SlideSettings(_notesData.Key, _notesData.Value, slideMaintains[_notesData.Value.GetLength()]);
+                SlideSettings(_notesData.Key, _notesData.Value, slideMaintains[_notesData.Value.GetLength()], isMain);
             }
             NotesData.Add(_notesData);
         }
@@ -260,8 +284,10 @@ public class NotesDirector : MonoBehaviour
                 }
                 char kind = data.GetKind();
                 char beforeKind = beforeData.GetKind();
+                bool isMain = !Array.Exists(subNumber, j => j == data.GetNumber());
+                bool beforeIsMain = !Array.Exists(subNumber, j => j == beforeData.GetNumber());
                 if (kind == 'M' || kind == 'T' || kind == 'B' || beforeKind == 'M' || beforeKind == 'T' || beforeKind == 'B' ||
-                    beforeData.GetTime() != data.GetTime() || beforeData.GetEndLane() >= data.GetStartLane())
+                    beforeData.GetTime() != data.GetTime() || beforeData.GetEndLane() >= data.GetStartLane() || isMain != beforeIsMain)
                 {
                     beforeData = data;
                     continue;
@@ -269,7 +295,7 @@ public class NotesDirector : MonoBehaviour
 
                 GameObject ins = Instantiate(pushLine, this.transform);
 
-                float time = TimeTo(data.GetTime() / 100f) * Speed;
+                float time = TimeTo(data.GetTime() / 100f, isMain) * Speed;
                 var positions = new Vector3[]
                 {
                     new Vector3(-6f + beforeData.GetEndLane(), 0f, time),
@@ -289,57 +315,61 @@ public class NotesDirector : MonoBehaviour
         mask.GetComponent<Image>().DOFade(0f, 1f).OnComplete(() => mask.SetActive(false));
     }
 
-    private float TimeTo(float time)
+    private float TimeTo(float time, bool isMain)
     {
-        int len = speedData.Length;
+        SpeedItem[] data = isMain ? speedData : subSpeedData;
+        
+        int len = data.Length;
         int pro = 0;
         for (int i = 0; i < len; i++)
         {
-            if (speedData[i].time100 >= time * 100)
+            if (data[i].time100 >= time * 100)
             {
                 break;
             }
 
             pro = i;
         }
-        
-        float pos = notesController.accDis[pro];
 
-        if (speedData[pro].isVariation)
+        float pos;
+        if (isMain) pos = notesController.accDis[pro];
+        else pos = subNotes.GetComponent<NotesController>().accDis[pro];
+
+        if (data[pro].isVariation)
         {
-            float t = time - speedData[pro].time100 / 100f;
-            pos += t * speedData[pro].speed100 / 100f;
-            pos += t * ((speedData[pro + 1].speed100 - speedData[pro].speed100) /
-                (float)(speedData[pro + 1].time100 - speedData[pro].time100) * t) / 2f;
+            float t = time - data[pro].time100 / 100f;
+            pos += t * data[pro].speed100 / 100f;
+            pos += t * ((data[pro + 1].speed100 - data[pro].speed100) /
+                (float)(data[pro + 1].time100 - data[pro].time100) * t) / 2f;
         }
         else
         {
-            float t = time - speedData[pro].time100 / 100f;
-            pos += t * speedData[pro].speed100 / 100f;
+            float t = time - data[pro].time100 / 100f;
+            pos += t * data[pro].speed100 / 100f;
         }
 
         return pos;
     }
 
-    private void NoteSettings(KeyValuePair<GameObject, Note> noteData)
+    private void NoteSettings(KeyValuePair<GameObject, Note> noteData, bool isMain)
     {
         float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.5f;
         float sizex = noteData.Value.GetEndLane() - noteData.Value.GetStartLane();
-        float time = TimeTo(noteData.Value.GetTime() / 100f) * Speed;
+        float time = TimeTo(noteData.Value.GetTime() / 100f, isMain) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
         noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
 
         if (noteData.Value.GetKind() == 'L')
         {
-            float length = TimeTo((noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f) * Speed - time;
+            float length = TimeTo((noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f, isMain) * Speed - time;
             noteData.Key.transform.GetChild(0).localPosition = new Vector3(0f, length / 2, 0f);
             noteData.Key.transform.GetChild(0).localScale = new Vector3(sizex, length, 1f);
             TrashData.Add(new KeyValuePair<GameObject, float>(noteData.Key.transform.GetChild(0).gameObject, (noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f));
         }
     }
 
-    private void SlideSettings(GameObject obj, Note slide, SlideMaintain[] maintains)
+    private void SlideSettings(GameObject obj, Note slide, SlideMaintain[] maintains, bool isMain)
     {
         // slideのFieldの描画
         
@@ -348,7 +378,7 @@ public class NotesDirector : MonoBehaviour
         List<Vector3> verts = new List<Vector3>();
         List<int> triangles = new List<int>();
 
-        float lastTime = TimeTo(slide.GetTime() / 100f);
+        float lastTime = TimeTo(slide.GetTime() / 100f, isMain);
         float lastLane = (slide.GetStartLane() + slide.GetEndLane()) / 2f;
         Vector3 lastPosF = new Vector3(slide.GetStartLane() - lastLane, 0f, 0);
         Vector3 lastPosL = new Vector3(slide.GetEndLane() - lastLane, 0f, 0);
@@ -363,8 +393,8 @@ public class NotesDirector : MonoBehaviour
         {
             var m = maintains[i];
 
-            Vector3 nextPosF = new Vector3(m.startLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed);
-            Vector3 nextPosL = new Vector3(m.endLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed);
+            Vector3 nextPosF = new Vector3(m.startLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed);
+            Vector3 nextPosL = new Vector3(m.endLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed);
 
             int l = verts.Count;
             List<int> parallelogram = new List<int>();
@@ -381,8 +411,8 @@ public class NotesDirector : MonoBehaviour
             }
             else
             {
-                verts.Add(new Vector3(lastPosF.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed));
-                verts.Add(new Vector3(lastPosL.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f) - lastTime) * Speed));
+                verts.Add(new Vector3(lastPosF.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed));
+                verts.Add(new Vector3(lastPosL.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed));
                 if (i != leng - 1)
                 {
                     verts.Add(nextPosF);

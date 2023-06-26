@@ -57,7 +57,7 @@ public class ImportData : MonoBehaviour
     public IEnumerator ImportSubLane(string name, string difficulty)
     {
         _subLaneData = new SubLaneSave();
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Addition.json";
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Sub.json";
 
         using (UnityWebRequest req = UnityWebRequest.Get(url))
         {
@@ -104,7 +104,7 @@ public class ImportData : MonoBehaviour
                 _slideData = new List<KeyValuePair<Note, SlideMaintain[]>>();
                 foreach (var n in saveData.item)
                 {
-                    note = new Note(n.time100, n.startLane, n.endLane, n.kind, n.length100);
+                    note = new Note(n.number, n.time100, n.startLane, n.endLane, n.kind, n.length100);
                     if (n.kind == 'S')
                     {
                         var data = _slideMaintainData[n.number];

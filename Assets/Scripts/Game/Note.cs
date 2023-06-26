@@ -5,19 +5,26 @@ using System.Collections.Generic;
 [Serializable]
 public class Note
 {
+    private int Number { get; }
     private int Time { get; }
     private int StartLane { get; }
     private int EndLane { get; }
     private char Kind { get; }
     private int Length { get; }
     
-    public Note(int time, int startLane, int endLane, char kind, int length)
+    public Note(int number, int time, int startLane, int endLane, char kind, int length)
     {
+        this.Number = number;
         this.Time = time;
         this.StartLane = startLane;
         this.EndLane = endLane;
         this.Kind = kind;
         this.Length = length;
+    }
+
+    public int GetNumber()
+    {
+        return Number;
     }
     
     public int GetTime()
@@ -108,5 +115,13 @@ public class SubLaneSave
 {
     public int[] number;
     public SpeedItem[] speedItem;
+    public CameraWork[] cameraWork;
     public int[] activeTime100;
+}
+
+[Serializable]
+public class CameraWork
+{
+    public int time100;
+    public int angle;
 }

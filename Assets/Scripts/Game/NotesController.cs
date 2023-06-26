@@ -25,7 +25,7 @@ public class NotesController : MonoBehaviour
     void Update()
     {
         if (gameDirector.isOk)
-            transform.position = new Vector3(0, 0, -TimeToPos(gameDirector.musicTime) * Speed);
+            transform.localPosition = new Vector3(0, 0, -TimeToPos(gameDirector.musicTime) * Speed);
     }
     
     public float TimeToPos(float time)

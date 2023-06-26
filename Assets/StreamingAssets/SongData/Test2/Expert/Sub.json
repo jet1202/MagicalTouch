@@ -1,0 +1,21 @@
+{
+  "number" : [
+    0, 30
+  ],
+  "speedItem": [
+    {
+      "time100":0,
+      "speed100":20,
+      "isVariation":false
+    }
+  ],
+  "cameraWork" : [
+    {
+      "time100": 0,
+      "angle": 57
+    }
+  ],
+  "activeTime100": [
+    0
+  ]
+}
