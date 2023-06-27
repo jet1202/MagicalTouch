@@ -12,7 +12,11 @@
   "cameraWork" : [
     {
       "time100": 0,
-      "angle": 57
+      "angle": 0
+    },
+    {
+      "time100": 1000,
+      "angle": 90
     }
   ],
   "activeTime100": [

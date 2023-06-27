@@ -17,6 +17,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private Cri cri;
 
     [SerializeField] private GameObject subNotes;
+    [SerializeField] private GameObject subLane;
     
     [SerializeField] private GameObject normalNote;
     [SerializeField] private GameObject holdNote;
@@ -130,6 +131,7 @@ public class NotesDirector : MonoBehaviour
             var data = (SubLaneSave)corutine.Current;
             subNumber = data.number;
             subSpeedData = data.speedItem;
+            subLane.GetComponent<SubController>().cameraWork = data.cameraWork;
         }
         
         Destroy(importData);
@@ -359,6 +361,18 @@ public class NotesDirector : MonoBehaviour
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
         noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
+        if (!isMain)
+        {
+            float rot = subLane.GetComponent<SubController>().TimeToAngle(noteData.Value.GetTime() / 100f);
+            Quaternion r = noteData.Key.transform.rotation;
+            noteData.Key.transform.rotation = r * Quaternion.AngleAxis(rot, Vector3.right);
+
+            if (noteData.Value.GetKind() == 'S' || noteData.Value.GetKind() == 'L')
+            {
+                Quaternion s = noteData.Key.transform.GetChild(0).rotation;
+                noteData.Key.transform.GetChild(0).rotation = s * Quaternion.AngleAxis(-rot, Vector3.right);
+            }
+        }
 
         if (noteData.Value.GetKind() == 'L')
         {
