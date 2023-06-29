@@ -12,11 +12,28 @@
   "cameraWork" : [
     {
       "time100": 0,
-      "angle": 0
+      "angle": 0,
+      "variation": 1
     },
     {
       "time100": 1000,
-      "angle": 90
+      "angle": 90,
+      "variation": 3
+    },
+    {
+      "time100": 1500,
+      "angle": -40,
+      "variation": 2
+    },
+    {
+      "time100": 2000,
+      "angle": 90,
+      "variation": -2
+    },
+    {
+      "time100": 2500,
+      "angle": 0,
+      "variation": 0
     }
   ],
   "activeTime100": [

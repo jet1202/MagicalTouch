@@ -124,4 +124,5 @@ public class CameraWork
 {
     public int time100;
     public int angle;
+    public int variation;
 }

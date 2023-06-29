@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CriWare.CriTimeline.Atom;
 using UnityEngine;
 
 public class SubController : MonoBehaviour
@@ -47,11 +48,27 @@ public class SubController : MonoBehaviour
         {
             CameraWork before = cameraWork[index];
             CameraWork after = cameraWork[index + 1];
-
+            
             float T = time - (float)before.time100 / 100;
-            float slope = (after.angle - before.angle) / ((float)(after.time100 - before.time100) / 100);
+            float t1 = (after.time100 - before.time100) / 100f;
+            float a1 = after.angle - before.angle;
+            int v = before.variation;
 
-            float angle = before.angle + slope * T;
+            float a;
+            if (v > 0)
+            {
+                a = a1 * (float)Math.Pow(T / t1, v);
+            }
+            else if (v < 0)
+            {
+                a = a1 * (float)Math.Pow(T / t1, -1.0f / v);
+            }
+            else
+            {
+                a = 0;
+            }
+
+            float angle = before.angle + a;
 
             return angle;
         }
