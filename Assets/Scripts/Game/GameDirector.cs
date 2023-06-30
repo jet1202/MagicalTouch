@@ -196,4 +196,36 @@ public class GameDirector : MonoBehaviour
         infoPanel.SetActive(false);
         isPlaying = true;
     }
+    
+
+    //バックグラウンドに行っているか
+    private bool _isBackground = false;
+  
+    private void OnApplicationPause(bool pauseStatus) {
+        ChangeBackgroundStatus(pauseStatus);
+    }
+
+    private void OnApplicationFocus(bool hasFocus) {
+        ChangeBackgroundStatus(!hasFocus);
+    }
+
+    //アプリがバックグラウンドにいるかのステータスを変更
+    private void ChangeBackgroundStatus(bool isBackground) {
+        if (isBackground == _isBackground) {
+            return;
+        }
+
+        if (isBackground) {
+            Debug.Log($"アプリがバックグラウンドへ");
+            if (isStart && isPlaying)
+            {
+                StartStopButtonTap();
+            }
+        }
+        else{
+            Debug.Log($"アプリがバックグラウンドから復帰");
+        }
+
+        _isBackground = isBackground;
+    }
 }
