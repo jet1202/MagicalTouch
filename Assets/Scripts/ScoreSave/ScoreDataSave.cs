@@ -58,9 +58,17 @@ public class ScoreDataSave : MonoBehaviour
     private void SaveText(string filePath, string fileName, byte[] textToSave)
     {
         var combinedPath = Path.Combine(filePath, fileName);
-        using (var fileStream = new FileStream(combinedPath, FileMode.Create, FileAccess.Write))
+        try
         {
-            fileStream.Write(textToSave, 0, textToSave.Length);
+            using (var fileStream = new FileStream(combinedPath, FileMode.Create, FileAccess.Write))
+            {
+                fileStream.Write(textToSave, 0, textToSave.Length);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Saveできませんでした");
+            Debug.Log(e);
         }
     }
     

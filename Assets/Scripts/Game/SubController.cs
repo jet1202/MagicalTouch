@@ -7,20 +7,43 @@ using UnityEngine;
 public class SubController : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
+    public GameObject subNotes;
     
     public CameraWork[] cameraWork;
 
-    public float nowAngle;
+    public int[] activeTime;
+    private int timeProg;
+    
+    private bool isActive;
 
     private void Start()
     {
         transform.rotation = Quaternion.identity;
+        subNotes = transform.GetChild(1).gameObject;
+        subNotes.SetActive(true);
+        isActive = true;
+        timeProg = 0;
     }
     
     void Update()
     {
         if (gameDirector.isOk)
+        {
             transform.rotation = Quaternion.AngleAxis(-TimeToAngle(gameDirector.musicTime), Vector3.right);
+            ActiveCheck(gameDirector.musicTime);
+        }
+    }
+
+    public void ActiveCheck(float time)
+    {
+        if (timeProg == activeTime.Length) return;
+        
+        if (activeTime[timeProg] / 100f < time)
+        {
+            isActive = !isActive;
+            subNotes.SetActive(isActive);
+            timeProg++;
+        }
     }
 
     public float TimeToAngle(float time)
@@ -38,11 +61,13 @@ public class SubController : MonoBehaviour
 
         if (index == leng - 1)
         {
-            return cameraWork[index].angle;
+            int a = cameraWork[index].angle % 360;
+            return a;
         }
         else if (index == -1)
         {
-            return cameraWork[0].angle;
+            int a = cameraWork[0].angle % 360;
+            return a;
         }
         else
         {
@@ -68,7 +93,7 @@ public class SubController : MonoBehaviour
                 a = 0;
             }
 
-            float angle = before.angle + a;
+            float angle = (before.angle + a) % 360;
 
             return angle;
         }

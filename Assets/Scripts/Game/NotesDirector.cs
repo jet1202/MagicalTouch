@@ -132,6 +132,7 @@ public class NotesDirector : MonoBehaviour
             subNumber = data.number;
             subSpeedData = data.speedItem;
             subLane.GetComponent<SubController>().cameraWork = data.cameraWork;
+            subLane.GetComponent<SubController>().activeTime = data.activeTime100;
         }
         
         Destroy(importData);
@@ -257,7 +258,6 @@ public class NotesDirector : MonoBehaviour
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
         {
-            // TODO: subの設定も作る
             bool isMain = !Array.Exists(subNumber, j => j == notesSheet[i].GetNumber());
 
             GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), isMain ? this.transform : subNotes.transform);
@@ -295,7 +295,12 @@ public class NotesDirector : MonoBehaviour
                     continue;
                 }
 
-                GameObject ins = Instantiate(pushLine, this.transform);
+                GameObject ins;
+
+                if (isMain)
+                    ins = Instantiate(pushLine, this.transform);
+                else
+                    ins = Instantiate(pushLine, subNotes.transform);
 
                 float time = TimeTo(data.GetTime() / 100f, isMain) * Speed;
                 var positions = new Vector3[]
@@ -361,9 +366,10 @@ public class NotesDirector : MonoBehaviour
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
         noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
+        
+        float rot = subLane.GetComponent<SubController>().TimeToAngle(noteData.Value.GetTime() / 100f);
         if (!isMain)
         {
-            float rot = subLane.GetComponent<SubController>().TimeToAngle(noteData.Value.GetTime() / 100f);
             Quaternion r = noteData.Key.transform.rotation;
             noteData.Key.transform.rotation = r * Quaternion.AngleAxis(rot, Vector3.right);
 
@@ -377,7 +383,17 @@ public class NotesDirector : MonoBehaviour
         if (noteData.Value.GetKind() == 'L')
         {
             float length = TimeTo((noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f, isMain) * Speed - time;
-            noteData.Key.transform.GetChild(0).localPosition = new Vector3(0f, length / 2, 0f);
+            float y = length / 2;
+            float z = 0f;
+            if (!isMain)
+            {
+                float c = length * (float)Math.Sin(rot * (Math.PI / 180));
+                float s = length * (float)Math.Cos(rot * (Math.PI / 180));
+                y = s / 2;
+                z = -c / 2;
+            }
+
+            noteData.Key.transform.GetChild(0).localPosition = new Vector3(0f, y, z);
             noteData.Key.transform.GetChild(0).localScale = new Vector3(sizex, length, 1f);
             TrashData.Add(new KeyValuePair<GameObject, float>(noteData.Key.transform.GetChild(0).gameObject, (noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f));
         }
