@@ -97,12 +97,12 @@
             "isVariation": false
         },
         {
-            "time100": 1061,
-            "speed100": -500,
+            "time100": 1031,
+            "speed100": -400,
             "isVariation": true
         },
         {
-            "time100": 1091,
+            "time100": 1076,
             "speed100": 0,
             "isVariation": true
         },
@@ -295,32 +295,32 @@
         },
         {
             "time100": 7240,
-            "angle": 180,
-            "variation": 0
-        },
-        {
-            "time100": 7269,
-            "angle": 180,
-            "variation": -2
-        },
-        {
-            "time100": 7284,
             "angle": 360,
             "variation": 0
         },
         {
+            "time100": 7269,
+            "angle": 360,
+            "variation": -2
+        },
+        {
+            "time100": 7284,
+            "angle": 370,
+            "variation": 0
+        },
+        {
             "time100": 7329,
-            "angle": 540,
+            "angle": 390,
             "variation": -2
         },
         {
             "time100": 7344,
-            "angle": 720,
+            "angle": 400,
             "variation": 1
         },
         {
             "time100": 7358,
-            "angle": 760,
+            "angle": 400,
             "variation": 0
         },
         {
@@ -361,30 +361,40 @@
         {
             "time100": 10179,
             "angle": 0,
-            "variation": 1
+            "variation": -2
+        },
+        {
+            "time100": 10341,
+            "angle": 180,
+            "variation": -3
+        },
+        {
+            "time100": 10504,
+            "angle": 360,
+            "variation": -3
         },
         {
             "time100": 10652,
-            "angle": 40,
+            "angle": 400,
             "variation": 0
         },
         {
             "time100": 11038,
-            "angle": 40,
+            "angle": 400,
             "variation": 1
         },
         {
             "time100": 11394,
-            "angle": 0,
+            "angle": 360,
             "variation": 1
         },
         {
             "time100": 11735,
-            "angle": 720,
+            "angle": 1080,
             "variation": 1
         }
     ],
     "activeTime100": [
-        0, 1061, 1160, 1920, 1980, 2010, 2068, 2725, 6764, 7344, 8547, 8725, 8784, 8814, 8873, 8903, 8962, 8991
+        0, 1031, 1160, 1920, 1980, 2010, 2068, 2725, 6764, 7344, 8547, 8725, 8784, 8814, 8873, 8903, 8962, 8991, 10179, 10593
     ]
 }

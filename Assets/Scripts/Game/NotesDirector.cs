@@ -595,7 +595,7 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
-            tColor = new Color(1f, 1f, 0f, 1f);
+            tColor = new Color(1f, 0.7f, 0.4f, 1f);
             point[0]++;
             combo++;
         }
@@ -645,7 +645,7 @@ public class NotesDirector : MonoBehaviour
             main.startColor = new ParticleSystem.MinMaxGradient(tColor);
             var shape = sys.shape;
             shape.scale = new Vector3(wi, 0.5f, 0.1f);
-            sys.emission.SetBurst(0, new ParticleSystem.Burst(0, wi * 10));
+            sys.emission.SetBurst(0, new ParticleSystem.Burst(0, wi * 30));
             sys.Play();
         }
     }

@@ -9,9 +9,9 @@ public class SubController : MonoBehaviour
     [SerializeField] private GameDirector gameDirector;
     public GameObject subNotes;
     
-    public CameraWork[] cameraWork;
+    public CameraWork[] cameraWork = Array.Empty<CameraWork>();
 
-    public int[] activeTime;
+    public int[] activeTime = Array.Empty<int>();
     private int timeProg;
     
     private bool isActive;
