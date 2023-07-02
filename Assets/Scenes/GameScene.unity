@@ -1067,7 +1067,7 @@ MonoBehaviour:
   subSpeedData: []
   bpmData: []
   isPushLine: 1
-  isAuto: 1
+  isAuto: 0
   combo: 0
   score: 0
   point: 0000000000000000000000000000000000000000

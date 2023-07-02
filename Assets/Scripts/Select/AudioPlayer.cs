@@ -49,7 +49,7 @@ public class AudioPlayer : MonoBehaviour
             CriAtom.RemoveCueSheet(nowCheetName);
         nowCheetName = title;
 
-        _audioTweener = DOTween.Sequence().AppendInterval(10f).OnStepComplete(() => {
+        _audioTweener = DOTween.Sequence().AppendInterval(15f).OnStepComplete(() => {
             atomExPlayer.SetStartTime(startTime);
             atomExPlayer.Start();
         }).SetLoops(-1).SetLink(gameObject).Play();

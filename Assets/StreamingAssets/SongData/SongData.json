@@ -3,7 +3,7 @@
         {
             "title": "Test1",
             "id": "T1",
-            "constant": [34, 78, 123, 161],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "Kyanack",
             "number": 0,
@@ -12,7 +12,7 @@
         {
             "title": "Test3",
             "id": "T3",
-            "constant": [14, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 2,
@@ -21,7 +21,7 @@
         {
             "title": "Test4",
             "id": "T4",
-            "constant": [34, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 3,
@@ -30,7 +30,7 @@
         {
             "title": "Test5",
             "id": "T5",
-            "constant": [44, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 4,
@@ -39,7 +39,7 @@
         {
             "title": "Test7",
             "id": "T6",
-            "constant": [34, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 5,
@@ -48,7 +48,7 @@
         {
             "title": "Test6",
             "id": "T7",
-            "constant": [54, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 6,
@@ -57,7 +57,7 @@
         {
             "title": "Test8",
             "id": "T8",
-            "constant": [64, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 7,
@@ -66,7 +66,7 @@
         {
             "title": "Test9",
             "id": "T9",
-            "constant": [74, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 8,
@@ -75,7 +75,7 @@
         {
             "title": "Test10",
             "id": "T10",
-            "constant": [84, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 9,
@@ -84,7 +84,7 @@
         {
             "title": "Test11",
             "id": "T11",
-            "constant": [94, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 10,
@@ -93,7 +93,7 @@
         {
             "title": "Test12",
             "id": "T12",
-            "constant": [84, 68, 113, 151],
+            "constant": [0, 0, 0, 0],
             "division": "Test",
             "composer": "None",
             "number": 11,
@@ -103,9 +103,9 @@
             "title": "Twitter_37510notes",
             "id": "TwiNote",
             "constant": [0, 0, 123, 0],
-            "division": "official",
+            "division": "Test",
             "composer": "trollman0129",
-            "number": 0,
+            "number": 12,
             "chorus": 124200
         },
         {
@@ -114,16 +114,16 @@
             "constant": [0, 0, 135, 0],
             "division": "Test",
             "composer": "trollman0129",
-            "number": 1,
+            "number": 13,
             "chorus": 69000
         },
         {
             "title": "XHRONOXAPSUL",
             "id": "XHRONOXAPSUL",
             "constant": [0, 0, 144, 0],
-            "division": "official",
+            "division": "Test",
             "composer": "Silentroom",
-            "number": 2,
+            "number": 14,
             "chorus": 49500
         }
     ]
