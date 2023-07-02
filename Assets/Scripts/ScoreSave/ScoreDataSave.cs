@@ -9,7 +9,7 @@ public class ScoreDataSave : MonoBehaviour
 {
     public SongData[] scoreData;
 
-    private void Start()
+    private void S()
     {
         scoreData = new SongData[]
         {

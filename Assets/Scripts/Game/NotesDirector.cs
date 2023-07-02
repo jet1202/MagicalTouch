@@ -39,7 +39,7 @@ public class NotesDirector : MonoBehaviour
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
-    private List<KeyValuePair<GameObject, float>> TrashData = new List<KeyValuePair<GameObject, float>>();
+    private List<Trash> TrashData = new List<Trash>();
 
     public SpeedItem[] speedData;
     public SpeedItem[] subSpeedData;
@@ -53,7 +53,7 @@ public class NotesDirector : MonoBehaviour
     private const float missGap = 0.15f;
     private KeyValuePair<GameObject, Note> _notesData;
     private KeyValuePair<GameObject, int> _linesData;
-    private KeyValuePair<GameObject, float> _trashData;
+    private Trash _trashData;
     private string _judgeMassage;
 
     // 引き継ぎ設定
@@ -61,6 +61,7 @@ public class NotesDirector : MonoBehaviour
     private string id;
     private string difficulty;
     [SerializeField] private bool isPushLine;
+    [SerializeField] public bool isAuto;
     
     // ノーツ数
     private int total;
@@ -91,6 +92,7 @@ public class NotesDirector : MonoBehaviour
         title = GameData.title;
         id = GameData.id;
         difficulty = GameData.difficult;
+        // TODO: SettingDataに合わせた設定
         
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
@@ -234,11 +236,13 @@ public class NotesDirector : MonoBehaviour
                         total++;
                         totalN10 += 2;
                     }
-                    else
+                    
+                    if (sm == s.Value.Last())
                     {
-                        // GameObject ins = Instantiate(NoteKind('B'), this.transform);
-                        // NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)));
-                        // TrashData.Add(new KeyValuePair<GameObject, float>(ins, (n.GetTime() + sm.time100) / 100f));
+                        GameObject ins = Instantiate(NoteKind('B'), this.transform);
+                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetNumber(), n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)), !Array.Exists(subNumber, j => j == n.GetNumber()));
+                        ins.GetComponent<SpriteRenderer>().enabled = true;
+                        TrashData.Add(new Trash(ins, (n.GetTime() + sm.time100) / 100f, n.GetStartLane(), n.GetEndLane(), 'P'));
                     }
                 }
 
@@ -270,7 +274,7 @@ public class NotesDirector : MonoBehaviour
             NotesData.Add(_notesData);
         }
 
-        TrashData = new List<KeyValuePair<GameObject, float>>(TrashData.OrderBy(x => x.Value));
+        TrashData = new List<Trash>(TrashData.OrderBy(x => x.GetTime()));
         
         // 同時押しラインの生成
         if (isPushLine)
@@ -319,6 +323,7 @@ public class NotesDirector : MonoBehaviour
         justFlame.color = new Color(1f, 1f, 0f, 1f);
 
         gameDirector.isOk = true;
+        Debug.Log($"finish total = {total}, N10 = {totalN10}");
         mask.GetComponent<Image>().DOFade(0f, 1f).OnComplete(() => mask.SetActive(false));
     }
 
@@ -395,7 +400,8 @@ public class NotesDirector : MonoBehaviour
 
             noteData.Key.transform.GetChild(0).localPosition = new Vector3(0f, y, z);
             noteData.Key.transform.GetChild(0).localScale = new Vector3(sizex, length, 1f);
-            TrashData.Add(new KeyValuePair<GameObject, float>(noteData.Key.transform.GetChild(0).gameObject, (noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f));
+            var n = noteData.Value;
+            TrashData.Add(new Trash(noteData.Key.transform.GetChild(0).gameObject, (n.GetTime() + n.GetLength()) / 100f, n.GetStartLane(), n.GetEndLane(), n.GetKind()));
         }
     }
 
@@ -464,7 +470,7 @@ public class NotesDirector : MonoBehaviour
         mesh.RecalculateNormals();
 
         obj.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh = mesh;
-        TrashData.Add(new KeyValuePair<GameObject, float>(obj.transform.GetChild(0).gameObject, (slide.GetTime() + maintains.Last().time100) / 100f));
+        TrashData.Add(new Trash(obj.transform.GetChild(0).gameObject, (slide.GetTime() + maintains.Last().time100) / 100f, slide.GetStartLane(), slide.GetEndLane(), slide.GetKind()));
     }
 
     GameObject NoteKind(char kind)
@@ -688,7 +694,7 @@ public class NotesDirector : MonoBehaviour
 
             // Hold, Flickの処理
             int index = 0;
-            while (NotesData.Count > index && NotesData[index].Value.GetTime() / 100f < gameDirector.musicTime)
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < gameDirector.musicTime)
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'H' || ki == 'M' || ki == 'T' || ki == 'B')
@@ -708,13 +714,24 @@ public class NotesDirector : MonoBehaviour
 
                     if (tap)
                     {
-                        NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
-                        char kind = NotesData[index].Value.GetKind();
+                        var note = NotesData[index];
+                        float t = note.Value.GetTime() / 100f;
                         NotesData.RemoveAt(index);
 
-                        if (ki == 'H' || ki == 'B')
-                            cri.se.Play(1);
-                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), kind);
+                        if (ki == 'H' || ki == 'B' || ki == 'M' || ki == 'T')
+                        {
+                            int l = TrashData.Count;
+                            int i;
+                            for (i = 0; i > l; i++)
+                            {
+                                if (t < TrashData[i].GetTime())
+                                    break;
+                            }
+
+                            TrashData.Insert(i,
+                                new Trash(note.Key, t, note.Value.GetStartLane(), note.Value.GetEndLane(),
+                                    note.Value.GetKind()));
+                        }
                     }
                     else
                     {
@@ -748,12 +765,21 @@ public class NotesDirector : MonoBehaviour
 
                     if (flick)
                     {
-                        NotesData[index].Key.GetComponent<SpriteRenderer>().enabled = false;
-                        NotesData[index].Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+                        var note = NotesData[index];
+                        float t = note.Value.GetTime() / 100f;
                         NotesData.RemoveAt(index);
-
-                        cri.se.Play(2);
-                        NoteJudge(0f, n.GetStartLane(), n.GetEndLane(), 'F');
+                        
+                        int l = TrashData.Count;
+                        int i;
+                        for (i = 0; i > l; i++)
+                        {
+                            if (t < TrashData[i].GetTime())
+                                break;
+                        }
+                        
+                        TrashData.Insert(i,
+                            new Trash(note.Key, t, note.Value.GetStartLane(), note.Value.GetEndLane(),
+                                note.Value.GetKind()));
                     }
                     else
                     {
@@ -783,27 +809,47 @@ public class NotesDirector : MonoBehaviour
         if (TrashData.Count != 0)
         {
             _trashData = TrashData[0];
-            while (_trashData.Value + missGap < gameDirector.musicTime)
+            while (_trashData.GetTime() < gameDirector.musicTime)
             {
-                var sp = _trashData.Key.GetComponent<SpriteRenderer>();
-                var me = _trashData.Key.GetComponent<MeshRenderer>();
+                var sp = _trashData.GetObj().GetComponent<SpriteRenderer>();
+                var me = _trashData.GetObj().GetComponent<MeshRenderer>();
                 if (sp != null)
                     sp.enabled = false;
                 if (me != null)
                     me.enabled = false;
+
+                char k = _trashData.GetKind();
+                if (k == 'H' || k == 'B' || k == 'M' || k == 'T')
+                {
+                    if (k == 'H' || k == 'B')
+                        cri.se.Play(1);
+                    NoteJudge(0f, _trashData.GetStartLane(), _trashData.GetEndLane(), k);
+                }
+                else if (k == 'F')
+                {
+                    cri.se.Play(2);
+                    NoteJudge(0f, _trashData.GetStartLane(), _trashData.GetEndLane(), k);
+
+                    _trashData.GetObj().transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+                }
+
                 TrashData.RemoveAt(0);
 
                 if (TrashData.Count == 0) break;
                 _trashData = TrashData[0];
             }
         }
+        
+        // AutoPlay
+        if (isAuto)
+            AutoPlay();
 
         if (gameDirector.isPlaying)
         {
             // スコア計算
             scoreN = (float)notesN10 / totalN10;
             scoreC = (float)maxCombo / total;
-            score = (int)(scoreN * 900000 + scoreC * 100000);
+            score = (int)(scoreN * 950000 + scoreC * 50000);
         }
         
         // AP, フルコン中のJustFlameの色
@@ -830,5 +876,72 @@ public class NotesDirector : MonoBehaviour
             nowBpm = bpmData[bpmProg].bpm;
             bpmProg++;
         }
+    }
+
+    private void AutoPlay()
+    {
+        if (NotesData.Count != 0)
+        {
+            // AutoPlay
+            int index = 0;
+            
+            _notesData = NotesData[index];
+            while (_notesData.Value.GetTime() / 100f < gameDirector.musicTime)
+            {
+                char kind = _notesData.Value.GetKind();
+                if (kind == 'N' || kind == 'L' || kind == 'S')
+                {
+                    int touchLane = _notesData.Value.GetStartLane() + _notesData.Value.GetEndLane();
+                    BeginTouch(touchLane, _notesData.Value.GetTime() / 100f + gameDirector.waitTime);
+                }
+
+                index++;
+                if (NotesData.Count == index) break;
+                _notesData = NotesData[index];
+            }
+        }
+    }
+}
+
+public class Trash
+{
+    private GameObject Obj { get; set; }
+    private float Time { get; set; }
+    private int StartLane { get; set; }
+    private int EndLane { get; set; }
+    private char Kind { get; set; }
+
+    public Trash(GameObject obj, float time, int start, int end, char kind)
+    {
+        Obj = obj;
+        Time = time;
+        StartLane = start;
+        EndLane = end;
+        Kind = kind;
+    }
+
+    public GameObject GetObj()
+    {
+        return Obj;
+    }
+
+    public float GetTime()
+    {
+        return Time;
+    }
+
+    public int GetStartLane()
+    {
+        return StartLane;
+    }
+
+    public int GetEndLane()
+    {
+        return EndLane;
+    }
+
+    public char GetKind()
+    {
+        return Kind;
     }
 }

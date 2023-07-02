@@ -107,7 +107,14 @@ public class GameDirector : MonoBehaviour
             musicTime = Time.realtimeSinceStartup - waitTime;
 
         scoreText.text = notesDirector.score.ToString("D7");
-        comboText.text = notesDirector.combo.ToString();
+        int c = notesDirector.combo;
+        if (c == 0)
+            comboText.gameObject.SetActive(false);
+        else
+        {
+            comboText.gameObject.SetActive(true);
+            comboText.text = notesDirector.combo.ToString();
+        }
         
         // 終了判定
         if (status == CriAtomSourceBase.Status.PlayEnd && !isEnd)
@@ -136,7 +143,8 @@ public class GameDirector : MonoBehaviour
                 cri.bgm.Pause(true);
             
             isPlaying = !isPlaying;
-            
+
+            infoPanel.GetComponent<Image>().DOKill();
             infoPanel.GetComponent<Image>().color = panelColor;
             infoPanel.SetActive(true);
             infoPanel.transform.GetChild(1).gameObject.SetActive(false);
@@ -216,14 +224,10 @@ public class GameDirector : MonoBehaviour
         }
 
         if (isBackground) {
-            Debug.Log($"アプリがバックグラウンドへ");
             if (isStart && isPlaying)
             {
                 StartStopButtonTap();
             }
-        }
-        else{
-            Debug.Log($"アプリがバックグラウンドから復帰");
         }
 
         _isBackground = isBackground;

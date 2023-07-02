@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.InputSystem.Utilities;
@@ -19,6 +20,8 @@ public class TouchDirector : MonoBehaviour
     private int _height, _width, touchlane;
     private int moveAllow;
 
+    private bool isAuto;
+
     private void Awake()
     {
         EnhancedTouchSupport.Enable();
@@ -29,12 +32,18 @@ public class TouchDirector : MonoBehaviour
         _height = Screen.height;
         _width = Screen.width;
         moveAllow = (_height / 80) * (_height / 80);
-        Debug.Log(moveAllow);
+
+        isAuto = _notesDirector.isAuto;
+        if (isAuto)
+        {
+            laneTouching = Enumerable.Repeat<bool>(true, 24).ToArray();
+            laneFlicking = Enumerable.Repeat<bool>(true, 24).ToArray();
+        }
     }
 
     void Update()
     {
-        if (gameDirector.isPlaying)
+        if (gameDirector.isPlaying && !isAuto)
         {
             // それぞれのタッチがどのレーンをタッチしているのか認識
             activeTouchList = Touch.activeTouches;

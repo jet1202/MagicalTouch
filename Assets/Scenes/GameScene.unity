@@ -1067,6 +1067,7 @@ MonoBehaviour:
   subSpeedData: []
   bpmData: []
   isPushLine: 1
+  isAuto: 1
   combo: 0
   score: 0
   point: 0000000000000000000000000000000000000000
@@ -1212,7 +1213,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 151
+    m_Bits: 215
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 9372205325160724cbaafd932c3beee0, type: 2}
   m_TargetDisplay: 0
