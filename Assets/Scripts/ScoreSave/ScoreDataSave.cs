@@ -5,11 +5,11 @@ using System.IO;
 using MessagePack;
 using UnityEngine;
 
-public class ScoreDataSave : MonoBehaviour
+public static class ScoreDataSave
 {
-    public SongData[] scoreData;
+    public static SongData[] scoreData;
 
-    private void S()
+    private static void S()
     {
         scoreData = new SongData[]
         {
@@ -36,7 +36,7 @@ public class ScoreDataSave : MonoBehaviour
         Read();
     }
 
-    public void Save()
+    private static void Save()
     {
         var serialized = MessagePackSerializer.Serialize(scoreData);
         
@@ -47,7 +47,7 @@ public class ScoreDataSave : MonoBehaviour
         );
     }
 
-    public void Read()
+    private static void Read()
     {
         ReadText(
             GetSecureDataPath(),
@@ -55,7 +55,7 @@ public class ScoreDataSave : MonoBehaviour
         );
     }
 
-    private void SaveText(string filePath, string fileName, byte[] textToSave)
+    private static void SaveText(string filePath, string fileName, byte[] textToSave)
     {
         var combinedPath = Path.Combine(filePath, fileName);
         try
@@ -72,7 +72,7 @@ public class ScoreDataSave : MonoBehaviour
         }
     }
     
-    private void ReadText(string filePath, string fileName)
+    private static void ReadText(string filePath, string fileName)
     {
         var combinedPath = Path.Combine(filePath, fileName);
         try
@@ -95,7 +95,7 @@ public class ScoreDataSave : MonoBehaviour
         }
     }
 
-    private string GetSecureDataPath()
+    private static string GetSecureDataPath()
     {
 #if !UNITY_EDITOR && UNITY_ANDROID
         using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))

@@ -49,6 +49,8 @@ public class SubController : MonoBehaviour
     public float TimeToAngle(float time)
     {
         int leng = cameraWork.Length;
+        if (leng == 0) return 0;
+        
         int index = leng - 1;
         for (int i = 0; i < leng; i++)
         {

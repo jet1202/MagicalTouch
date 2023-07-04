@@ -47,13 +47,15 @@ namespace MessagePack.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(5)
+            lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(7)
             {
                 { typeof(global::ScoreDetail[]), 0 },
-                { typeof(global::SongData[]), 1 },
-                { typeof(global::ScoreData), 2 },
+                { typeof(global::GameSetting), 1 },
+                { typeof(global::ProfileSetting), 2 },
                 { typeof(global::ScoreDetail), 3 },
-                { typeof(global::SongData), 4 },
+                { typeof(global::SessionSetting), 4 },
+                { typeof(global::Setting), 5 },
+                { typeof(global::SongData), 6 },
             };
         }
 
@@ -68,10 +70,12 @@ namespace MessagePack.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::ScoreDetail>();
-                case 1: return new global::MessagePack.Formatters.ArrayFormatter<global::SongData>();
-                case 2: return new MessagePack.Formatters.ScoreDataFormatter();
+                case 1: return new MessagePack.Formatters.GameSettingFormatter();
+                case 2: return new MessagePack.Formatters.ProfileSettingFormatter();
                 case 3: return new MessagePack.Formatters.ScoreDetailFormatter();
-                case 4: return new MessagePack.Formatters.SongDataFormatter();
+                case 4: return new MessagePack.Formatters.SessionSettingFormatter();
+                case 5: return new MessagePack.Formatters.SettingFormatter();
+                case 6: return new MessagePack.Formatters.SongDataFormatter();
                 default: return null;
             }
         }
@@ -107,10 +111,94 @@ namespace MessagePack.Resolvers
 
 namespace MessagePack.Formatters
 {
-    public sealed class ScoreDataFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::ScoreData>
+    public sealed class GameSettingFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameSetting>
     {
 
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::ScoreData value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::GameSetting value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            writer.WriteArrayHeader(11);
+            writer.Write(value.IsPushLine);
+            writer.Write(value.NoteSpeed);
+            writer.Write(value.IsAuto);
+            writer.Write(value.SeVolume);
+            writer.Write(value.NoteType);
+            writer.Write(value.IsLateFast);
+            writer.Write(value.IsColorfulLine);
+            writer.Write(value.FPSMode);
+            writer.Write(value.NoteThickness);
+            writer.Write(value.SongOffset);
+            writer.Write(value.TapOffset);
+        }
+
+        public global::GameSetting Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::GameSetting();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        ____result.IsPushLine = reader.ReadBoolean();
+                        break;
+                    case 1:
+                        ____result.NoteSpeed = reader.ReadInt32();
+                        break;
+                    case 2:
+                        ____result.IsAuto = reader.ReadBoolean();
+                        break;
+                    case 3:
+                        ____result.SeVolume = reader.ReadInt32();
+                        break;
+                    case 4:
+                        ____result.NoteType = reader.ReadInt32();
+                        break;
+                    case 5:
+                        ____result.IsLateFast = reader.ReadBoolean();
+                        break;
+                    case 6:
+                        ____result.IsColorfulLine = reader.ReadBoolean();
+                        break;
+                    case 7:
+                        ____result.FPSMode = reader.ReadInt32();
+                        break;
+                    case 8:
+                        ____result.NoteThickness = reader.ReadInt32();
+                        break;
+                    case 9:
+                        ____result.SongOffset = reader.ReadInt32();
+                        break;
+                    case 10:
+                        ____result.TapOffset = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class ProfileSettingFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::ProfileSetting>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::ProfileSetting value, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (value == null)
             {
@@ -119,11 +207,12 @@ namespace MessagePack.Formatters
             }
 
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
-            writer.WriteArrayHeader(1);
-            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::SongData[]>(formatterResolver).Serialize(ref writer, value.Data, options);
+            writer.WriteArrayHeader(2);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Name, options);
+            writer.Write(value.Rate);
         }
 
-        public global::ScoreData Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::ProfileSetting Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (reader.TryReadNil())
             {
@@ -133,14 +222,17 @@ namespace MessagePack.Formatters
             options.Security.DepthStep(ref reader);
             global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
-            var ____result = new global::ScoreData();
+            var ____result = new global::ProfileSetting();
 
             for (int i = 0; i < length; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        ____result.Data = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::SongData[]>(formatterResolver).Deserialize(ref reader, options);
+                        ____result.Name = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        ____result.Rate = reader.ReadInt32();
                         break;
                     default:
                         reader.Skip();
@@ -197,6 +289,114 @@ namespace MessagePack.Formatters
                         break;
                     case 3:
                         ____result.Accuracy = reader.ReadInt32();
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class SessionSettingFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::SessionSetting>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::SessionSetting value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(3);
+            writer.Write(value.Difficulty);
+            writer.Write(value.SortMode);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Serialize(ref writer, value.Pack, options);
+        }
+
+        public global::SessionSetting Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::SessionSetting();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        ____result.Difficulty = reader.ReadInt32();
+                        break;
+                    case 1:
+                        ____result.SortMode = reader.ReadInt32();
+                        break;
+                    case 2:
+                        ____result.Pack = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<string>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            reader.Depth--;
+            return ____result;
+        }
+    }
+
+    public sealed class SettingFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Setting>
+    {
+
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, global::Setting value, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+                return;
+            }
+
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            writer.WriteArrayHeader(3);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::GameSetting>(formatterResolver).Serialize(ref writer, value.Game, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ProfileSetting>(formatterResolver).Serialize(ref writer, value.Profile, options);
+            global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::SessionSetting>(formatterResolver).Serialize(ref writer, value.Session, options);
+        }
+
+        public global::Setting Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+
+            options.Security.DepthStep(ref reader);
+            global::MessagePack.IFormatterResolver formatterResolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+            var ____result = new global::Setting();
+
+            for (int i = 0; i < length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        ____result.Game = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::GameSetting>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        ____result.Profile = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::ProfileSetting>(formatterResolver).Deserialize(ref reader, options);
+                        break;
+                    case 2:
+                        ____result.Session = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::SessionSetting>(formatterResolver).Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();

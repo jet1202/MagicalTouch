@@ -252,6 +252,8 @@ public class ScrollController : MonoBehaviour
             end,
             0.3f
             );
+        
+        StartCoroutine(audioPlayer.SetMusic(songList[number].id, songList[number].chorus));
     }
 
     public void AdjustDifficulty(int e, bool isV)
@@ -312,7 +314,6 @@ public class ScrollController : MonoBehaviour
                 inertia = 0f;
                 isScrolling = false;
                 AdjustPosition();
-                StartCoroutine(audioPlayer.SetMusic(songList[number].id, songList[number].chorus));
             }
         }
     }

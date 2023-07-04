@@ -9,6 +9,7 @@ public static class SettingData
     public static int noteSpeed;
     public static bool isAuto;
     public static int seVolume;
+    public static int noteType;
 
     // 映像と曲のずれ
     public static int songOffset;
