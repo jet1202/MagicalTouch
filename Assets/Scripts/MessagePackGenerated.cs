@@ -123,17 +123,17 @@ namespace MessagePack.Formatters
             }
 
             writer.WriteArrayHeader(11);
-            writer.Write(value.IsPushLine);
             writer.Write(value.NoteSpeed);
+            writer.Write(value.IsPushLine);
             writer.Write(value.IsAuto);
-            writer.Write(value.SeVolume);
-            writer.Write(value.NoteType);
             writer.Write(value.IsLateFast);
-            writer.Write(value.IsColorfulLine);
-            writer.Write(value.FPSMode);
-            writer.Write(value.NoteThickness);
+            writer.Write(value.IsColor);
             writer.Write(value.SongOffset);
             writer.Write(value.TapOffset);
+            writer.Write(value.MusicVolume);
+            writer.Write(value.SeVolume);
+            writer.Write(value.NoteThickness);
+            writer.Write(value.FPSMode);
         }
 
         public global::GameSetting Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -152,37 +152,37 @@ namespace MessagePack.Formatters
                 switch (i)
                 {
                     case 0:
-                        ____result.IsPushLine = reader.ReadBoolean();
+                        ____result.NoteSpeed = reader.ReadInt32();
                         break;
                     case 1:
-                        ____result.NoteSpeed = reader.ReadInt32();
+                        ____result.IsPushLine = reader.ReadBoolean();
                         break;
                     case 2:
                         ____result.IsAuto = reader.ReadBoolean();
                         break;
                     case 3:
-                        ____result.SeVolume = reader.ReadInt32();
-                        break;
-                    case 4:
-                        ____result.NoteType = reader.ReadInt32();
-                        break;
-                    case 5:
                         ____result.IsLateFast = reader.ReadBoolean();
                         break;
-                    case 6:
-                        ____result.IsColorfulLine = reader.ReadBoolean();
+                    case 4:
+                        ____result.IsColor = reader.ReadBoolean();
                         break;
-                    case 7:
-                        ____result.FPSMode = reader.ReadInt32();
-                        break;
-                    case 8:
-                        ____result.NoteThickness = reader.ReadInt32();
-                        break;
-                    case 9:
+                    case 5:
                         ____result.SongOffset = reader.ReadInt32();
                         break;
-                    case 10:
+                    case 6:
                         ____result.TapOffset = reader.ReadInt32();
+                        break;
+                    case 7:
+                        ____result.MusicVolume = reader.ReadInt32();
+                        break;
+                    case 8:
+                        ____result.SeVolume = reader.ReadInt32();
+                        break;
+                    case 9:
+                        ____result.NoteThickness = reader.ReadInt32();
+                        break;
+                    case 10:
+                        ____result.FPSMode = reader.ReadBoolean();
                         break;
                     default:
                         reader.Skip();

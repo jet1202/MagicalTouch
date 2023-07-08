@@ -7,92 +7,109 @@ using UnityEngine;
 
 public static class ScoreDataSave
 {
-    public static SongData[] scoreData;
-
     private static void S()
     {
-        scoreData = new SongData[]
-        {
-                new SongData
-                {
-                    Id = "Test2",
-                    Detail = new ScoreDetail[]
-                    {
-                        new ScoreDetail { Difficulty = 2, Score = 900000, Rank = 1, Accuracy = 9635 },
-                        new ScoreDetail { Difficulty = 3, Score = 852300, Rank = 0, Accuracy = 9322 }
-                    }
-                },
-                new SongData
-                {
-                    Id = "TwiNote",
-                    Detail = new ScoreDetail[]
-                    {
-                        new ScoreDetail { Difficulty = 1, Score = 900000, Rank = 1, Accuracy = 9635 }
-                    }
-                }
-        };
+        // ScoreData.song = new SongData[]
+        // {
+        //         new SongData
+        //         {
+        //             Id = "Test2",
+        //             Detail = new ScoreDetail[]
+        //             {
+        //                 new ScoreDetail { Difficulty = 2, Score = 900000, Rank = 1, Accuracy = 9635 },
+        //                 new ScoreDetail { Difficulty = 3, Score = 852300, Rank = 0, Accuracy = 9322 }
+        //             }
+        //         },
+        //         new SongData
+        //         {
+        //             Id = "TwiNote",
+        //             Detail = new ScoreDetail[]
+        //             {
+        //                 new ScoreDetail { Difficulty = 1, Score = 900000, Rank = 1, Accuracy = 9635 }
+        //             }
+        //         }
+        // };
         
-        Save();
-        Read();
+        ScoreRead();
+        SettingRead();
     }
 
-    private static void Save()
+    private static void ScoreWrite()
     {
-        var serialized = MessagePackSerializer.Serialize(scoreData);
+        var serialized = MessagePackSerializer.Serialize(ScoreData.song);
         
         SaveText(
             GetSecureDataPath(),
             "Score.dat",
             serialized
-        );
+            );
     }
 
-    private static void Read()
+    private static void SettingWrite()
     {
-        ReadText(
+        var serialized = MessagePackSerializer.Serialize(ScoreData.setting);
+        
+        SaveText(
             GetSecureDataPath(),
-            "Score.dat"
-        );
+            "Setting.dat",
+            serialized
+            );
+    }
+
+    private static void ScoreRead()
+    {
+        try
+        {
+            ReadText(
+                GetSecureDataPath(),
+                "Score.dat",
+                true
+            );
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Score Read failed.");
+            ScoreData.song = Array.Empty<SongData>();
+        }
+    }
+
+    private static void SettingRead()
+    {
+        try
+        {
+            ReadText(
+                GetSecureDataPath(),
+                "Setting.dat",
+                false
+            );
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Setting Read failed.");
+            ScoreData.setting = new Setting();
+        }
     }
 
     private static void SaveText(string filePath, string fileName, byte[] textToSave)
     {
         var combinedPath = Path.Combine(filePath, fileName);
-        try
-        {
-            using (var fileStream = new FileStream(combinedPath, FileMode.Create, FileAccess.Write))
-            {
-                fileStream.Write(textToSave, 0, textToSave.Length);
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Saveできませんでした");
-            Debug.Log(e);
-        }
+        using var fileStream = new FileStream(combinedPath, FileMode.Create, FileAccess.Write);
+        fileStream.Write(textToSave, 0, textToSave.Length);
     }
     
-    private static void ReadText(string filePath, string fileName)
+    private static void ReadText(string filePath, string fileName, bool isScore)
     {
         var combinedPath = Path.Combine(filePath, fileName);
-        try
-        {
-            using (var fileStream = new FileStream(combinedPath, FileMode.Open))
-            {
-                var bs = new byte[fileStream.Length];
-                fileStream.Read(bs, 0, bs.Length);
+        
+        using var fileStream = new FileStream(combinedPath, FileMode.Open);
+        
+        var bs = new byte[fileStream.Length];
+        fileStream.Read(bs, 0, bs.Length);
 
-                scoreData = MessagePackSerializer.Deserialize<SongData[]>(bs);
-            
-                var json = MessagePackSerializer.ConvertToJson(bs);
-                Debug.Log(json);
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Readできませんでした");
-            scoreData = new SongData[0];
-        }
+        if (isScore)
+            ScoreData.song = MessagePackSerializer.Deserialize<SongData[]>(bs);
+        else
+            ScoreData.setting = MessagePackSerializer.Deserialize<Setting>(bs);
     }
 
     private static string GetSecureDataPath()
