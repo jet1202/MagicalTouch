@@ -4,6 +4,61 @@
             "time100": 0,
             "speed100": 100,
             "isVariation": false
+        },
+        {
+            "time100": 1105,
+            "speed100": 0,
+            "isVariation": false
+        },
+        {
+            "time100": 1120,
+            "speed100": 100,
+            "isVariation": false
+        },
+        {
+            "time100": 5223,
+            "speed100": 40000,
+            "isVariation": false
+        },
+        {
+            "time100": 5234,
+            "speed100": 100,
+            "isVariation": false
+        },
+        {
+            "time100": 5282,
+            "speed100": 40000,
+            "isVariation": false
+        },
+        {
+            "time100": 5294,
+            "speed100": 100,
+            "isVariation": false
+        },
+        {
+            "time100": 6973,
+            "speed100": 400,
+            "isVariation": false
+        },
+        {
+            "time100": 7031,
+            "speed100": 100,
+            "isVariation": false
+        },
+        {
+            "time100": 10685,
+            "speed100": 100,
+            "isVariation": true
+        },
+        {
+            "time100": 10774,
+            "speed100": 50,
+            "isVariation": false
+        },
+        {
+            "time100": 11249,
+            "speed100": 100,
+            "isVariation": false
         }
     ],
     "bpmItem": [
