@@ -20,7 +20,7 @@ public class InputController : MonoBehaviour
     
     public void NoteSpeedLeft()
     {
-        setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed - 1, 20, 100);
+        setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed - 1, 10, 110);
         noteSpeedText.text = (setting.Game.NoteSpeed / 10f).ToString("F1");
         
         gameController.ChangePosition();
@@ -28,7 +28,7 @@ public class InputController : MonoBehaviour
     
     public void NoteSpeedRight()
     {
-        setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed + 1, 30, 100);
+        setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed + 1, 10, 110);
         noteSpeedText.text = (setting.Game.NoteSpeed / 10f).ToString("F1");
         
         gameController.ChangePosition();

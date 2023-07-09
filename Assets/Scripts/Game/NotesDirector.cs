@@ -65,6 +65,7 @@ public class NotesDirector : MonoBehaviour
     private bool isAuto;
     private bool isColor;
     private float noteThickness;
+    private float tapOffset;
     
     // ノーツ数
     private int total;
@@ -96,12 +97,12 @@ public class NotesDirector : MonoBehaviour
         id = GameData.id;
         difficulty = GameData.difficult;
         
-        // TODO: SettingDataに合わせた設定
         var set = ScoreData.setting.Game;
         isPushLine = set.IsPushLine;
         isAuto = set.IsAuto;
         isColor = set.IsColor;
         noteThickness = set.NoteThickness / 10f;
+        tapOffset = set.TapOffset / 1000f;
         
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
@@ -248,8 +249,9 @@ public class NotesDirector : MonoBehaviour
                     
                     if (sm == s.Value.Last())
                     {
-                        GameObject ins = Instantiate(NoteKind('B'), this.transform);
-                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetNumber(), n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)), !Array.Exists(subNumber, j => j == n.GetNumber()));
+                        bool isMain = !Array.Exists(subNumber, j => j == n.GetNumber());
+                        GameObject ins = Instantiate(NoteKind('B'), isMain ? this.transform : subNotes.transform);
+                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetNumber(), n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)), isMain);
                         ins.GetComponent<SpriteRenderer>().enabled = true;
                         TrashData.Add(new Trash(ins, (n.GetTime() + sm.time100) / 100f, n.GetStartLane(), n.GetEndLane(), 'P'));
                     }
@@ -523,6 +525,8 @@ public class NotesDirector : MonoBehaviour
 
     public void BeginTouch(int laneNumber, double touchTime)
     {
+        touchTime += tapOffset;
+        
         // NormalNote, LongNoteの始点
         int con = NotesData.Count;
         if (con == 0) return;
@@ -680,7 +684,7 @@ public class NotesDirector : MonoBehaviour
         {
             // 見逃したノーツの削除
             _notesData = NotesData[0];
-            while (_notesData.Value.GetTime() / 100f + missGap < gameDirector.musicTime)
+            while (_notesData.Value.GetTime() / 100f + missGap < (gameDirector.musicTime + tapOffset))
             {
                 _notesData.Key.GetComponent<SpriteRenderer>().enabled = false;
                 if (_notesData.Value.GetKind() == 'F')
@@ -707,7 +711,7 @@ public class NotesDirector : MonoBehaviour
 
             // Hold, Flickの処理
             int index = 0;
-            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < gameDirector.musicTime)
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < (gameDirector.musicTime + tapOffset))
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'H' || ki == 'M' || ki == 'T' || ki == 'B')
@@ -758,7 +762,7 @@ public class NotesDirector : MonoBehaviour
             }
 
             index = 0;
-            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < gameDirector.musicTime)
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < (gameDirector.musicTime + tapOffset))
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'F')
@@ -908,11 +912,11 @@ public class NotesDirector : MonoBehaviour
                 if (kind == 'N' || kind == 'L' || kind == 'S')
                 {
                     int touchLane = _notesData.Value.GetStartLane() + _notesData.Value.GetEndLane();
-                    BeginTouch(touchLane, _notesData.Value.GetTime() / 100f + gameDirector.waitTime);
+                    BeginTouch(touchLane, _notesData.Value.GetTime() / 100f + gameDirector.waitTime - tapOffset);
                 }
 
                 index++;
-                if (NotesData.Count == index) break;
+                if (NotesData.Count <= index) break;
                 _notesData = NotesData[index];
             }
         }
