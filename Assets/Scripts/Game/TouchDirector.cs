@@ -19,7 +19,8 @@ public class TouchDirector : MonoBehaviour
     private ReadOnlyArray<Touch> activeTouchList;
     private int _height, _width, touchlane;
     private int moveAllow;
-
+    
+    private float tapOffset;
     private bool isAuto;
 
     private void Awake()
@@ -33,12 +34,14 @@ public class TouchDirector : MonoBehaviour
         _width = Screen.width;
         moveAllow = (_height / 80) * (_height / 80);
 
-        isAuto = _notesDirector.isAuto;
+        isAuto = ScoreData.setting.Game.IsAuto;
         if (isAuto)
         {
             laneTouching = Enumerable.Repeat<bool>(true, 24).ToArray();
             laneFlicking = Enumerable.Repeat<bool>(true, 24).ToArray();
         }
+
+        tapOffset = ScoreData.setting.Game.TapOffset / 1000f;
     }
 
     void Update()
@@ -60,7 +63,7 @@ public class TouchDirector : MonoBehaviour
                         laneFlicking[touchlane] = true;
                 }
                 if (touch.began)
-                    _notesDirector.BeginTouch(touchlane, touch.startTime);
+                    _notesDirector.BeginTouch(touchlane, touch.startTime + tapOffset);
             }
             
             // for (int i = 0; i < 24; i++)

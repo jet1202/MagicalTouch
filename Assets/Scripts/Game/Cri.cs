@@ -25,6 +25,8 @@ public class Cri : MonoBehaviour
         se = new GameObject().AddComponent<CriAtomSource>();
         se.loop = false;
         se.cueSheet = "SE";
+
+        se.volume = ScoreData.setting.Game.SeVolume / 100f;
     }
     
     public void SetBgm(string title)
@@ -35,6 +37,8 @@ public class Cri : MonoBehaviour
         bgm = new GameObject().AddComponent<CriAtomSource>();
         bgm.loop = false;
         bgm.cueSheet = title;
+
+        bgm.volume = ScoreData.setting.Game.MusicVolume / 100f;
         
         CriAtomExAcb _exAcb = CriAtom.GetAcb(title);
         

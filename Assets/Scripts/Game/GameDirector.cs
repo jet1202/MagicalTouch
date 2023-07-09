@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameDirector : MonoBehaviour
 {
@@ -42,7 +43,10 @@ public class GameDirector : MonoBehaviour
     void Awake()
     {
 #if !UNITY_EDITOR && PLATFORM_ANDROID
-        Application.targetFrameRate = 60;
+        if (ScoreData.setting.Game.FPSMode)
+            Application.targetFrameRate = 120;
+        else
+            Application.targetFrameRate = 60;
 #else
         Application.targetFrameRate = -1;
 #endif
@@ -95,7 +99,7 @@ public class GameDirector : MonoBehaviour
         
         if (!isAudio)
         {
-            if (musicTime > 0)
+            if (musicTime > -ScoreData.setting.Game.SongOffset)
             {
                 isAudio = true;
                 cri.bgm.Play(0);

@@ -8,7 +8,7 @@ public class NotesController : MonoBehaviour
     [SerializeField] private GameDirector gameDirector;
     
     // 引継ぎ設定
-    [SerializeField] public float Speed;
+    public float Speed;
 
     public SpeedItem[] speedData;
     public float[] accDis;
@@ -19,6 +19,7 @@ public class NotesController : MonoBehaviour
     
     void Start()
     {
+        Speed = ScoreData.setting.Game.NoteSpeed;
         transform.position = new Vector3(0, 0, 0);
     }
 

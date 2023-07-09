@@ -60,8 +60,11 @@ public class NotesDirector : MonoBehaviour
     private string title;
     private string id;
     private string difficulty;
-    [SerializeField] private bool isPushLine;
-    [SerializeField] public bool isAuto;
+    
+    private bool isPushLine;
+    private bool isAuto;
+    private bool isColor;
+    private float noteThickness;
     
     // ノーツ数
     private int total;
@@ -92,7 +95,13 @@ public class NotesDirector : MonoBehaviour
         title = GameData.title;
         id = GameData.id;
         difficulty = GameData.difficult;
+        
         // TODO: SettingDataに合わせた設定
+        var set = ScoreData.setting.Game;
+        isPushLine = set.IsPushLine;
+        isAuto = set.IsAuto;
+        isColor = set.IsColor;
+        noteThickness = set.NoteThickness / 10f;
         
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
@@ -320,7 +329,11 @@ public class NotesDirector : MonoBehaviour
         }
         
         // 画面の設定
-        justFlame.color = new Color(1f, 1f, 0f, 1f);
+        if (isColor)
+            justFlame.color = new Color(1f, 1f, 0f, 1f);
+        else
+            justFlame.color = Color.white;
+        justFlame.size = new Vector2(12.06f, noteThickness);
 
         gameDirector.isOk = true;
         Debug.Log($"finish total = {total}, N10 = {totalN10}");
@@ -370,7 +383,7 @@ public class NotesDirector : MonoBehaviour
         float time = TimeTo(noteData.Value.GetTime() / 100f, isMain) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
-        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, 1f);
+        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, noteThickness);
         
         float rot = subLane.GetComponent<SubController>().TimeToAngle(noteData.Value.GetTime() / 100f);
         if (!isMain)
@@ -853,23 +866,26 @@ public class NotesDirector : MonoBehaviour
         }
         
         // AP, フルコン中のJustFlameの色
-        if (isFull == 2)
+        if (isColor)
         {
-            if (point[2] + point[3] + point[4] > 0)
+            if (isFull == 2)
             {
-                isFull = 1;
-                justFlame.color = new Color(0f, 59f / 255f, 1f, 1f);
+                if (point[2] + point[3] + point[4] > 0)
+                {
+                    isFull = 1;
+                    justFlame.color = new Color(0f, 59f / 255f, 1f, 1f);
+                }
+            }
+            else if (isFull == 1)
+            {
+                if (point[3] + point[4] > 0)
+                {
+                    isFull = 0;
+                    justFlame.color = Color.white;
+                }
             }
         }
-        else if (isFull == 1)
-        {
-            if (point[3] + point[4] > 0)
-            {
-                isFull = 0;
-                justFlame.color = new Color(1f, 71f / 255f, 208f / 255f, 1f);
-            }
-        }
-        
+
         // 現在BPM
         if (bpmProg < bpmData.Length && bpmData[bpmProg].time100 / 100f < gameDirector.musicTime)
         {
