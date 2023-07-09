@@ -7,6 +7,8 @@ using static ScoreData;
 
 public class InputController : MonoBehaviour
 {
+    [SerializeField] private GameController gameController;
+    
     [SerializeField] private TextMeshProUGUI noteSpeedText;
     [SerializeField] private TextMeshProUGUI songOffsetText;
     [SerializeField] private TextMeshProUGUI tapOffsetText;
@@ -14,14 +16,18 @@ public class InputController : MonoBehaviour
     
     public void NoteSpeedLeft()
     {
-        setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed - 1, 30, 100);
+        setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed - 1, 20, 100);
         noteSpeedText.text = (setting.Game.NoteSpeed / 10f).ToString("F1");
+        
+        gameController.ChangePosition();
     }
     
     public void NoteSpeedRight()
     {
         setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed + 1, 30, 100);
         noteSpeedText.text = (setting.Game.NoteSpeed / 10f).ToString("F1");
+        
+        gameController.ChangePosition();
     }
     
     public void SimultaneousLine(bool isOn)
@@ -48,12 +54,16 @@ public class InputController : MonoBehaviour
     {
         setting.Game.SongOffset = Math.Clamp(setting.Game.SongOffset - 5, -300, 300);
         songOffsetText.text = (setting.Game.SongOffset / 10f).ToString("F1");
+        
+        gameController.ChangeMusicOffset();
     }
     
     public void MusicOffsetRight()
     {
         setting.Game.SongOffset = Math.Clamp(setting.Game.SongOffset + 5, -300, 300);
         songOffsetText.text = (setting.Game.SongOffset / 10f).ToString("F1");
+        
+        gameController.ChangeMusicOffset();
     }
     
     public void TapOffsetLeft()
@@ -82,12 +92,16 @@ public class InputController : MonoBehaviour
     {
         setting.Game.NoteThickness = Math.Clamp(setting.Game.NoteThickness - 1, 1, 10);
         noteThicknessText.text = (setting.Game.NoteThickness / 10f).ToString("F1");
+        
+        gameController.ChangeThickness();
     }
     
     public void NoteThicknessRight()
     {
         setting.Game.NoteThickness = Math.Clamp(setting.Game.NoteThickness + 1, 1, 10);
         noteThicknessText.text = (setting.Game.NoteThickness / 10f).ToString("F1");
+        
+        gameController.ChangeThickness();
     }
 
     public void FPSMode(bool isOn)

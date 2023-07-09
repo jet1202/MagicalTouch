@@ -13,8 +13,6 @@ public class SettingDrag : MonoBehaviour, IDragHandler
     {
         _width = Screen.width;
         _height = Screen.height;
-        
-        Debug.Log(transform.GetChild(0).GetComponent<RectTransform>().localPosition.y);
     }
 
     public void OnDrag(PointerEventData e)
@@ -23,7 +21,6 @@ public class SettingDrag : MonoBehaviour, IDragHandler
 
         var posy = transform.GetChild(0).GetComponent<RectTransform>().localPosition.y;
         posy = Math.Clamp(posy + dy, 250f, 910f);
-        Debug.Log(posy);
         transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(0f, posy, 0f);
     }
 }
