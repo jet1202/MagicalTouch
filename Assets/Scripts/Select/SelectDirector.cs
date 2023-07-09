@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class SelectDirector : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SelectDirector : MonoBehaviour
     [SerializeField] private GameObject subCanvas;
     [SerializeField] private GameObject mainCamera;
     [SerializeField] private GameObject subCamera;
+    [SerializeField] private AudioPlayer audioPlayer;
 
     [SerializeField] private ImportScore importScore;
     [SerializeField] private ScrollController scrollController;
@@ -70,6 +72,7 @@ public class SelectDirector : MonoBehaviour
 
     public void MoveGame()
     {
+        audioPlayer.StopBgm();
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
         mask.GetComponent<Image>().DOFade(1f, 0.7f)
@@ -81,5 +84,18 @@ public class SelectDirector : MonoBehaviour
                     subCamera.SetActive(true);
                     subDirector.MoveAnimation();
                 });
+    }
+
+    public void MoveSetting()
+    {
+        SettingData.fromScene = SceneManager.GetActiveScene().name;
+        audioPlayer.StopBgm();
+        mask.SetActive(true);
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.GetComponent<Image>().DOFade(1f, 0.7f)
+            .OnComplete(() =>
+            {
+                SceneManager.LoadScene("SettingScene");
+            });
     }
 }

@@ -378,8 +378,6 @@ public class ScrollController : MonoBehaviour
                     else t = defaultImage;
                     SetCube(m, difficulty, t, 0.85f);
                 }
-                
-                audioPlayer.StopBgm();
 
                 IEnumerator corutine = subDirector.MoveGameFromSelect(song);
                 StartCoroutine(corutine);

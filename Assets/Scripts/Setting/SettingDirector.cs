@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEditor.Search;
 using UnityEngine;
@@ -9,6 +10,8 @@ using UnityEngine.UI;
 public class SettingDirector : MonoBehaviour
 {
     [SerializeField] private GameObject back;
+    [SerializeField] private GameObject mask;
+    
     [SerializeField] private GameObject noteSpeedText;
     [SerializeField] private GameObject isSimultaneousLine;
     [SerializeField] private GameObject isAuto;
@@ -23,6 +26,9 @@ public class SettingDirector : MonoBehaviour
 
     private void Start()
     {
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
+        mask.SetActive(true);
+        
         var m = back.GetComponent<Renderer>().material;
         m.SetFloat("_Number_of_cell", 50f);
         m.SetColor("_BaseColor", new Color(150f / 255f, 255f / 255f, 255f / 255f, 1f));
@@ -40,5 +46,8 @@ public class SettingDirector : MonoBehaviour
         seVolume.GetComponent<Slider>().value = set.SeVolume / 100f;
         noteThickness.GetComponent<TextMeshProUGUI>().text = (set.NoteThickness / 10f).ToString("F1");
         isFPSMode.GetComponent<Toggle>().isOn = set.FPSMode;
+
+        mask.GetComponent<Image>().DOFade(0f, 0.7f)
+            .OnComplete(() => { mask.SetActive(false); });
     }
 }

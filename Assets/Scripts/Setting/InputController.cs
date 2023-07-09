@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using static ScoreData;
 
 public class InputController : MonoBehaviour
 {
     [SerializeField] private GameController gameController;
+    [SerializeField] private GameObject mask;
     
     [SerializeField] private TextMeshProUGUI noteSpeedText;
     [SerializeField] private TextMeshProUGUI songOffsetText;
@@ -107,5 +111,13 @@ public class InputController : MonoBehaviour
     public void FPSMode(bool isOn)
     {
         setting.Game.FPSMode = isOn;
+    }
+
+    public void BackButton()
+    {
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.SetActive(true);
+        mask.GetComponent<Image>().DOFade(1f, 0.7f)
+            .OnComplete(() => { SceneManager.LoadScene(SettingData.fromScene); });
     }
 }
