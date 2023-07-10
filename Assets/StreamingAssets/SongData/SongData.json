@@ -103,28 +103,55 @@
             "title": "Twitter_37510notes",
             "id": "TwiNote",
             "constant": [0, 0, 123, 0],
-            "division": "Test",
+            "division": "Pack1",
             "composer": "trollman0129",
-            "number": 12,
+            "number": 0,
             "chorus": 124200
         },
         {
             "title": "Test2",
             "id": "Test2",
             "constant": [0, 0, 135, 200],
-            "division": "Test",
+            "division": "Pack1",
             "composer": "trollman0129",
-            "number": 13,
+            "number": 1,
             "chorus": 69000
         },
         {
             "title": "XHRONOXAPSUL",
             "id": "XHRONOXAPSUL",
             "constant": [0, 0, 144, 0],
-            "division": "Test",
+            "division": "Pack1",
             "composer": "Silentroom",
-            "number": 14,
+            "number": 2,
             "chorus": 49500
+        },
+        {
+            "title": "RENDA_JOCKEY",
+            "id": "RENDA_JOCKEY",
+            "constant": [0, 0, 0, 200],
+            "division": "Pack1",
+            "composer": "ルゼ",
+            "number": 3,
+            "chorus": 94000
+        },
+        {
+            "title": "Peaceful morning alarm",
+            "id": "Peaceful",
+            "constant": [0, 0, 0, 200],
+            "division": "Pack1",
+            "composer": "takehirotei",
+            "number": 4,
+            "chorus": 1000
+        },
+        {
+            "title": "YAMINABE",
+            "id": "YAMINABE",
+            "constant": [0, 0, 140, 0],
+            "division": "Pack1",
+            "composer": "cosMo@暴走P",
+            "number": 5,
+            "chorus": 57000
         }
     ]
 }

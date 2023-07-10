@@ -9139,46 +9139,46 @@
     {
       "number": 1142,
       "time100": 10774,
-      "startLane": 8,
-      "endLane": 10,
-      "kind": 83,
+      "startLane": 6,
+      "endLane": 8,
+      "kind": 72,
       "length100": 0
     },
     {
       "number": 1143,
       "time100": 10774,
-      "startLane": 8,
-      "endLane": 10,
-      "kind": 72,
+      "startLane": 6,
+      "endLane": 8,
+      "kind": 83,
       "length100": 0
     },
     {
       "number": 1144,
       "time100": 10803,
-      "startLane": 5,
-      "endLane": 7,
-      "kind": 78,
+      "startLane": 6,
+      "endLane": 8,
+      "kind": 72,
       "length100": 0
     },
     {
       "number": 1145,
-      "time100": 10803,
-      "startLane": 5,
-      "endLane": 7,
+      "time100": 10833,
+      "startLane": 6,
+      "endLane": 11,
       "kind": 72,
       "length100": 0
     },
     {
       "number": 1146,
       "time100": 10833,
-      "startLane": 5,
-      "endLane": 7,
-      "kind": 78,
+      "startLane": 6,
+      "endLane": 11,
+      "kind": 83,
       "length100": 0
     },
     {
       "number": 1147,
-      "time100": 10833,
+      "time100": 10863,
       "startLane": 5,
       "endLane": 7,
       "kind": 72,
@@ -9187,24 +9187,24 @@
     {
       "number": 1148,
       "time100": 10863,
-      "startLane": 0,
-      "endLane": 2,
+      "startLane": 5,
+      "endLane": 7,
       "kind": 83,
       "length100": 0
     },
     {
       "number": 1149,
-      "time100": 10863,
-      "startLane": 0,
-      "endLane": 2,
-      "kind": 72,
+      "time100": 10952,
+      "startLane": 5,
+      "endLane": 10,
+      "kind": 78,
       "length100": 0
     },
     {
       "number": 1150,
       "time100": 10952,
-      "startLane": 10,
-      "endLane": 11,
+      "startLane": 5,
+      "endLane": 10,
       "kind": 83,
       "length100": 0
     },
@@ -12485,8 +12485,8 @@
         },
         {
           "time100": 119,
-          "startLine": 5,
-          "endLine": 7,
+          "startLine": 4,
+          "endLine": 6,
           "isJudge": true,
           "isVariation": true
         },
@@ -12891,184 +12891,91 @@
       "number": 1141,
       "item": [
         {
-          "time100": 29,
-          "startLine": 2,
-          "endLine": 4,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 59,
-          "startLine": 2,
-          "endLine": 4,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 89,
-          "startLine": 2,
-          "endLine": 4,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 118,
-          "startLine": 2,
-          "endLine": 4,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 148,
-          "startLine": 2,
-          "endLine": 4,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 178,
-          "startLine": 2,
-          "endLine": 3,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 208,
-          "startLine": 2,
-          "endLine": 3,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 237,
-          "startLine": 2,
-          "endLine": 3,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 267,
-          "startLine": 2,
-          "endLine": 3,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 297,
-          "startLine": 2,
-          "endLine": 3,
-          "isJudge": false,
-          "isVariation": true
-        },
-        {
-          "time100": 326,
-          "startLine": 0,
-          "endLine": 1,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
           "time100": 356,
           "startLine": 0,
-          "endLine": 1,
+          "endLine": 6,
           "isJudge": true,
           "isVariation": true
         },
         {
           "time100": 361,
-          "startLine": 2,
-          "endLine": 3,
+          "startLine": 0,
+          "endLine": 6,
           "isJudge": true,
           "isVariation": true
         },
         {
           "time100": 366,
-          "startLine": 5,
+          "startLine": 0,
           "endLine": 6,
           "isJudge": true,
+          "isVariation": false
+        }
+      ]
+    },
+    {
+      "number": 1143,
+      "item": [
+        {
+          "time100": 7,
+          "startLine": 3,
+          "endLine": 5,
+          "isJudge": false,
+          "isVariation": true
+        },
+        {
+          "time100": 22,
+          "startLine": 9,
+          "endLine": 11,
+          "isJudge": false,
+          "isVariation": true
+        },
+        {
+          "time100": 29,
+          "startLine": 6,
+          "endLine": 8,
+          "isJudge": false,
           "isVariation": true
         }
       ]
     },
     {
-      "number": 1142,
+      "number": 1146,
       "item": [
         {
-          "time100": 29,
-          "startLine": 8,
-          "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 59,
-          "startLine": 8,
-          "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 89,
-          "startLine": 9,
-          "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 119,
-          "startLine": 9,
-          "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 148,
-          "startLine": 9,
-          "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 178,
-          "startLine": 9,
-          "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 208,
-          "startLine": 9,
-          "endLine": 10,
-          "isJudge": false,
-          "isVariation": true
-        },
-        {
-          "time100": 237,
-          "startLine": 11,
-          "endLine": 12,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 267,
-          "startLine": 11,
-          "endLine": 12,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 272,
-          "startLine": 9,
-          "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 277,
+          "time100": 5,
           "startLine": 6,
-          "endLine": 7,
-          "isJudge": true,
-          "isVariation": true
+          "endLine": 8,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 10,
+          "startLine": 6,
+          "endLine": 11,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 15,
+          "startLine": 6,
+          "endLine": 8,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 20,
+          "startLine": 6,
+          "endLine": 11,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 25,
+          "startLine": 6,
+          "endLine": 11,
+          "isJudge": false,
+          "isVariation": false
         }
       ]
     },
@@ -13076,59 +12983,31 @@
       "number": 1148,
       "item": [
         {
-          "time100": 30,
-          "startLine": 1,
-          "endLine": 2,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 59,
-          "startLine": 1,
-          "endLine": 2,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 89,
-          "startLine": 1,
-          "endLine": 2,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 119,
-          "startLine": 0,
-          "endLine": 1,
+          "time100": 7,
+          "startLine": 4,
+          "endLine": 8,
           "isJudge": false,
-          "isVariation": true
+          "isVariation": false
         },
         {
-          "time100": 148,
-          "startLine": 0,
-          "endLine": 1,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 178,
-          "startLine": 0,
-          "endLine": 1,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 183,
-          "startLine": 2,
-          "endLine": 3,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 188,
+          "time100": 15,
           "startLine": 5,
-          "endLine": 6,
-          "isJudge": true,
+          "endLine": 7,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 30,
+          "startLine": 5,
+          "endLine": 9,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 37,
+          "startLine": 6,
+          "endLine": 8,
+          "isJudge": false,
           "isVariation": true
         }
       ]
@@ -13137,39 +13016,39 @@
       "number": 1150,
       "item": [
         {
-          "time100": 30,
-          "startLine": 11,
-          "endLine": 12,
-          "isJudge": false,
-          "isVariation": true
-        },
-        {
-          "time100": 59,
-          "startLine": 11,
-          "endLine": 12,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 89,
-          "startLine": 11,
-          "endLine": 12,
-          "isJudge": true,
-          "isVariation": true
-        },
-        {
-          "time100": 94,
-          "startLine": 9,
+          "time100": 7,
+          "startLine": 8,
           "endLine": 10,
-          "isJudge": true,
-          "isVariation": true
+          "isJudge": false,
+          "isVariation": false
         },
         {
-          "time100": 99,
-          "startLine": 6,
+          "time100": 15,
+          "startLine": 5,
+          "endLine": 10,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 22,
+          "startLine": 5,
           "endLine": 7,
-          "isJudge": true,
-          "isVariation": true
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 30,
+          "startLine": 5,
+          "endLine": 10,
+          "isJudge": false,
+          "isVariation": false
+        },
+        {
+          "time100": 37,
+          "startLine": 5,
+          "endLine": 10,
+          "isJudge": false,
+          "isVariation": false
         }
       ]
     },

@@ -52,7 +52,7 @@ public class SelectDirector : MonoBehaviour
         songList = (SongList[])corutine.Current;
 
         // division = SelectData.division;
-        division = "Test";
+        division = "Pack1";
 
         List<SongList> displaySong = new List<SongList>();
         int leng = songList.Length;
