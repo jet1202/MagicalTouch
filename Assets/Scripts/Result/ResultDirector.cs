@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -31,14 +30,18 @@ public class ResultDirector : MonoBehaviour
         score = resultCanvas.transform.GetChild(2);
         scoreDetail = resultCanvas.transform.GetChild(3);
         rank = resultCanvas.transform.GetChild(4);
-
+        
         // ロード
+
+        int[] detail = ResultData.resultDetail;
+
         title.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.title;
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.difficult;
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().color = setColor(ResultData.difficult);
         difficulty.GetChild(1).GetComponent<TextMeshProUGUI>().text = (ResultData.difficulty / 10).ToString();
         score.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.score.ToString("D7");
-        scoreDetail.GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Join('\n', ResultData.point);
+        scoreDetail.GetChild(1).GetComponent<TextMeshProUGUI>().text = 
+            $"{detail[3]}\n{detail[2] + detail[4]}\n{detail[1] + detail[5]}\n{detail[0] + detail[6]}\n{detail[7]}\n";
         
         IEnumerator corutine = GetComponent<ImportResult>().ImportJacket(ResultData.id);
         yield return StartCoroutine(corutine);

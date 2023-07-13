@@ -81,7 +81,7 @@ public class NotesDirector : MonoBehaviour
     
     // 判定
     private int isFull = 2;
-    public int[] point = new int[5];
+    public int[] resultPoint = new int[8];
 
     private int bpmProg = 0;
     public int nowBpm = 0;
@@ -563,7 +563,7 @@ public class NotesDirector : MonoBehaviour
             NotesData.RemoveAt(i);
 
             cri.se.Play(0);
-            NoteJudge(Mathf.Abs(gap), s, e, kind);
+            NoteJudge(gap, s, e, kind);
         }
     }
 
@@ -607,30 +607,37 @@ public class NotesDirector : MonoBehaviour
                 s = 2;
                 break;
         }
-        
-        if (gap < 0.02f)
+
+        float g = Math.Abs(gap);
+        if (g < 0.03f)
         {
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 0.7f, 0.4f, 1f);
-            point[0]++;
+            resultPoint[3]++;
             combo++;
         }
-        else if (gap < 0.05f)
+        else if (g < 0.05f)
         {
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 1f, 0f, 1f);
-            point[1]++;
+            if (gap > 0)
+                resultPoint[4]++;
+            else
+                resultPoint[2]++;
             combo++;
         }
-        else if (gap < 0.10f)
+        else if (g < 0.10f)
         {
             judgeKind = 'G';
             Pcolor = new Color(95f / 255f, 184f / 255f, 1f, 1f);
             tColor = new Color(50f / 255f, 150f / 255f, 1f, 1f);
             // eColor = new Color(0f, 70f / 255f, 1f, 70f / 255f);
-            point[2]++;
+            if (gap > 0)
+                resultPoint[5]++;
+            else
+                resultPoint[1]++;
             s -= 4;
             combo++;
         }
@@ -639,7 +646,10 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'B';
             Pcolor = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
             eColor = new Color(0f, 1f, 0f, 70f / 255f);
-            point[3]++;
+            if (gap > 0)
+                resultPoint[6]++;
+            else
+                resultPoint[0]++;
             s = 0;
             combo = 0;
         }
@@ -700,7 +710,7 @@ public class NotesDirector : MonoBehaviour
                 jIns.transform.rotation = Quaternion.identity;
                 jIns.GetComponent<JudgeController>().Setting('M');
                 combo = 0;
-                point[4]++;
+                resultPoint[7]++;
                 damageController.Damage();
                 // Debug.Log("Damage");
                 //Debug.Log("Miss");
@@ -874,7 +884,7 @@ public class NotesDirector : MonoBehaviour
         {
             if (isFull == 2)
             {
-                if (point[2] + point[3] + point[4] > 0)
+                if (resultPoint[0] + resultPoint[1] + resultPoint[5] + resultPoint[6] + resultPoint[7] > 0)
                 {
                     isFull = 1;
                     justFlame.color = new Color(0f, 59f / 255f, 1f, 1f);
@@ -882,7 +892,7 @@ public class NotesDirector : MonoBehaviour
             }
             else if (isFull == 1)
             {
-                if (point[3] + point[4] > 0)
+                if (resultPoint[0] + resultPoint[6] + resultPoint[7] > 0)
                 {
                     isFull = 0;
                     justFlame.color = Color.white;
