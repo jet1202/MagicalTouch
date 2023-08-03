@@ -6,6 +6,6 @@ public static class GameData
     // gameData
     public static string title = "Test";
     public static string id = "Test2";
-    public static string difficult = "Normal";
-    public static int difficulty = 1;
+    public static string difficult = "Expert";
+    public static int difficulty = 2;
 }

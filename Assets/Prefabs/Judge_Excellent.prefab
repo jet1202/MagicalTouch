@@ -167,7 +167,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: eeec759db54457b4ba0c64b561d5c10a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 90e8e843608b32c4ca11019ae8a4023b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe81a18521823734ebc2e3d7c0069b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perfectImage: {fileID: 21300000, guid: dc33f3dd417d2224388b68adea3545a9, type: 3}
-  greatImage: {fileID: 21300000, guid: 3b9c04f79f072d0438223b0cb480168c, type: 3}
-  badImage: {fileID: 21300000, guid: 56fb42834c8999744ba44a1e82527cc8, type: 3}
-  missImage: {fileID: 21300000, guid: eeec759db54457b4ba0c64b561d5c10a, type: 3}
+  perfectImage: {fileID: 21300000, guid: 90e8e843608b32c4ca11019ae8a4023b, type: 3}
+  greatImage: {fileID: 21300000, guid: 9e523c4dec138bf488951901241e7e30, type: 3}
+  badImage: {fileID: 21300000, guid: 32720ac95132b3a45bd10daad5f63337, type: 3}
+  missImage: {fileID: 21300000, guid: 3c9099e438775ab40b94b97ae91933c0, type: 3}

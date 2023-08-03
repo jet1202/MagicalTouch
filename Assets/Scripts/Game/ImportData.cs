@@ -18,7 +18,6 @@ public class ImportData : MonoBehaviour
     {
         _notesData = new List<Note>();
         string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Data.json";
-        Debug.Log($"Exists = {File.Exists(url)}, url = {url}");
 
         // var formatter = new BinaryFormatter();
         // FileStream fs = new FileStream(url, FileMode.Open);
