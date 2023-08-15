@@ -12,7 +12,6 @@ using UnityEngine.SocialPlatforms.Impl;
 public class GameDirector : MonoBehaviour
 {
     [SerializeField] private NotesDirector notesDirector;
-    [SerializeField] private NotesController notesController;
     [SerializeField] private Cri cri;
     [SerializeField] private Text timeText;
     [SerializeField] private TextMeshProUGUI scoreText;
@@ -89,7 +88,6 @@ public class GameDirector : MonoBehaviour
         progressText.text = 
             $"Time : {t}\n" +
             $"BPM  : {notesDirector.nowBpm}\n" +
-            $"Speed: {notesController.nowSpeed}\n\n" +
             $"BadF     : {notesDirector.resultPoint[0]}\n" +
             $"GreatF   : {notesDirector.resultPoint[1]}\n" +
             $"PerfectF : {notesDirector.resultPoint[2]}\n" +

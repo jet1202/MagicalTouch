@@ -1,0 +1,361 @@
+{
+    "item": [
+        {
+            "field": 0,
+            "speedItem": [
+                {
+                    "time": 0,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 113500,
+                    "speed": 80000,
+                    "isVariation": false
+                },
+                {
+                    "time": 113510,
+                    "speed": 100,
+                    "isVariation": false
+                }
+            ],
+            "angleWork": [
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                }
+            ],
+            "activeTime": []
+        },
+        {
+            "field": 1,
+            "speedItem": [
+                {
+                    "time": 0,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 10310,
+                    "speed": -400,
+                    "isVariation": true
+                },
+                {
+                    "time": 10760,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 11050,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 19200,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 19650,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 19800,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 20100,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 20540,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 20680,
+                    "speed": 40,
+                    "isVariation": false
+                },
+                {
+                    "time": 87250,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 87690,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 87840,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 88140,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 88580,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 88730,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 89030,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 89470,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 89620,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 89910,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 90350,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 90500,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 101790,
+                    "speed": 40,
+                    "isVariation": false
+                }
+            ],
+            "angleWork": [
+                {
+                    "time": 0,
+                    "angle": 30,
+                    "variation": 1
+                },
+                {
+                    "time": 10610,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 11500,
+                    "angle": 0,
+                    "variation": 1
+                },
+                {
+                    "time": 18770,
+                    "angle": 30,
+                    "variation": 0
+                },
+                {
+                    "time": 40320,
+                    "angle": 30,
+                    "variation": 1
+                },
+                {
+                    "time": 41500,
+                    "angle": 0,
+                    "variation": 1
+                },
+                {
+                    "time": 46260,
+                    "angle": 30,
+                    "variation": 0
+                },
+                {
+                    "time": 68530,
+                    "angle": 30,
+                    "variation": 2
+                },
+                {
+                    "time": 68830,
+                    "angle": 20,
+                    "variation": -3
+                },
+                {
+                    "time": 68980,
+                    "angle": 40,
+                    "variation": 3
+                },
+                {
+                    "time": 69130,
+                    "angle": 10,
+                    "variation": -3
+                },
+                {
+                    "time": 69280,
+                    "angle": 30,
+                    "variation": 3
+                },
+                {
+                    "time": 69430,
+                    "angle": 0,
+                    "variation": -3
+                },
+                {
+                    "time": 69570,
+                    "angle": 20,
+                    "variation": 3
+                },
+                {
+                    "time": 69720,
+                    "angle": 0,
+                    "variation": -3
+                },
+                {
+                    "time": 69870,
+                    "angle": 20,
+                    "variation": 3
+                },
+                {
+                    "time": 70020,
+                    "angle": 0,
+                    "variation": 1
+                },
+                {
+                    "time": 72400,
+                    "angle": 360,
+                    "variation": 0
+                },
+                {
+                    "time": 72690,
+                    "angle": 360,
+                    "variation": -2
+                },
+                {
+                    "time": 72840,
+                    "angle": 370,
+                    "variation": 0
+                },
+                {
+                    "time": 73290,
+                    "angle": 390,
+                    "variation": -2
+                },
+                {
+                    "time": 73440,
+                    "angle": 400,
+                    "variation": 1
+                },
+                {
+                    "time": 73580,
+                    "angle": 400,
+                    "variation": 0
+                },
+                {
+                    "time": 74180,
+                    "angle": 40,
+                    "variation": 0
+                },
+                {
+                    "time": 90800,
+                    "angle": 40,
+                    "variation": 1
+                },
+                {
+                    "time": 92290,
+                    "angle": 0,
+                    "variation": 1
+                },
+                {
+                    "time": 97040,
+                    "angle": 0,
+                    "variation": 1
+                },
+                {
+                    "time": 99410,
+                    "angle": 20,
+                    "variation": 0
+                },
+                {
+                    "time": 100600,
+                    "angle": 20,
+                    "variation": 1
+                },
+                {
+                    "time": 101190,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 101790,
+                    "angle": 0,
+                    "variation": -2
+                },
+                {
+                    "time": 103410,
+                    "angle": 180,
+                    "variation": -3
+                },
+                {
+                    "time": 105040,
+                    "angle": 360,
+                    "variation": -3
+                },
+                {
+                    "time": 106520,
+                    "angle": 400,
+                    "variation": 0
+                },
+                {
+                    "time": 110380,
+                    "angle": 400,
+                    "variation": 1
+                },
+                {
+                    "time": 113940,
+                    "angle": 360,
+                    "variation": 1
+                },
+                {
+                    "time": 117350,
+                    "angle": 1080,
+                    "variation": 1
+                }
+            ],
+            "activeTime": [
+                0,
+                10310,
+                11600,
+                19200,
+                19800,
+                20100,
+                20680,
+                27250,
+                67640,
+                73440,
+                85470,
+                87250,
+                87840,
+                88140,
+                88730,
+                89030,
+                89620,
+                89910,
+                101790,
+                105930
+            ]
+        }
+    ]
+}

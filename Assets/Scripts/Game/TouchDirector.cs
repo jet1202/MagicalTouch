@@ -12,7 +12,6 @@ public class TouchDirector : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private NotesDirector _notesDirector;
-    [SerializeField] private NotesController notesController;
     public bool[] laneTouching = new bool[24];
     public bool[] laneFlicking = new bool[24];
     private bool[] lastLaneTouching = new bool[24];

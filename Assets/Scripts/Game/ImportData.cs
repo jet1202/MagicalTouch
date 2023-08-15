@@ -9,8 +9,8 @@ using UnityEngine.Networking;
 public class ImportData : MonoBehaviour
 {
     private List<Note> _notesData;
-    private NoteAddition _additionData;
-    private SubLaneSave _subLaneData;
+    private BpmSave _bpmData;
+    private FieldSave _fieldData;
     private Dictionary<int, SlideMaintain[]> _slideMaintainData;
     private List<KeyValuePair<Note, SlideMaintain[]>> _slideData;
 
@@ -32,10 +32,10 @@ public class ImportData : MonoBehaviour
         yield return _slideData;
     }
 
-    public IEnumerator ImportAddition(string name, string difficulty)
+    public IEnumerator ImportBpm(string name, string difficulty)
     {
-        _additionData = new NoteAddition();
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Addition.json";
+        _bpmData = new BpmSave();
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Bpm.json";
 
         using (UnityWebRequest req = UnityWebRequest.Get(url))
         {
@@ -44,19 +44,19 @@ public class ImportData : MonoBehaviour
             {
                 string jsonStr = req.downloadHandler.text;
 
-                NoteAddition saveData = JsonUtility.FromJson<NoteAddition>(jsonStr);
+                BpmSave saveData = JsonUtility.FromJson<BpmSave>(jsonStr);
 
-                _additionData = saveData;
+                _bpmData = saveData;
             }
 
-            yield return _additionData;
+            yield return _bpmData;
         }
     }
 
-    public IEnumerator ImportSubLane(string name, string difficulty)
+    public IEnumerator ImportField(string name, string difficulty)
     {
-        _subLaneData = new SubLaneSave();
-        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Sub.json";
+        _fieldData = new FieldSave();
+        string url = Application.streamingAssetsPath + $"/SongData/{name}/{difficulty}/Field.json";
 
         using (UnityWebRequest req = UnityWebRequest.Get(url))
         {
@@ -65,11 +65,11 @@ public class ImportData : MonoBehaviour
             {
                 string jsonStr = req.downloadHandler.text;
 
-                SubLaneSave saveData = JsonUtility.FromJson<SubLaneSave>(jsonStr);
+                FieldSave saveData = JsonUtility.FromJson<FieldSave>(jsonStr);
 
-                _subLaneData = saveData;
+                _fieldData = saveData;
 
-                yield return _subLaneData;
+                yield return _fieldData;
             }
             else
             {
@@ -103,7 +103,7 @@ public class ImportData : MonoBehaviour
                 _slideData = new List<KeyValuePair<Note, SlideMaintain[]>>();
                 foreach (var n in saveData.item)
                 {
-                    note = new Note(n.number, n.time100, n.startLane, n.endLane, n.kind, n.length100);
+                    note = new Note(n.number, n.time, n.startLane, n.endLane, n.kind, n.length, n.field);
                     if (n.kind == 'S')
                     {
                         var data = _slideMaintainData[n.number];

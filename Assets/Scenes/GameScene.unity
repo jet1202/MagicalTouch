@@ -157,7 +157,7 @@ Transform:
   - {fileID: 1229011789}
   - {fileID: 1873982660}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &105072862
 GameObject:
@@ -274,7 +274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &119578936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,7 +350,7 @@ RectTransform:
   m_Children:
   - {fileID: 1671462232}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -387,8 +387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDirector: {fileID: 745814838}
-  _notesDirector: {fileID: 311307477}
-  notesController: {fileID: 311307476}
+  _notesDirector: {fileID: 745814842}
   laneTouching: 000000000000000000000000
   laneFlicking: 000000000000000000000000
 --- !u!4 &121340879
@@ -753,7 +752,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &218505685
 GameObject:
@@ -1059,118 +1058,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257342629}
   m_CullTransparentMesh: 1
---- !u!1 &311307474
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 311307475}
-  - component: {fileID: 311307477}
-  - component: {fileID: 311307476}
-  m_Layer: 0
-  m_Name: notes
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &311307475
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 311307474}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &311307476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 311307474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4b7ac278810e244eb224176dadd88a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameDirector: {fileID: 745814838}
-  Speed: 50
-  speedData: []
-  accDis: []
-  nowSpeed: 0
---- !u!114 &311307477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 311307474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77adb4287295b784f9dae7364f327a0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameDirector: {fileID: 745814838}
-  touchDirector: {fileID: 121340878}
-  importData: {fileID: 745814840}
-  notesController: {fileID: 311307476}
-  damageController: {fileID: 1275019552}
-  cri: {fileID: 2098207744}
-  subNotes: {fileID: 1323407775}
-  subLane: {fileID: 1817767068}
-  normalNote: {fileID: 3401851094058923445, guid: f3ca527d61247c54f97662e6bb5cbc78,
-    type: 3}
-  holdNote: {fileID: 4384366980701419821, guid: 85c50a0f72986e84eb49dcd907ea08d2,
-    type: 3}
-  flickNote: {fileID: 6298575762882459934, guid: 8f6d5e182d1dc1548a67c4135aa7e144,
-    type: 3}
-  longNote: {fileID: 8434124444890167761, guid: 91376a9b5aa9eff4387184cd1273b44d,
-    type: 3}
-  slideNote: {fileID: 6838575676586949595, guid: 8ada9c25d8c27fc4aad025a7433cfbee,
-    type: 3}
-  slideMaintainNote: {fileID: 338555087718982254, guid: 1214dc1e71b77d441820726d16d3c132,
-    type: 3}
-  maintainNote: {fileID: 8781556880654120215, guid: 5e2d4ad6a44b49842b906b1f7a1b7723,
-    type: 3}
-  pushLine: {fileID: 4080413076315708716, guid: c7b554de7ac747d4bbb98bfc75477a94,
-    type: 3}
-  judgePool: {fileID: 201828477}
-  paddlePool: {fileID: 1156729019}
-  justFlame: {fileID: 1873982661}
-  laneArray:
-  - {fileID: 1724811090}
-  - {fileID: 1143344706}
-  - {fileID: 1274282048}
-  - {fileID: 933769859}
-  - {fileID: 1889317709}
-  - {fileID: 1216932521}
-  - {fileID: 1974727930}
-  - {fileID: 477652222}
-  - {fileID: 1397037492}
-  - {fileID: 732290613}
-  - {fileID: 917238060}
-  - {fileID: 320572725}
-  twinkleEffect: {fileID: 8480302070179110385, guid: 50e873317bf54a740b3ca93ea6b67c53,
-    type: 3}
-  mask: {fileID: 1168233513}
-  speedData: []
-  subSpeedData: []
-  bpmData: []
-  combo: 0
-  score: 0
-  resultPoint: 0000000000000000000000000000000000000000000000000000000000000000
-  nowBpm: 0
 --- !u!1 &320572723
 GameObject:
   m_ObjectHideFlags: 0
@@ -2057,6 +1944,7 @@ GameObject:
   m_Component:
   - component: {fileID: 745814839}
   - component: {fileID: 745814838}
+  - component: {fileID: 745814842}
   - component: {fileID: 745814840}
   - component: {fileID: 745814841}
   m_Layer: 0
@@ -2078,8 +1966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c4f57becdd7c9419a57368a749f772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notesDirector: {fileID: 311307477}
-  notesController: {fileID: 311307476}
+  notesDirector: {fileID: 745814842}
   cri: {fileID: 2098207744}
   timeText: {fileID: 1946030870}
   scoreText: {fileID: 1937113209}
@@ -2216,6 +2103,64 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &745814842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745814837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77adb4287295b784f9dae7364f327a0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameDirector: {fileID: 745814838}
+  touchDirector: {fileID: 121340878}
+  importData: {fileID: 745814840}
+  damageController: {fileID: 1275019552}
+  cri: {fileID: 2098207744}
+  fieldPrefab: {fileID: 1817767068}
+  normalNote: {fileID: 3401851094058923445, guid: f3ca527d61247c54f97662e6bb5cbc78,
+    type: 3}
+  holdNote: {fileID: 4384366980701419821, guid: 85c50a0f72986e84eb49dcd907ea08d2,
+    type: 3}
+  flickNote: {fileID: 6298575762882459934, guid: 8f6d5e182d1dc1548a67c4135aa7e144,
+    type: 3}
+  longNote: {fileID: 8434124444890167761, guid: 91376a9b5aa9eff4387184cd1273b44d,
+    type: 3}
+  slideNote: {fileID: 6838575676586949595, guid: 8ada9c25d8c27fc4aad025a7433cfbee,
+    type: 3}
+  slideMaintainNote: {fileID: 338555087718982254, guid: 1214dc1e71b77d441820726d16d3c132,
+    type: 3}
+  maintainNote: {fileID: 8781556880654120215, guid: 5e2d4ad6a44b49842b906b1f7a1b7723,
+    type: 3}
+  pushLine: {fileID: 4080413076315708716, guid: c7b554de7ac747d4bbb98bfc75477a94,
+    type: 3}
+  judgePool: {fileID: 201828477}
+  paddlePool: {fileID: 1156729019}
+  justFlame: {fileID: 1873982661}
+  laneArray:
+  - {fileID: 1724811090}
+  - {fileID: 1143344706}
+  - {fileID: 1274282048}
+  - {fileID: 933769859}
+  - {fileID: 1889317709}
+  - {fileID: 1216932521}
+  - {fileID: 1974727930}
+  - {fileID: 477652222}
+  - {fileID: 1397037492}
+  - {fileID: 732290613}
+  - {fileID: 917238060}
+  - {fileID: 320572725}
+  twinkleEffect: {fileID: 8480302070179110385, guid: 50e873317bf54a740b3ca93ea6b67c53,
+    type: 3}
+  mask: {fileID: 1168233513}
+  bpmData: []
+  combo: 0
+  score: 0
+  resultPoint: 0000000000000000000000000000000000000000000000000000000000000000
+  nowBpm: 0
 --- !u!1 &811173886
 GameObject:
   m_ObjectHideFlags: 0
@@ -2436,7 +2381,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &838941842
 GameObject:
@@ -3217,7 +3162,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1076661817
 GameObject:
@@ -3265,7 +3210,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1076661821
 MonoBehaviour:
@@ -3594,7 +3539,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1168233513
 GameObject:
@@ -3990,7 +3935,7 @@ RectTransform:
   m_Children:
   - {fileID: 1083842977}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4038,7 +3983,7 @@ Transform:
   - {fileID: 917238059}
   - {fileID: 320572724}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1274282045
 GameObject:
@@ -4322,9 +4267,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1323407776}
-  - component: {fileID: 1323407777}
   m_Layer: 0
-  m_Name: subnotes
+  m_Name: notes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4345,23 +4289,6 @@ Transform:
   m_Father: {fileID: 1817767069}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1323407777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1323407775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4b7ac278810e244eb224176dadd88a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameDirector: {fileID: 745814838}
-  Speed: 50
-  speedData: []
-  accDis: []
-  nowSpeed: 0
 --- !u!1 &1337254078
 GameObject:
   m_ObjectHideFlags: 0
@@ -4909,7 +4836,7 @@ RectTransform:
   - {fileID: 232261245}
   - {fileID: 1275019550}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5628,7 +5555,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: 0, y: 20}
+  m_SizeDelta: {x: 47.336685, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1671462233
 MonoBehaviour:
@@ -5995,12 +5922,12 @@ GameObject:
   - component: {fileID: 1817767069}
   - component: {fileID: 1817767070}
   m_Layer: 0
-  m_Name: subLane
+  m_Name: Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1817767069
 Transform:
   m_ObjectHideFlags: 0
@@ -6016,7 +5943,7 @@ Transform:
   - {fileID: 1909572238}
   - {fileID: 1323407776}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: -40, y: 0, z: 0}
 --- !u!114 &1817767070
 MonoBehaviour:
@@ -6032,7 +5959,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameDirector: {fileID: 745814838}
   subNotes: {fileID: 0}
-  cameraWork: []
+  Speed: 0
+  speedItem: []
+  accDis: []
+  nowSpeed: 0
+  angleWork: []
   activeTime: 
 --- !u!1 &1819987200
 GameObject:
@@ -6814,7 +6745,7 @@ RectTransform:
   - {fileID: 1819987201}
   - {fileID: 1168233514}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7335,7 +7266,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2098207742
 GameObject:
@@ -7367,7 +7298,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2098207744
 MonoBehaviour:

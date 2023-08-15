@@ -1,3 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 Mplus2-Medium[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
+*.awb filter=lfs diff=lfs merge=lfs -text

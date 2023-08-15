@@ -12,12 +12,10 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameDirector gameDirector;
     [SerializeField] private TouchDirector touchDirector;
     [SerializeField] private ImportData importData;
-    [SerializeField] private NotesController notesController;
     [SerializeField] private DamageController damageController;
     [SerializeField] private Cri cri;
 
-    [SerializeField] private GameObject subNotes;
-    [SerializeField] private GameObject subLane;
+    [SerializeField] private GameObject fieldPrefab;
     
     [SerializeField] private GameObject normalNote;
     [SerializeField] private GameObject holdNote;
@@ -41,13 +39,11 @@ public class NotesDirector : MonoBehaviour
     private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
     private List<Trash> TrashData = new List<Trash>();
 
-    public SpeedItem[] speedData;
-    public SpeedItem[] subSpeedData;
     public BpmItem[] bpmData;
 
-    private int[] subNumber;
-
     private List<float> MaintainJudge;
+
+    private List<GameObject> fieldObjects = new List<GameObject>();
 
     private float Speed;
     private const float missGap = 0.15f;
@@ -108,7 +104,7 @@ public class NotesDirector : MonoBehaviour
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
         
         // データをImport
-        Speed = GetComponent<NotesController>().Speed;
+        Speed = ScoreData.setting.Game.NoteSpeed;
 
         // Sheet
         IEnumerator corutine = importData.ImportSheet(id, difficulty);
@@ -120,37 +116,27 @@ public class NotesDirector : MonoBehaviour
         yield return StartCoroutine(corutine);
         List<KeyValuePair<Note, SlideMaintain[]>> slideData = (List<KeyValuePair<Note, SlideMaintain[]>>)corutine.Current;
         
-        // Addition
-        corutine = importData.ImportAddition(id, difficulty);
+        // Bpm
+        corutine = importData.ImportBpm(id, difficulty);
         yield return StartCoroutine(corutine);
-        NoteAddition additionData = (NoteAddition)corutine.Current;
-        speedData = additionData.speedItem;
-        bpmData = additionData.bpmItem;
+        BpmSave bpmSaveData = (BpmSave)corutine.Current;
+        bpmData = bpmSaveData.bpmItem;
         
-        // subLane
-        corutine = importData.ImportSubLane(id, difficulty);
+        // Field
+        corutine = importData.ImportField(id, difficulty);
         yield return StartCoroutine(corutine);
-        if (corutine.Current == null)
+        FieldSave field = (FieldSave)corutine.Current;
+        if (field == null) throw new Exception();
+        foreach (var f in field.item)
         {
-            subNumber = Array.Empty<int>();
-            subSpeedData = new[] { new SpeedItem() };
-            subSpeedData[0].time100 = 0;
-            subSpeedData[0].speed100 = 100;
-            subSpeedData[0].isVariation = false;
-        }
-        else
-        {
-            var data = (SubLaneSave)corutine.Current;
-            subNumber = data.number;
-            subSpeedData = data.speedItem;
-            subLane.GetComponent<SubController>().cameraWork = data.cameraWork;
-            subLane.GetComponent<SubController>().activeTime = data.activeTime100;
+            GameObject obj = Instantiate(fieldPrefab);
+            fieldObjects.Add(obj);
+            
+            obj.GetComponent<FieldController>().ItemImport(f.speedItem, f.angleWork, f.activeTime);
+            obj.SetActive(true);
         }
         
         Destroy(importData);
-        
-        notesController.BpmDataImport(speedData);
-        subNotes.GetComponent<NotesController>().BpmDataImport(subSpeedData);
 
         cri.SetBgm(id);
 
@@ -162,12 +148,12 @@ public class NotesDirector : MonoBehaviour
         for (int i = 0; i < leng; i++)
         {
             b = bpmData[i].bpm;
-            t = bpmData[i].time100 / 100f;
+            t = bpmData[i].time / 1000f;
         
             if (i == leng - 1)
                 nex = cri.GetLen() / 1000f;
             else
-                nex = bpmData[i + 1].time100 / 100f;
+                nex = bpmData[i + 1].time / 1000f;
 
             for (float j = t; j < nex; j += 60f / b)
             {
@@ -200,14 +186,14 @@ public class NotesDirector : MonoBehaviour
             // 終点('T')の判定
             if (n.GetLength() <= 10) continue;
             
-            notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T', 0));
+            notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T', 0, n.GetField()));
             total++;
             totalN10 += 2;
 
             int fir;
             for (int j = 0;; j++)
             {
-                if (MaintainJudge[j] > (n.GetTime() + 11) / 100f)
+                if (MaintainJudge[j] > (n.GetTime() + 11) / 1000f)
                 {
                     fir = j;
                     break;
@@ -216,10 +202,10 @@ public class NotesDirector : MonoBehaviour
             
             for (int j = fir;; j++)
             {
-                if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 1) / 100f)
+                if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 10) / 1000f)
                     break;
                 
-                notesSheetA.Add(new Note(n.GetNumber(), (int)Math.Floor(MaintainJudge[j] * 100), n.GetStartLane(), n.GetEndLane(), 'M', 0));
+                notesSheetA.Add(new Note(n.GetNumber(), (int)Math.Floor(MaintainJudge[j] * 1000), n.GetStartLane(), n.GetEndLane(), 'M', 0, n.GetField()));
                 total++;
                 totalN10 += 2;
             }
@@ -233,7 +219,7 @@ public class NotesDirector : MonoBehaviour
             foreach (var s in slideData)
             {
                 n = s.Key;
-                notesSheetA.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), i));
+                notesSheetA.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), i, n.GetField()));
                 slideMaintains.Add(i, s.Value);
                 total++;
                 totalN10 += 10;
@@ -242,18 +228,17 @@ public class NotesDirector : MonoBehaviour
                 {
                     if (sm.isJudge)
                     {
-                        notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0));
+                        notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'B', 0, n.GetField()));
                         total++;
                         totalN10 += 2;
                     }
                     
                     if (sm == s.Value.Last())
                     {
-                        bool isMain = !Array.Exists(subNumber, j => j == n.GetNumber());
-                        GameObject ins = Instantiate(NoteKind('B'), isMain ? this.transform : subNotes.transform);
-                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetNumber(), n.GetTime() + sm.time100, sm.startLine, sm.endLine, 'B', 0)), isMain);
+                        GameObject ins = Instantiate(NoteKind('B'), fieldObjects[n.GetField()].transform.GetChild(1));
+                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'B', 0, n.GetField())));
                         ins.GetComponent<SpriteRenderer>().enabled = true;
-                        TrashData.Add(new Trash(ins, (n.GetTime() + sm.time100) / 100f, n.GetStartLane(), n.GetEndLane(), 'P'));
+                        TrashData.Add(new Trash(ins, (n.GetTime() + sm.time) / 1000f, n.GetStartLane(), n.GetEndLane(), 'P'));
                     }
                 }
 
@@ -273,14 +258,12 @@ public class NotesDirector : MonoBehaviour
         int len = notesSheet.Count;
         for (int i = 0; i < len; i++)
         {
-            bool isMain = !Array.Exists(subNumber, j => j == notesSheet[i].GetNumber());
-
-            GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), isMain ? this.transform : subNotes.transform);
+            GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), fieldObjects[notesSheet[i].GetField()].transform.GetChild(1));
             _notesData = new KeyValuePair<GameObject, Note>(ins, notesSheet[i]);
-            NoteSettings(_notesData, isMain);
+            NoteSettings(_notesData);
             if (_notesData.Value.GetKind() == 'S')
             {
-                SlideSettings(_notesData.Key, _notesData.Value, slideMaintains[_notesData.Value.GetLength()], isMain);
+                SlideSettings(_notesData.Key, _notesData.Value, slideMaintains[_notesData.Value.GetLength()]);
             }
             NotesData.Add(_notesData);
         }
@@ -301,23 +284,18 @@ public class NotesDirector : MonoBehaviour
                 }
                 char kind = data.GetKind();
                 char beforeKind = beforeData.GetKind();
-                bool isMain = !Array.Exists(subNumber, j => j == data.GetNumber());
-                bool beforeIsMain = !Array.Exists(subNumber, j => j == beforeData.GetNumber());
+                int nowField = data.GetField();
+                int beforeField = beforeData.GetField();
                 if (kind == 'M' || kind == 'T' || kind == 'B' || beforeKind == 'M' || beforeKind == 'T' || beforeKind == 'B' ||
-                    beforeData.GetTime() != data.GetTime() || beforeData.GetEndLane() >= data.GetStartLane() || isMain != beforeIsMain)
+                    beforeData.GetTime() != data.GetTime() || beforeData.GetEndLane() >= data.GetStartLane() || nowField != beforeField)
                 {
                     beforeData = data;
                     continue;
                 }
 
-                GameObject ins;
+                GameObject ins = Instantiate(pushLine, fieldObjects[nowField].transform.GetChild(1));
 
-                if (isMain)
-                    ins = Instantiate(pushLine, this.transform);
-                else
-                    ins = Instantiate(pushLine, subNotes.transform);
-
-                float time = TimeTo(data.GetTime() / 100f, isMain) * Speed;
+                float time = TimeTo(data.GetTime() / 1000f, nowField) * Speed;
                 var positions = new Vector3[]
                 {
                     new Vector3(-6f + beforeData.GetEndLane(), 0f, time),
@@ -342,15 +320,16 @@ public class NotesDirector : MonoBehaviour
         mask.GetComponent<Image>().DOFade(0f, 1f).OnComplete(() => mask.SetActive(false));
     }
 
-    private float TimeTo(float time, bool isMain)
+    private float TimeTo(float time, int fieldNumber)
     {
-        SpeedItem[] data = isMain ? speedData : subSpeedData;
+        FieldController fieldController = fieldObjects[fieldNumber].GetComponent<FieldController>();
+        SpeedItem[] data = fieldController.speedItem;
         
         int len = data.Length;
         int pro = 0;
         for (int i = 0; i < len; i++)
         {
-            if (data[i].time100 >= time * 100)
+            if (data[i].time >= time * 1000)
             {
                 break;
             }
@@ -358,78 +337,80 @@ public class NotesDirector : MonoBehaviour
             pro = i;
         }
 
-        float pos;
-        if (isMain) pos = notesController.accDis[pro];
-        else pos = subNotes.GetComponent<NotesController>().accDis[pro];
+        float pos = fieldController.accDis[pro];
 
         if (data[pro].isVariation)
         {
-            float t = time - data[pro].time100 / 100f;
-            pos += t * data[pro].speed100 / 100f;
-            pos += t * ((data[pro + 1].speed100 - data[pro].speed100) /
-                (float)(data[pro + 1].time100 - data[pro].time100) * t) / 2f;
+            float t = time - data[pro].time / 1000f;
+            pos += t * data[pro].speed / 100f;
+            pos += t * ((data[pro + 1].speed - data[pro].speed) /
+                (float)(data[pro + 1].time - data[pro].time) * t) / 2f * 10f;
         }
         else
         {
-            float t = time - data[pro].time100 / 100f;
-            pos += t * data[pro].speed100 / 100f;
+            float t = time - data[pro].time / 1000f;
+            pos += t * data[pro].speed / 100f;
         }
 
         return pos;
     }
 
-    private void NoteSettings(KeyValuePair<GameObject, Note> noteData, bool isMain)
+    private void NoteSettings(KeyValuePair<GameObject, Note> noteData)
     {
+        int field = noteData.Value.GetField();
+
+        if (noteData.Value.GetKind() == 'B')
+        {
+            var n = noteData.Value;
+            Debug.Log($"{n.GetNumber()}, {n.GetStartLane()}, {n.GetEndLane()}, {n.GetTime()}");
+        }
+
         float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.5f;
         float sizex = noteData.Value.GetEndLane() - noteData.Value.GetStartLane();
-        float time = TimeTo(noteData.Value.GetTime() / 100f, isMain) * Speed;
+        float time = TimeTo(noteData.Value.GetTime() / 1000f, field) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
         noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, noteThickness);
         
-        float rot = subLane.GetComponent<SubController>().TimeToAngle(noteData.Value.GetTime() / 100f);
-        if (!isMain)
+        float rot = fieldObjects[field].GetComponent<FieldController>().TimeToAngle(noteData.Value.GetTime() / 1000f);
+            
+        Quaternion r = noteData.Key.transform.rotation;
+        noteData.Key.transform.rotation = r * Quaternion.AngleAxis(rot, Vector3.right);
+        if (noteData.Value.GetKind() == 'S' || noteData.Value.GetKind() == 'L')
         {
-            Quaternion r = noteData.Key.transform.rotation;
-            noteData.Key.transform.rotation = r * Quaternion.AngleAxis(rot, Vector3.right);
-
-            if (noteData.Value.GetKind() == 'S' || noteData.Value.GetKind() == 'L')
-            {
-                Quaternion s = noteData.Key.transform.GetChild(0).rotation;
-                noteData.Key.transform.GetChild(0).rotation = s * Quaternion.AngleAxis(-rot, Vector3.right);
-            }
+            Quaternion s = noteData.Key.transform.GetChild(0).rotation;
+            noteData.Key.transform.GetChild(0).rotation = s * Quaternion.AngleAxis(-rot, Vector3.right);
         }
 
         if (noteData.Value.GetKind() == 'L')
         {
-            float length = TimeTo((noteData.Value.GetTime() + noteData.Value.GetLength()) / 100f, isMain) * Speed - time;
+            float length = TimeTo((noteData.Value.GetTime() + noteData.Value.GetLength()) / 1000f, field) * Speed - time;
             float y = length / 2;
             float z = 0f;
-            if (!isMain)
-            {
-                float c = length * (float)Math.Sin(rot * (Math.PI / 180));
-                float s = length * (float)Math.Cos(rot * (Math.PI / 180));
-                y = s / 2;
-                z = -c / 2;
-            }
+            
+            float c = length * (float)Math.Sin(rot * (Math.PI / 180));
+            float s = length * (float)Math.Cos(rot * (Math.PI / 180));
+            y = s / 2;
+            z = -c / 2;
 
             noteData.Key.transform.GetChild(0).localPosition = new Vector3(0f, y, z);
             noteData.Key.transform.GetChild(0).localScale = new Vector3(sizex, length, 1f);
             var n = noteData.Value;
-            TrashData.Add(new Trash(noteData.Key.transform.GetChild(0).gameObject, (n.GetTime() + n.GetLength()) / 100f, n.GetStartLane(), n.GetEndLane(), n.GetKind()));
+            TrashData.Add(new Trash(noteData.Key.transform.GetChild(0).gameObject, (n.GetTime() + n.GetLength()) / 1000f, n.GetStartLane(), n.GetEndLane(), n.GetKind()));
         }
     }
 
-    private void SlideSettings(GameObject obj, Note slide, SlideMaintain[] maintains, bool isMain)
+    private void SlideSettings(GameObject obj, Note slide, SlideMaintain[] maintains)
     {
         // slideのFieldの描画
-        
         if (maintains == null) return;
+
+        int field = slide.GetField();
 
         List<Vector3> verts = new List<Vector3>();
         List<int> triangles = new List<int>();
 
-        float lastTime = TimeTo(slide.GetTime() / 100f, isMain);
+        float lastTime = TimeTo(slide.GetTime() / 1000f, field);
         float lastLane = (slide.GetStartLane() + slide.GetEndLane()) / 2f;
         Vector3 lastPosF = new Vector3(slide.GetStartLane() - lastLane, 0f, 0);
         Vector3 lastPosL = new Vector3(slide.GetEndLane() - lastLane, 0f, 0);
@@ -444,8 +425,8 @@ public class NotesDirector : MonoBehaviour
         {
             var m = maintains[i];
 
-            Vector3 nextPosF = new Vector3(m.startLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed);
-            Vector3 nextPosL = new Vector3(m.endLine - lastLane, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed);
+            Vector3 nextPosF = new Vector3(m.startLane - lastLane, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed);
+            Vector3 nextPosL = new Vector3(m.endLane - lastLane, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed);
 
             int l = verts.Count;
             List<int> parallelogram = new List<int>();
@@ -462,8 +443,8 @@ public class NotesDirector : MonoBehaviour
             }
             else
             {
-                verts.Add(new Vector3(lastPosF.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed));
-                verts.Add(new Vector3(lastPosL.x, 0f, (TimeTo((m.time100 + slide.GetTime()) / 100f, isMain) - lastTime) * Speed));
+                verts.Add(new Vector3(lastPosF.x, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed));
+                verts.Add(new Vector3(lastPosL.x, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed));
                 if (i != leng - 1)
                 {
                     verts.Add(nextPosF);
@@ -485,7 +466,7 @@ public class NotesDirector : MonoBehaviour
         mesh.RecalculateNormals();
 
         obj.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh = mesh;
-        TrashData.Add(new Trash(obj.transform.GetChild(0).gameObject, (slide.GetTime() + maintains.Last().time100) / 100f, slide.GetStartLane(), slide.GetEndLane(), slide.GetKind()));
+        TrashData.Add(new Trash(obj.transform.GetChild(0).gameObject, (slide.GetTime() + maintains.Last().time) / 1000f, slide.GetStartLane(), slide.GetEndLane(), slide.GetKind()));
     }
 
     GameObject NoteKind(char kind)
@@ -538,7 +519,7 @@ public class NotesDirector : MonoBehaviour
         for (i = 0; i < con; i++)
         {
             Note data = NotesData[i].Value;
-            gap = (float)(touchTime - gameDirector.waitTime - data.GetTime() / 100f);
+            gap = (float)(touchTime - gameDirector.waitTime - data.GetTime() / 1000f);
             if (gap < -missGap)
             {
                 break;
@@ -694,7 +675,7 @@ public class NotesDirector : MonoBehaviour
         {
             // 見逃したノーツの削除
             _notesData = NotesData[0];
-            while (_notesData.Value.GetTime() / 100f + missGap < (gameDirector.musicTime + tapOffset))
+            while (_notesData.Value.GetTime() / 1000f + missGap < (gameDirector.musicTime + tapOffset))
             {
                 _notesData.Key.GetComponent<SpriteRenderer>().enabled = false;
                 if (_notesData.Value.GetKind() == 'F')
@@ -721,7 +702,7 @@ public class NotesDirector : MonoBehaviour
 
             // Hold, Flickの処理
             int index = 0;
-            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < (gameDirector.musicTime + tapOffset))
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 1000f < (gameDirector.musicTime + tapOffset))
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'H' || ki == 'M' || ki == 'T' || ki == 'B')
@@ -742,7 +723,7 @@ public class NotesDirector : MonoBehaviour
                     if (tap)
                     {
                         var note = NotesData[index];
-                        float t = note.Value.GetTime() / 100f;
+                        float t = note.Value.GetTime() / 1000f;
                         NotesData.RemoveAt(index);
 
                         if (ki == 'H' || ki == 'B' || ki == 'M' || ki == 'T')
@@ -772,7 +753,7 @@ public class NotesDirector : MonoBehaviour
             }
 
             index = 0;
-            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 100f < (gameDirector.musicTime + tapOffset))
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 1000f < (gameDirector.musicTime + tapOffset))
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'F')
@@ -793,7 +774,7 @@ public class NotesDirector : MonoBehaviour
                     if (flick)
                     {
                         var note = NotesData[index];
-                        float t = note.Value.GetTime() / 100f;
+                        float t = note.Value.GetTime() / 1000f;
                         NotesData.RemoveAt(index);
                         
                         int l = TrashData.Count;
@@ -823,7 +804,7 @@ public class NotesDirector : MonoBehaviour
         if (LinesData.Count != 0)
         {
             _linesData = LinesData[0];
-            while (_linesData.Value / 100f < gameDirector.musicTime)
+            while (_linesData.Value / 1000f < gameDirector.musicTime)
             {
                 _linesData.Key.GetComponent<LineRenderer>().enabled = false;
                 LinesData.RemoveAt(0);
@@ -901,7 +882,7 @@ public class NotesDirector : MonoBehaviour
         }
 
         // 現在BPM
-        if (bpmProg < bpmData.Length && bpmData[bpmProg].time100 / 100f < gameDirector.musicTime)
+        if (bpmProg < bpmData.Length && bpmData[bpmProg].time / 1000f < gameDirector.musicTime)
         {
             nowBpm = bpmData[bpmProg].bpm;
             bpmProg++;
@@ -916,13 +897,13 @@ public class NotesDirector : MonoBehaviour
             int index = 0;
             
             _notesData = NotesData[index];
-            while (_notesData.Value.GetTime() / 100f < gameDirector.musicTime)
+            while (_notesData.Value.GetTime() / 1000f < gameDirector.musicTime)
             {
                 char kind = _notesData.Value.GetKind();
                 if (kind == 'N' || kind == 'L' || kind == 'S')
                 {
                     int touchLane = _notesData.Value.GetStartLane() + _notesData.Value.GetEndLane();
-                    BeginTouch(touchLane, _notesData.Value.GetTime() / 100f + gameDirector.waitTime - tapOffset);
+                    BeginTouch(touchLane, _notesData.Value.GetTime() / 1000f + gameDirector.waitTime - tapOffset);
                 }
 
                 index++;
