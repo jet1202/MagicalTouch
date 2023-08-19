@@ -142,7 +142,7 @@ public class FieldController : MonoBehaviour
             float T = time - (float)before.time / 1000;
             float t1 = (after.time - before.time) / 1000f;
             float a1 = after.angle - before.angle;
-            int v = before.variation;
+            float v = before.variation / 10f;
 
             float a;
             if (v > 0)

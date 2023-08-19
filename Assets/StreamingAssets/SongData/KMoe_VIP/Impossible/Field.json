@@ -1,0 +1,243 @@
+{
+    "item": [
+        {
+            "field": 0,
+            "speedItem": [
+                {
+                    "time": 0,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 11034,
+                    "speed": -40,
+                    "isVariation": true
+                },
+                {
+                    "time": 10947,
+                    "speed": -50000,
+                    "isVariation": false
+                },
+                {
+                    "time": 11119,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 12758,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 16895,
+                    "speed": 150,
+                    "isVariation": false
+                },
+                {
+                    "time": 11293,
+                    "speed": 150,
+                    "isVariation": false
+                },
+                {
+                    "time": 18274,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 22413,
+                    "speed": 150,
+                    "isVariation": false
+                },
+                {
+                    "time": 23620,
+                    "speed": 25,
+                    "isVariation": true
+                },
+                {
+                    "time": 25172,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 27930,
+                    "speed": 150,
+                    "isVariation": false
+                },
+                {
+                    "time": 29309,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 30688,
+                    "speed": 150,
+                    "isVariation": true
+                },
+                {
+                    "time": 32068,
+                    "speed": 100,
+                    "isVariation": false
+                }
+            ],
+            "angleWork": [
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                }
+            ],
+            "activeTime": []
+        },
+        {
+            "field": 1,
+            "speedItem": [
+                {
+                    "time": 0,
+                    "speed": 100,
+                    "isVariation": false
+                }
+            ],
+            "angleWork": [
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 37155,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 37844,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 38534,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 39224,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 39912,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 40603,
+                    "angle": 0,
+                    "variation": 0
+                }
+            ],
+            "activeTime": []
+        },
+        {
+            "field": 2,
+            "speedItem": [
+                {
+                    "time": 0,
+                    "speed": 100,
+                    "isVariation": false
+                }
+            ],
+            "angleWork": [
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 37155,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 37844,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 38534,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 39224,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 39912,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 40603,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 37844,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 38534,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 39223,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 39912,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 40603,
+                    "angle": 180,
+                    "variation": 10
+                },
+                {
+                    "time": 41292,
+                    "angle": 0,
+                    "variation": 0
+                }
+            ],
+            "activeTime": []
+        }
+    ]
+}

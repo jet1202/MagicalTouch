@@ -152,6 +152,15 @@
             "composer": "cosMo@暴走P",
             "number": 5,
             "chorus": 57000
+        },
+        {
+            "title": "K.Moe(VIP)",
+            "id": "KMoe_VIP",
+            "constant": [0, 0, 0, 180],
+            "division": "Pack1",
+            "composer": "ZxNX",
+            "number": 6,
+            "chorus": 33500
         }
     ]
 }
