@@ -102,7 +102,7 @@
         {
             "title": "Twitter_37510notes",
             "id": "TwiNote",
-            "constant": [0, 0, 123, 0],
+            "constant": [0, 0, 0, 0],
             "division": "Pack1",
             "composer": "trollman0129",
             "number": 0,
@@ -118,45 +118,9 @@
             "chorus": 69000
         },
         {
-            "title": "XHRONOXAPSUL",
-            "id": "XHRONOXAPSUL",
-            "constant": [0, 0, 144, 0],
-            "division": "Pack1",
-            "composer": "Silentroom",
-            "number": 2,
-            "chorus": 49500
-        },
-        {
-            "title": "RENDA_JOCKEY",
-            "id": "RENDA_JOCKEY",
-            "constant": [0, 0, 0, 200],
-            "division": "Pack1",
-            "composer": "ルゼ",
-            "number": 3,
-            "chorus": 94000
-        },
-        {
-            "title": "Peaceful morning alarm",
-            "id": "Peaceful",
-            "constant": [0, 0, 0, 200],
-            "division": "Pack1",
-            "composer": "takehirotei",
-            "number": 4,
-            "chorus": 1000
-        },
-        {
-            "title": "YAMINABE",
-            "id": "YAMINABE",
-            "constant": [0, 0, 140, 0],
-            "division": "Pack1",
-            "composer": "cosMo@暴走P",
-            "number": 5,
-            "chorus": 57000
-        },
-        {
             "title": "K.Moe(VIP)",
             "id": "KMoe_VIP",
-            "constant": [0, 0, 0, 180],
+            "constant": [0, 0, 0, 150],
             "division": "Pack1",
             "composer": "ZxNX",
             "number": 6,

@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.TerrainUtils;
 using UnityEngine.UI;
 
 public class NotesDirector : MonoBehaviour
@@ -28,10 +29,10 @@ public class NotesDirector : MonoBehaviour
 
     [SerializeField] private GameObject judgePool;
     [SerializeField] private GameObject paddlePool;
+    [SerializeField] private GameObject effectPool;
     
     [SerializeField] private SpriteRenderer justFlame;
     [SerializeField] private List<MeshRenderer> laneArray;
-    [SerializeField] private GameObject twinkleEffect;
 
     [SerializeField] private GameObject mask;
     
@@ -594,7 +595,7 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
-            tColor = new Color(1f, 0.7f, 0.4f, 1f);
+            tColor = new Color(1f, 1f, 0f, 150f / 255f);
             resultPoint[3]++;
             combo++;
         }
@@ -602,7 +603,7 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
-            tColor = new Color(1f, 1f, 0f, 1f);
+            tColor = new Color(1f, 1f, 1f, 150f / 255f);
             if (gap > 0)
                 resultPoint[4]++;
             else
@@ -613,7 +614,7 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'G';
             Pcolor = new Color(95f / 255f, 184f / 255f, 1f, 1f);
-            tColor = new Color(50f / 255f, 150f / 255f, 1f, 1f);
+            tColor = new Color(1f, 1f, 1f, 150f / 255f);
             // eColor = new Color(0f, 70f / 255f, 1f, 70f / 255f);
             if (gap > 0)
                 resultPoint[5]++;
@@ -646,15 +647,23 @@ public class NotesDirector : MonoBehaviour
 
         if (tColor != Color.black)
         {
-            GameObject twinkleIns = Instantiate(twinkleEffect);
-            twinkleIns.transform.position = appearPos;
-            var sys = twinkleIns.GetComponent<ParticleSystem>();
-            var main = sys.main;
-            main.startColor = new ParticleSystem.MinMaxGradient(tColor);
-            var shape = sys.shape;
-            shape.scale = new Vector3(wi, 0.5f, 0.1f);
-            sys.emission.SetBurst(0, new ParticleSystem.Burst(0, wi * 30));
-            sys.Play();
+            // effectPool
+            GameObject Tins = effectPool.GetComponent<MyObjectPool>().SetObject();
+            
+            Transform Tr = Tins.transform;
+            Transform Tc = Tr.GetChild(0);
+            Tr.position = appearPos;
+            Tr.rotation = Quaternion.identity;
+            Tc.GetComponent<MeshRenderer>().material.color = tColor;
+            Tc.localScale = new Vector3(wi, 1f, 1f);
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(Tr.DOMoveY(6f, 0.4f).SetEase(Ease.OutQuad));
+            seq.Join(Tc.GetComponent<MeshRenderer>().material.DOFade(0f, 0.5f).SetEase(Ease.Linear));
+            seq.Play().OnComplete(() =>
+            {
+                effectPool.GetComponent<MyObjectPool>().RemoveObject(Tins);
+            });
         }
     }
 

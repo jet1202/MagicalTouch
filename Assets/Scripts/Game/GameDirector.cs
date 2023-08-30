@@ -100,7 +100,7 @@ public class GameDirector : MonoBehaviour
         
         if (!isAudio)
         {
-            if (musicTime > -ScoreData.setting.Game.SongOffset)
+            if (musicTime > -ScoreData.setting.Game.SongOffset / 1000f)
             {
                 isAudio = true;
                 cri.bgm.Play(0);
