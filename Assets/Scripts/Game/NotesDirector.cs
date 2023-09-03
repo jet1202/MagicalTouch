@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.TerrainUtils;
 using UnityEngine.UI;
 
 public class NotesDirector : MonoBehaviour
