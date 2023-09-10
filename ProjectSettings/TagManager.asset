@@ -47,3 +47,6 @@ TagManager:
   - name: Notes
     uniqueID: 1034825351
     locked: 0
+  - name: Important
+    uniqueID: 4204991855
+    locked: 0

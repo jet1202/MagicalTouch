@@ -650,19 +650,35 @@ public class NotesDirector : MonoBehaviour
             GameObject Tins = effectPool.GetComponent<MyObjectPool>().SetObject();
             
             Transform Tr = Tins.transform;
-            Transform Tc = Tr.GetChild(0);
+            
+            Transform Tnote = Tr.GetChild(0);
+            Tnote.GetComponent<MeshRenderer>().sortingLayerName = "Important";
             Tr.position = appearPos;
             Tr.rotation = Quaternion.identity;
-            Tc.GetComponent<MeshRenderer>().material.color = tColor;
-            Tc.localScale = new Vector3(wi, 1f, 1f);
+            Tnote.GetComponent<MeshRenderer>().material.color = tColor;
+            Tnote.localScale = new Vector3(wi, 1f, 1f);
+            Tnote.transform.localPosition = Vector3.zero;
 
             Sequence seq = DOTween.Sequence();
-            seq.Append(Tr.DOMoveY(6f, 0.4f).SetEase(Ease.OutQuad));
-            seq.Join(Tc.GetComponent<MeshRenderer>().material.DOFade(0f, 0.5f).SetEase(Ease.Linear));
+            seq.Append(Tnote.DOMoveY(6f, 0.4f).SetEase(Ease.OutQuad));
+            seq.Join(Tnote.GetComponent<MeshRenderer>().material.DOFade(0f, 0.5f).SetEase(Ease.Linear));
             seq.Play().OnComplete(() =>
             {
                 effectPool.GetComponent<MyObjectPool>().RemoveObject(Tins);
             });
+            
+            Transform Tflick = Tr.GetChild(1);
+            Tflick.GetComponent<MeshRenderer>().sortingLayerName = "Important";
+
+            if (kind == 'F')
+            {
+                Tflick.gameObject.SetActive(true);
+                Tflick.GetComponent<Renderer>().material.SetFloat("_Adapt", Time.time);
+            }
+            else
+            {
+                Tflick.gameObject.SetActive(false);
+            }
         }
     }
 
