@@ -679,6 +679,13 @@ public class NotesDirector : MonoBehaviour
             {
                 Tflick.gameObject.SetActive(false);
             }
+            
+            Transform Tfade = Tr.GetChild(2);
+            Tfade.GetComponent<MeshRenderer>().sortingLayerName = "Important";
+            
+            Tfade.gameObject.SetActive(true);
+            Tfade.GetComponent<Renderer>().material.SetFloat("_Adapt", Time.time);
+            Tfade.transform.localScale = new Vector3(wi, 8f, 1f);
         }
     }
 

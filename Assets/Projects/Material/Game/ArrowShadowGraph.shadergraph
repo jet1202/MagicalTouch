@@ -2080,13 +2080,13 @@
     },
     "m_Name": "Time",
     "m_DrawState": {
-        "m_Expanded": true,
+        "m_Expanded": false,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2093.0,
-            "y": 450.0000305175781,
-            "width": 124.0,
-            "height": 173.00003051757813
+            "x": -1975.9998779296875,
+            "y": 470.0,
+            "width": 79.0,
+            "height": 77.0
         }
     },
     "m_Slots": [
