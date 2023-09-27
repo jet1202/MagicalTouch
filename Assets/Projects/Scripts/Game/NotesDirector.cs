@@ -62,7 +62,11 @@ public class NotesDirector : MonoBehaviour
     private bool isColor;
     private float noteThickness;
     private float tapOffset;
-    
+
+    private float jsize = 1f;
+    private float lfsize = 1f;
+    private float lfpos = 4.5f;
+
     // ノーツ数
     private int total;
     public int combo = 0;
@@ -362,7 +366,6 @@ public class NotesDirector : MonoBehaviour
         if (noteData.Value.GetKind() == 'B')
         {
             var n = noteData.Value;
-            Debug.Log($"{n.GetNumber()}, {n.GetStartLane()}, {n.GetEndLane()}, {n.GetTime()}");
         }
 
         float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.5f;
@@ -567,8 +570,9 @@ public class NotesDirector : MonoBehaviour
         Jins.transform.rotation = Quaternion.identity;
         char judgeKind = 'M';
 
-        Color eColor = Color.black;
+        // Color eColor = Color.black;
         Color tColor = Color.black;
+        Color fColor = Color.clear;
         
         int s = 0;
         switch (kind)
@@ -595,6 +599,7 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 1f, 0f, 150f / 255f);
+            fColor = Color.yellow;
             resultPoint[3]++;
             combo++;
         }
@@ -603,6 +608,7 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 1f, 1f, 150f / 255f);
+            fColor = Color.white;
             if (gap > 0)
                 resultPoint[4]++;
             else
@@ -614,6 +620,7 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'G';
             Pcolor = new Color(95f / 255f, 184f / 255f, 1f, 1f);
             tColor = new Color(1f, 1f, 1f, 150f / 255f);
+            fColor = Color.cyan;
             // eColor = new Color(0f, 70f / 255f, 1f, 70f / 255f);
             if (gap > 0)
                 resultPoint[5]++;
@@ -626,7 +633,8 @@ public class NotesDirector : MonoBehaviour
         {
             judgeKind = 'B';
             Pcolor = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
-            eColor = new Color(0f, 1f, 0f, 70f / 255f);
+            tColor = Color.clear;
+            fColor = Color.green;
             if (gap > 0)
                 resultPoint[6]++;
             else
@@ -641,8 +649,8 @@ public class NotesDirector : MonoBehaviour
         notesN10 += s;
         if (maxCombo < combo) maxCombo = combo;
         
-        if (eColor != Color.black)
-            LaneEffect(start, end, new Color(0f, 1f, 0f, 70f / 255f));
+        // if (eColor != Color.black)
+        //     LaneEffect(start, end, new Color(0f, 1f, 0f, 70f / 255f));
 
         if (tColor != Color.black)
         {
@@ -650,11 +658,12 @@ public class NotesDirector : MonoBehaviour
             GameObject Tins = effectPool.GetComponent<MyObjectPool>().SetObject();
             
             Transform Tr = Tins.transform;
-            
-            Transform Tnote = Tr.GetChild(0);
-            Tnote.GetComponent<MeshRenderer>().sortingLayerName = "Important";
             Tr.position = appearPos;
             Tr.rotation = Quaternion.identity;
+            
+            // effect1 灰色のノーツの形をしたエフェクト
+            Transform Tnote = Tr.GetChild(0);
+            Tnote.GetComponent<MeshRenderer>().sortingLayerName = "Important";
             Tnote.GetComponent<MeshRenderer>().material.color = tColor;
             Tnote.localScale = new Vector3(wi, 1f, 1f);
             Tnote.transform.localPosition = Vector3.zero;
@@ -667,6 +676,7 @@ public class NotesDirector : MonoBehaviour
                 effectPool.GetComponent<MyObjectPool>().RemoveObject(Tins);
             });
             
+            // effect2 フリックエフェクト
             Transform Tflick = Tr.GetChild(1);
             Tflick.GetComponent<MeshRenderer>().sortingLayerName = "Important";
 
@@ -680,12 +690,30 @@ public class NotesDirector : MonoBehaviour
                 Tflick.gameObject.SetActive(false);
             }
             
+            // effect3 全体タッチエフェクト
             Transform Tfade = Tr.GetChild(2);
             Tfade.GetComponent<MeshRenderer>().sortingLayerName = "Important";
             
             Tfade.gameObject.SetActive(true);
             Tfade.GetComponent<Renderer>().material.SetFloat("_Adapt", Time.time);
             Tfade.transform.localScale = new Vector3(wi, 8f, 1f);
+            
+            // effect4 LateFast
+            Transform Tlf = Tr.GetChild(3);
+            if (g > 0.05f)
+            {
+                Tlf.GetComponent<MeshRenderer>().sortingLayerName = "Important";
+                Tlf.localPosition = new Vector3(0f, lfpos, 0f);
+                Tlf.localScale = new Vector3(lfsize, lfsize / 2f, lfsize);
+
+                Tlf.gameObject.SetActive(true);
+                Tlf.GetComponent<Renderer>().material.SetFloat("_kind", gap > 0 ? 1f : 0f);
+                Tlf.DOMoveY(lfpos + 1f, 0.5f).SetEase(Ease.OutQuart);
+            }
+            else
+            {
+                Tlf.gameObject.SetActive(false);
+            }
         }
     }
 
