@@ -33,9 +33,15 @@ public class ScrollController : MonoBehaviour
     public Tweener horizontalTweener;
     public Tweener verticalTweener;
 
+    [Header("Scrollの摩擦力")]
     public float friction = 0.1f;
+    [Header("Scrollが端に行ったときの戻る強さ")]
+    public float returnForce = 1f;
+    [Header("Scrollが止まるライン")]
     public float stopForce = 0.3f;
+    [Header("慣性")]
     public float inertia = 0;
+    [Header("cubeの回転")]
     public float cubeRotate = 0f;
 
     public bool isScrollDragging = false;
@@ -85,6 +91,10 @@ public class ScrollController : MonoBehaviour
         SongChange();
     }
 
+    /// <summary>
+    ///     Scrollの初期設定
+    /// </summary>
+    /// <param name="num"></param>
     private void AdjustNumber(int num)
     {
         number = num;
@@ -97,8 +107,10 @@ public class ScrollController : MonoBehaviour
         
         sortText.text = mode.ToString();
     }
-
-    // Sort mode is changed
+    
+    /// <summary>
+    ///     Sortの変更
+    /// </summary>
     public void SortChange()
     {
         int m = ((int)mode + 1) % 4;
@@ -107,17 +119,22 @@ public class ScrollController : MonoBehaviour
         
         ListSort();
     }
-
-    // Difficulty is changed
+    
+    /// <summary>
+    ///     難易度の変更
+    /// </summary>
+    /// <param name="d"></param>
     public void ChangeDifficulty(int d)
     {
         difficulty = (DifficultyMode)Enum.ToObject(typeof(DifficultyMode), d);
         // Debug.Log($"difficulty = {(int)difficulty}, {difficulty.ToString()}");
         ListSort();
     }
-
-    // Play sort
-    void ListSort()
+    
+    /// <summary>
+    ///     Listのソート
+    /// </summary>
+    private void ListSort()
     {
         string nowSong = songList[number].id;
         int num;
@@ -151,9 +168,13 @@ public class ScrollController : MonoBehaviour
         AdjustNumber(num);
         SongChange();
     }
-
-    // Cubeに変更を反映
-    void CubeChange(int cube, int number)
+    
+    /// <summary>
+    ///     Cubeの画像を変更
+    /// </summary>
+    /// <param name="cube"></param>
+    /// <param name="number"></param>
+    private void CubeChange(int cube, int number)
     {
         if (cube < 0) cube += 12;
         
@@ -188,7 +209,10 @@ public class ScrollController : MonoBehaviour
         boxDisplay[cube] = number;
     }
     
-    void SongChange()
+    /// <summary>
+    ///     Songの変更を反映
+    /// </summary>
+    private void SongChange()
     {
         // 反対側のCubeの画像を変更
         for (int i = number - 5; i < number + 7; i++)
@@ -214,22 +238,30 @@ public class ScrollController : MonoBehaviour
         composer.GetComponent<TextMeshProUGUI>().text = songList[number].composer;
     }
 
+    /// <summary>
+    ///     Scrollのドラッグ開始
+    /// </summary>
+    /// <param name="position"></param>
     public void BarChange(float position)
     {
         if (position > 1f)
         {
-            scrollbar.value = 1f;
-            return;
+            inertia /= 1f + returnForce;
+            position = 0.5f * (float)Math.Atan(2f * (position - 1)) + 1f;
+            // scrollbar.value = 1f;
+            // return;
         }
         if (position < 0f)
         {
-            scrollbar.value = 0f;
-            return;
+            inertia /= 1f + returnForce;
+            position = 0.5f * (float)Math.Atan(2f * position);
+            // scrollbar.value = 0f;
+            // return;
         }
-
+        
         _scrollNumber = position * (leng - 1);
         int Bnumber = number;
-        number = (int)Math.Round(_scrollNumber);
+        number = Math.Clamp((int)Math.Round(_scrollNumber), 0, leng - 1);
 
         Quaternion rot = Quaternion.AngleAxis(-_scrollNumber * 30, Vector3.up);
         CenterBoxes.transform.rotation = rot;
@@ -238,6 +270,9 @@ public class ScrollController : MonoBehaviour
             SongChange();
     }
 
+    /// <summary>
+    ///     Scrollの位置を調整
+    /// </summary>
     public void AdjustPosition()
     {
         float ini = leng - 1 == 0 ? 0f : _scrollNumber / (leng - 1);
@@ -253,9 +288,15 @@ public class ScrollController : MonoBehaviour
             0.3f
             );
         
+        // 音楽の変更
         StartCoroutine(audioPlayer.SetMusic(songList[number].id, songList[number].chorus));
     }
 
+    /// <summary>
+    ///     縦Scrollの位置を調整
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="isV"></param>
     public void AdjustDifficulty(int e, bool isV)
     {
         if (isV)
@@ -290,11 +331,16 @@ public class ScrollController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///     cubeの縦回転（x軸回転）
+    /// </summary>
+    /// <param name="del"></param>
     public void CubeRotation(float del)
     {
         cubeRotate += del;
         for (int i = 0; i < 12; i++)
         {
+            // 一度回転軸を合わせてから回転
             Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
             var lot = boxes[i].transform.localRotation;
             boxes[i].transform.localRotation = localAngle;
@@ -309,6 +355,7 @@ public class ScrollController : MonoBehaviour
             scrollbar.value -= leng - 1 == 0 ? 0f :inertia * (1f / 30f) / (leng - 1);
             inertia /= 1f + friction;
 
+            // スクロールスピードが一定以下になったら止め、位置を調整
             if (Math.Abs(inertia) < stopForce)
             {
                 inertia = 0f;
@@ -318,6 +365,11 @@ public class ScrollController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///     Difficultyの色を取得
+    /// </summary>
+    /// <param name="m"></param>
+    /// <returns></returns>
     public Color GetColor(DifficultyMode m)
     {
         Color color = new Color();

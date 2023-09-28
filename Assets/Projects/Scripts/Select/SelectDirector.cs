@@ -37,6 +37,7 @@ public class SelectDirector : MonoBehaviour
 
     IEnumerator Start()
     {
+        // canvasを表示
         contentCanvas.SetActive(true);
         subCanvas.SetActive(false);
         mainCamera.SetActive(true);
@@ -47,13 +48,14 @@ public class SelectDirector : MonoBehaviour
 
         songList = Array.Empty<SongList>();
 
+        // 曲データの読み込み
         IEnumerator corutine = importScore.ImportSongData();
         yield return StartCoroutine(corutine);
         songList = (SongList[])corutine.Current;
 
         // division = SelectData.division;
         division = "Pack1";
-
+        
         List<SongList> displaySong = new List<SongList>();
         int leng = songList.Length;
         for (int i = 0; i < leng; i++)
@@ -62,14 +64,19 @@ public class SelectDirector : MonoBehaviour
                 displaySong.Add(songList[i]);
         }
 
+        // スクロールの設定
         yield return StartCoroutine(scrollController.Setting(displaySong));
 
         isOk = true;
 
+        // マスクを消す
         mask.GetComponent<Image>().DOFade(0f, 0.7f)
             .OnComplete(() => mask.SetActive(false));
     }
 
+    /// <summary>
+    ///     曲確定、subシーンに移動
+    /// </summary>
     public void MoveGame()
     {
         audioPlayer.StopBgm();
@@ -86,6 +93,9 @@ public class SelectDirector : MonoBehaviour
                 });
     }
 
+    /// <summary>
+    ///     設定画面に移動
+    /// </summary>
     public void MoveSetting()
     {
         SettingData.fromScene = SceneManager.GetActiveScene().name;
