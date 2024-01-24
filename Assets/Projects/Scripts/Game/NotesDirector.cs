@@ -24,7 +24,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject slideNote;
     [SerializeField] private GameObject slideMaintainNote;
     [SerializeField] private GameObject maintainNote;
-    [SerializeField] private GameObject pushLine;
+    [SerializeField] private GameObject slideFieldPrefab;
 
     [SerializeField] private GameObject judgePool;
     [SerializeField] private GameObject paddlePool;
@@ -36,7 +36,6 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject mask;
     
     private List<KeyValuePair<GameObject, Note>> NotesData = new List<KeyValuePair<GameObject, Note>>();
-    private List<KeyValuePair<GameObject, int>> LinesData = new List<KeyValuePair<GameObject, int>>();
     private List<Trash> TrashData = new List<Trash>();
 
     public BpmItem[] bpmData;
@@ -118,7 +117,7 @@ public class NotesDirector : MonoBehaviour
         // Slide
         corutine = importData.ImportSlide();
         yield return StartCoroutine(corutine);
-        List<KeyValuePair<Note, SlideMaintain[]>> slideData = (List<KeyValuePair<Note, SlideMaintain[]>>)corutine.Current;
+        Dictionary<int, SlideSave> slideData = (Dictionary<int, SlideSave>)corutine.Current;
         
         // Bpm
         corutine = importData.ImportBpm(id, difficulty);
@@ -131,20 +130,29 @@ public class NotesDirector : MonoBehaviour
         yield return StartCoroutine(corutine);
         FieldSave field = (FieldSave)corutine.Current;
         if (field == null) throw new Exception();
+        
+        List<KeyValuePair<Note, bool>> JudgeNotes = new List<KeyValuePair<Note, bool>>(); // note, isAppear
+        List<Note> TrashNotes = new List<Note>();
+
+        bool[] fieldIsDummy = new bool[field.item.Length];
+        int lo = 0;
         foreach (var f in field.item)
         {
             GameObject obj = Instantiate(fieldPrefab);
             fieldObjects.Add(obj);
             
-            obj.GetComponent<FieldController>().ItemImport(f.speedItem, f.angleWork, f.activeTime);
+            obj.GetComponent<FieldController>().ItemImport(f.speedItem, f.angleWork, f.transparencyItem);
             obj.SetActive(true);
+
+            fieldIsDummy[lo] = f.isDummy;
+            lo++;
         }
         
         Destroy(importData);
 
         cri.SetBgm(id);
 
-        // Maintainの判定をリストに格納
+        // LongMaintainの判定をリストに格納
         MaintainJudge = new List<float>();
         int b;
         float t, nex;
@@ -165,152 +173,148 @@ public class NotesDirector : MonoBehaviour
             }
         }
         
-        // ノーツの設定(Longノーツの中継判定地点を作る), ノーツ数計算
-        leng = notesSheetA.Count;
-        Note n;
-        for (int i = 0; i < leng; i++)
+        // ノーツたちをJudgeNotesとTrashNotesに分類
+        int lengt = notesSheetA.Count;
+        for (int i = 0; i < lengt; i++)
         {
-            n = notesSheetA[i];
+            Note n = notesSheetA[i];
+            if (n.GetKind() == 'L')
+            {
+                if (fieldIsDummy[n.GetField()])
+                    TrashNotes.Add(n);
+                else
+                {
+                    JudgeNotes.Add(new KeyValuePair<Note, bool>(n, true));
+                    
+                    // LongMaintainの判定地点を作る
+                    // 終点('T')の判定
+                    if (n.GetLength() <= 10) continue;
+
+                    JudgeNotes.Add(new KeyValuePair<Note, bool>(
+                        new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T',
+                            0, n.GetField()), false));
+
+                    int fir;
+                    for (int j = 0;; j++)
+                    {
+                        if (MaintainJudge[j] > (n.GetTime() + 11) / 1000f)
+                        {
+                            fir = j;
+                            break;
+                        }
+                    }
+
+                    for (int j = fir;; j++)
+                    {
+                        if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 10) / 1000f)
+                            break;
+
+                        JudgeNotes.Add(new KeyValuePair<Note, bool>(new Note(n.GetNumber(), (int)Math.Floor(MaintainJudge[j] * 1000),
+                            n.GetStartLane(), n.GetEndLane(), 'M', 0, n.GetField()), false));
+                    }
+                }
+            }
+            else if (n.GetKind() == 'S')
+            {
+                var m = slideData[n.GetNumber()];
+                
+                TrashNotes.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), 'A', 0, n.GetField()));
+
+                if (fieldIsDummy[n.GetField()])
+                {
+                    if (!m.isDummy)
+                        TrashNotes.Add(n);
+                    continue;
+                }
+                else
+                {
+                    if (m.isDummy)
+                        continue;
+                    else
+                        JudgeNotes.Add(new KeyValuePair<Note, bool>(n, true));
+                }
+                
+                
+                foreach (var sm in m.item)
+                {
+                    if (sm.isJudge)
+                    {
+                        JudgeNotes.Add(new KeyValuePair<Note, bool>(new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'B', 0, n.GetField()), false));
+                    }
+                    
+                    if (sm == m.item.Last())
+                    {
+                        TrashNotes.Add(new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'P', 0,
+                            n.GetField()));
+                    }
+                }
+            }
+            else
+            {
+                if (fieldIsDummy[n.GetField()])
+                    TrashNotes.Add(n);
+                else
+                    JudgeNotes.Add(new KeyValuePair<Note, bool>(n, true));
+            }
+        }
+        
+        // スコア計算
+        foreach (var np in JudgeNotes)
+        {
+            Note n = np.Key;
+
+            int score10 = 0;
             switch (n.GetKind())
             {
                 case 'N':
                 case 'F':
                 case 'L':
-                    total++;
-                    totalN10 += 10;
+                case 'S':
+                    score10 = 10;
                     break;
                 case 'H':
-                    total++;
-                    totalN10 += 6;
+                case 'M':
+                case 'T':
+                case 'B':
+                    score10 = 2;
                     break;
             }
-            
-            if (n.GetKind() != 'L') continue;
-            
-            // 終点('T')の判定
-            if (n.GetLength() <= 10) continue;
-            
-            notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T', 0, n.GetField()));
+
             total++;
-            totalN10 += 2;
-
-            int fir;
-            for (int j = 0;; j++)
-            {
-                if (MaintainJudge[j] > (n.GetTime() + 11) / 1000f)
-                {
-                    fir = j;
-                    break;
-                }
-            }
-            
-            for (int j = fir;; j++)
-            {
-                if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 10) / 1000f)
-                    break;
-                
-                notesSheetA.Add(new Note(n.GetNumber(), (int)Math.Floor(MaintainJudge[j] * 1000), n.GetStartLane(), n.GetEndLane(), 'M', 0, n.GetField()));
-                total++;
-                totalN10 += 2;
-            }
-        }
-        
-        // slideの設定、ノーツ数計算
-        Dictionary<int, SlideMaintain[]> slideMaintains = new Dictionary<int, SlideMaintain[]>();
-        if (slideData != null)
-        {
-            int i = 0;
-            foreach (var s in slideData)
-            {
-                n = s.Key;
-                notesSheetA.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), n.GetKind(), i, n.GetField()));
-                slideMaintains.Add(i, s.Value);
-                total++;
-                totalN10 += 10;
-
-                foreach (var sm in s.Value)
-                {
-                    if (sm.isJudge)
-                    {
-                        notesSheetA.Add(new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'B', 0, n.GetField()));
-                        total++;
-                        totalN10 += 2;
-                    }
-                    
-                    if (sm == s.Value.Last())
-                    {
-                        GameObject ins = Instantiate(NoteKind('B'), fieldObjects[n.GetField()].transform.GetChild(1));
-                        NoteSettings(new KeyValuePair<GameObject, Note>(ins, new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'B', 0, n.GetField())));
-                        ins.GetComponent<SpriteRenderer>().enabled = true;
-                        TrashData.Add(new Trash(ins, (n.GetTime() + sm.time) / 1000f, n.GetStartLane(), n.GetEndLane(), 'P'));
-                    }
-                }
-
-                i++;
-            }
+            totalN10 += score10;
         }
 
         // 整列
-        var notesData = notesSheetA.OrderBy(x => x.GetTime()).ThenBy(x => x.GetStartLane());
-        List<Note> notesSheet = new List<Note>();
-        foreach (var data in notesData)
-        {
-            notesSheet.Add(data);
-        }
+        JudgeNotes = new List<KeyValuePair<Note, bool>>(JudgeNotes.OrderBy(x => x.Key.GetTime()));
+        TrashNotes = new List<Note>(TrashNotes.OrderBy(x => x.GetTime()));
 
-        // ノーツの生成
-        int len = notesSheet.Count;
+        // ノーツの生成 (判定のあるもの)
+        int len = JudgeNotes.Count;
         for (int i = 0; i < len; i++)
         {
-            GameObject ins = Instantiate(NoteKind(notesSheet[i].GetKind()), fieldObjects[notesSheet[i].GetField()].transform.GetChild(1));
-            _notesData = new KeyValuePair<GameObject, Note>(ins, notesSheet[i]);
-            NoteSettings(_notesData);
-            if (_notesData.Value.GetKind() == 'S')
-            {
-                SlideSettings(_notesData.Key, _notesData.Value, slideMaintains[_notesData.Value.GetLength()]);
-            }
+            Note n = JudgeNotes[i].Key;
+            GameObject ins = Instantiate(NoteKind(n.GetKind()), fieldObjects[n.GetField()].transform.GetChild(1));
+            _notesData = new KeyValuePair<GameObject, Note>(ins, n);
+            NoteSettings(_notesData, JudgeNotes[i].Value);
             NotesData.Add(_notesData);
+        }
+        
+        // ノーツの生成 (判定のないもの)
+        len = TrashNotes.Count;
+        for (int i = 0; i < len; i++)
+        {
+            Note n = TrashNotes[i];
+            GameObject ins = Instantiate(NoteKind(n.GetKind()), fieldObjects[n.GetField()].transform.GetChild(1));
+            _notesData = new KeyValuePair<GameObject, Note>(ins, n);
+            NoteSettings(_notesData, true);
+            if (_notesData.Value.GetKind() == 'A')
+            {
+                SlideSettings(_notesData.Key, _notesData.Value, slideData[_notesData.Value.GetNumber()].item);
+            }
+            TrashData.Add(new Trash(_notesData.Key, _notesData.Value.GetTime() / 1000f, _notesData.Value.GetStartLane(), _notesData.Value.GetEndLane(), _notesData.Value.GetKind()));
         }
 
         TrashData = new List<Trash>(TrashData.OrderBy(x => x.GetTime()));
-        
-        // 同時押しラインの生成
-        if (isPushLine)
-        {
-            LinesData = new List<KeyValuePair<GameObject, int>>();
-            Note beforeData = null;
-            foreach (var data in notesSheet)
-            {
-                if (beforeData == null)
-                {
-                    beforeData = data;
-                    continue;
-                }
-                char kind = data.GetKind();
-                char beforeKind = beforeData.GetKind();
-                int nowField = data.GetField();
-                int beforeField = beforeData.GetField();
-                if (kind == 'M' || kind == 'T' || kind == 'B' || beforeKind == 'M' || beforeKind == 'T' || beforeKind == 'B' ||
-                    beforeData.GetTime() != data.GetTime() || beforeData.GetEndLane() >= data.GetStartLane() || nowField != beforeField)
-                {
-                    beforeData = data;
-                    continue;
-                }
-
-                GameObject ins = Instantiate(pushLine, fieldObjects[nowField].transform.GetChild(1));
-
-                float time = TimeTo(data.GetTime() / 1000f, nowField) * Speed;
-                var positions = new Vector3[]
-                {
-                    new Vector3(-6f + beforeData.GetEndLane(), 0f, time),
-                    new Vector3(-6f + data.GetStartLane(), 0f, time)
-                };
-                ins.GetComponent<LineRenderer>().SetPositions(positions);
-                LinesData.Add(new KeyValuePair<GameObject, int>(ins, data.GetTime()));
-
-                beforeData = data;
-            }
-        }
         
         // 画面の設定
         if (isColor)
@@ -359,7 +363,7 @@ public class NotesDirector : MonoBehaviour
         return pos;
     }
 
-    private void NoteSettings(KeyValuePair<GameObject, Note> noteData)
+    private void NoteSettings(KeyValuePair<GameObject, Note> noteData, bool isAppear)
     {
         int field = noteData.Value.GetField();
 
@@ -401,6 +405,8 @@ public class NotesDirector : MonoBehaviour
             var n = noteData.Value;
             TrashData.Add(new Trash(noteData.Key.transform.GetChild(0).gameObject, (n.GetTime() + n.GetLength()) / 1000f, n.GetStartLane(), n.GetEndLane(), n.GetKind()));
         }
+        
+        noteData.Key.SetActive(isAppear);
     }
 
     private void SlideSettings(GameObject obj, Note slide, SlideMaintain[] maintains)
@@ -497,7 +503,11 @@ public class NotesDirector : MonoBehaviour
                 k = slideNote;
                 break;
             case 'B':
+            case 'P':
                 k = slideMaintainNote;
+                break;
+            case 'A':
+                k = slideFieldPrefab;
                 break;
             default:
                 k = normalNote;
@@ -857,19 +867,6 @@ public class NotesDirector : MonoBehaviour
                 {
                     index++;
                 }
-            }
-        }
-
-        if (LinesData.Count != 0)
-        {
-            _linesData = LinesData[0];
-            while (_linesData.Value / 1000f < gameDirector.musicTime)
-            {
-                _linesData.Key.GetComponent<LineRenderer>().enabled = false;
-                LinesData.RemoveAt(0);
-
-                if (LinesData.Count == 0) break;
-                _linesData = LinesData[0];
             }
         }
 

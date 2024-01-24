@@ -83,6 +83,8 @@ public class NoteSave
 public class SlideSave
 {
     public int number;
+    public int color;
+    public bool isDummy;
     public SlideMaintain[] item;
 }
 
@@ -119,9 +121,10 @@ public class FieldSave
 public class Field
 {
     public int field;
+    public bool isDummy;
     public SpeedItem[] speedItem;
     public AngleWork[] angleWork;
-    public int[] activeTime;
+    public TransparencyItem[] transparencyItem;
 }
 
 [Serializable]
@@ -138,4 +141,12 @@ public class AngleWork
     public int time;
     public int angle;
     public int variation;
+}
+
+[Serializable]
+public class TransparencyItem
+{
+    public int time;
+    public int alpha;
+    public bool isVariation;
 }

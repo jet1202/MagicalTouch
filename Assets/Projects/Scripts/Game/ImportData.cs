@@ -11,8 +11,8 @@ public class ImportData : MonoBehaviour
     private List<Note> _notesData;
     private BpmSave _bpmData;
     private FieldSave _fieldData;
-    private Dictionary<int, SlideMaintain[]> _slideMaintainData;
-    private List<KeyValuePair<Note, SlideMaintain[]>> _slideData;
+    private Dictionary<int, SlideSave> _slideMaintainData;
+    private Dictionary<int, SlideSave> _slideData;
 
     public IEnumerator ImportSheet(string name, string difficulty)
     {
@@ -89,28 +89,28 @@ public class ImportData : MonoBehaviour
 
                 NoteSaveData saveData = JsonUtility.FromJson<NoteSaveData>(jsonStr);
 
-                _slideMaintainData = new Dictionary<int, SlideMaintain[]>();
+                _slideMaintainData = new Dictionary<int, SlideSave>();
                 if (saveData.slideItem != null)
                 {
                     foreach (var ss in saveData.slideItem)
                     {
-                        _slideMaintainData.Add(ss.number, ss.item);
+                        _slideMaintainData.Add(ss.number, ss);
                     }
                 }
 
                 // notesDataとslidesDataにデータを格納
                 Note note;
-                _slideData = new List<KeyValuePair<Note, SlideMaintain[]>>();
+                _slideData = new Dictionary<int, SlideSave>();
                 foreach (var n in saveData.item)
                 {
                     note = new Note(n.number, n.time, n.startLane, n.endLane, n.kind, n.length, n.field);
                     if (n.kind == 'S')
                     {
                         var data = _slideMaintainData[n.number];
-                        _slideData.Add(new KeyValuePair<Note, SlideMaintain[]>(note, data));
+                        _slideData.Add(n.number, data);
                     }
-                    else
-                        _notesData.Add(note);
+                    
+                    _notesData.Add(note);
                 }
             }
             else
