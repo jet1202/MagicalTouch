@@ -30,7 +30,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject paddlePool;
     [SerializeField] private GameObject effectPool;
     
-    [SerializeField] private SpriteRenderer justFlame;
+    [SerializeField] private LineRenderer justFlame;
     [SerializeField] private List<MeshRenderer> laneArray;
 
     [SerializeField] private GameObject mask;
@@ -55,11 +55,10 @@ public class NotesDirector : MonoBehaviour
     private string title;
     private string id;
     private string difficulty;
-    
-    private bool isPushLine;
+
+    private float noteThickness;
     private bool isAuto;
     private bool isColor;
-    private float noteThickness;
     private float tapOffset;
 
     private float jsize = 1f;
@@ -97,10 +96,9 @@ public class NotesDirector : MonoBehaviour
         difficulty = GameData.difficult;
         
         var set = ScoreData.setting.Game;
-        isPushLine = set.IsPushLine;
+        noteThickness = set.NoteThickness / 10f;
         isAuto = set.IsAuto;
         isColor = set.IsColor;
-        noteThickness = set.NoteThickness / 10f;
         tapOffset = set.TapOffset / 1000f;
         
         mask.SetActive(true);
@@ -140,6 +138,9 @@ public class NotesDirector : MonoBehaviour
         {
             GameObject obj = Instantiate(fieldPrefab);
             fieldObjects.Add(obj);
+            
+            if (f.transparencyItem == null)
+                f.transparencyItem = new TransparencyItem[]{new TransparencyItem(){time = 0, alpha = 100, isVariation = false}};
             
             obj.GetComponent<FieldController>().ItemImport(f.speedItem, f.angleWork, f.transparencyItem);
             obj.SetActive(true);
@@ -188,7 +189,7 @@ public class NotesDirector : MonoBehaviour
                     
                     // LongMaintainの判定地点を作る
                     // 終点('T')の判定
-                    if (n.GetLength() <= 10) continue;
+                    if (n.GetLength() <= 100) continue;
 
                     JudgeNotes.Add(new KeyValuePair<Note, bool>(
                         new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T',
@@ -197,7 +198,7 @@ public class NotesDirector : MonoBehaviour
                     int fir;
                     for (int j = 0;; j++)
                     {
-                        if (MaintainJudge[j] > (n.GetTime() + 11) / 1000f)
+                        if (MaintainJudge[j] > (n.GetTime() + 101) / 1000f)
                         {
                             fir = j;
                             break;
@@ -206,7 +207,7 @@ public class NotesDirector : MonoBehaviour
 
                     for (int j = fir;; j++)
                     {
-                        if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 10) / 1000f)
+                        if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 100) / 1000f)
                             break;
 
                         JudgeNotes.Add(new KeyValuePair<Note, bool>(new Note(n.GetNumber(), (int)Math.Floor(MaintainJudge[j] * 1000),
@@ -217,8 +218,9 @@ public class NotesDirector : MonoBehaviour
             else if (n.GetKind() == 'S')
             {
                 var m = slideData[n.GetNumber()];
-                
-                TrashNotes.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), 'A', 0, n.GetField()));
+
+                TrashNotes.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), 'A', 0,
+                    n.GetField()));
 
                 if (fieldIsDummy[n.GetField()])
                 {
@@ -239,7 +241,9 @@ public class NotesDirector : MonoBehaviour
                 {
                     if (sm.isJudge)
                     {
-                        JudgeNotes.Add(new KeyValuePair<Note, bool>(new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'B', 0, n.GetField()), false));
+                        JudgeNotes.Add(new KeyValuePair<Note, bool>(
+                            new Note(n.GetNumber(), n.GetTime() + sm.time, sm.startLane, sm.endLane, 'B', 0,
+                                n.GetField()), false));
                     }
                     
                     if (sm == m.item.Last())
@@ -293,7 +297,7 @@ public class NotesDirector : MonoBehaviour
         for (int i = 0; i < len; i++)
         {
             Note n = JudgeNotes[i].Key;
-            GameObject ins = Instantiate(NoteKind(n.GetKind()), fieldObjects[n.GetField()].transform.GetChild(1));
+            GameObject ins = Instantiate(NoteKind(n.GetKind()), fieldObjects[n.GetField()].transform.GetChild(0));
             _notesData = new KeyValuePair<GameObject, Note>(ins, n);
             NoteSettings(_notesData, JudgeNotes[i].Value);
             NotesData.Add(_notesData);
@@ -304,24 +308,34 @@ public class NotesDirector : MonoBehaviour
         for (int i = 0; i < len; i++)
         {
             Note n = TrashNotes[i];
-            GameObject ins = Instantiate(NoteKind(n.GetKind()), fieldObjects[n.GetField()].transform.GetChild(1));
+            GameObject ins = Instantiate(NoteKind(n.GetKind()), fieldObjects[n.GetField()].transform.GetChild(0));
             _notesData = new KeyValuePair<GameObject, Note>(ins, n);
             NoteSettings(_notesData, true);
             if (_notesData.Value.GetKind() == 'A')
             {
                 SlideSettings(_notesData.Key, _notesData.Value, slideData[_notesData.Value.GetNumber()].item);
             }
-            TrashData.Add(new Trash(_notesData.Key, _notesData.Value.GetTime() / 1000f, _notesData.Value.GetStartLane(), _notesData.Value.GetEndLane(), _notesData.Value.GetKind()));
+            else
+            {
+                TrashData.Add(new Trash(_notesData.Key, _notesData.Value.GetTime() / 1000f,
+                    _notesData.Value.GetStartLane(), _notesData.Value.GetEndLane(),
+                    Char.ToLower(_notesData.Value.GetKind())));
+            }
         }
 
         TrashData = new List<Trash>(TrashData.OrderBy(x => x.GetTime()));
         
         // 画面の設定
         if (isColor)
-            justFlame.color = new Color(1f, 1f, 0f, 1f);
+        {
+            justFlame.startColor = new Color(1f, 1f, 0f, 1f);
+            justFlame.endColor = new Color(1f, 1f, 0f, 1f);
+        }
         else
-            justFlame.color = Color.white;
-        justFlame.size = new Vector2(12.06f, noteThickness);
+        {
+            justFlame.startColor = Color.white;
+            justFlame.endColor = Color.white;
+        }
 
         gameDirector.isOk = true;
         Debug.Log($"finish total = {total}, N10 = {totalN10}");
@@ -377,17 +391,18 @@ public class NotesDirector : MonoBehaviour
         float time = TimeTo(noteData.Value.GetTime() / 1000f, field) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
-        noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, noteThickness);
+        if (noteData.Value.GetKind() != 'A')
+            noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, noteThickness);
         
-        float rot = fieldObjects[field].GetComponent<FieldController>().TimeToAngle(noteData.Value.GetTime() / 1000f);
-            
-        Quaternion r = noteData.Key.transform.rotation;
-        noteData.Key.transform.rotation = r * Quaternion.AngleAxis(rot, Vector3.right);
-        if (noteData.Value.GetKind() == 'S' || noteData.Value.GetKind() == 'L')
-        {
-            Quaternion s = noteData.Key.transform.GetChild(0).rotation;
-            noteData.Key.transform.GetChild(0).rotation = s * Quaternion.AngleAxis(-rot, Vector3.right);
-        }
+        // float rot = fieldObjects[field].GetComponent<FieldController>().TimeToAngle(noteData.Value.GetTime() / 1000f);
+        //     
+        // Quaternion r = noteData.Key.transform.rotation;
+        // noteData.Key.transform.rotation = r * Quaternion.AngleAxis(rot, Vector3.right);
+        // if (noteData.Value.GetKind() == 'S' || noteData.Value.GetKind() == 'L')
+        // {
+        //     Quaternion s = noteData.Key.transform.GetChild(0).rotation;
+        //     noteData.Key.transform.GetChild(0).rotation = s * Quaternion.AngleAxis(-rot, Vector3.right);
+        // }
 
         if (noteData.Value.GetKind() == 'L')
         {
@@ -395,10 +410,10 @@ public class NotesDirector : MonoBehaviour
             float y = length / 2;
             float z = 0f;
             
-            float c = length * (float)Math.Sin(rot * (Math.PI / 180));
-            float s = length * (float)Math.Cos(rot * (Math.PI / 180));
-            y = s / 2;
-            z = -c / 2;
+            // float c = length * (float)Math.Sin(rot * (Math.PI / 180));
+            // float s = length * (float)Math.Cos(rot * (Math.PI / 180));
+            // y = s / 2;
+            // z = -c / 2;
 
             noteData.Key.transform.GetChild(0).localPosition = new Vector3(0f, y, z);
             noteData.Key.transform.GetChild(0).localScale = new Vector3(sizex, length, 1f);
@@ -474,8 +489,9 @@ public class NotesDirector : MonoBehaviour
         mesh.triangles = triangles.ToArray();
         mesh.RecalculateNormals();
 
-        obj.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh = mesh;
-        TrashData.Add(new Trash(obj.transform.GetChild(0).gameObject, (slide.GetTime() + maintains.Last().time) / 1000f, slide.GetStartLane(), slide.GetEndLane(), slide.GetKind()));
+        obj.transform.GetComponent<MeshFilter>().sharedMesh = mesh;
+        TrashData.Add(new Trash(obj, (slide.GetTime() + maintains.Last().time) / 1000f, slide.GetStartLane(),
+            slide.GetEndLane(), slide.GetKind()));
     }
 
     GameObject NoteKind(char kind)
@@ -771,7 +787,7 @@ public class NotesDirector : MonoBehaviour
 
             // Hold, Flickの処理
             int index = 0;
-            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 1000f < (gameDirector.musicTime + tapOffset))
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 10) / 1000f < (gameDirector.musicTime + tapOffset))
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'H' || ki == 'M' || ki == 'T' || ki == 'B')
@@ -822,7 +838,7 @@ public class NotesDirector : MonoBehaviour
             }
 
             index = 0;
-            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 3) / 1000f < (gameDirector.musicTime + tapOffset))
+            while (NotesData.Count > index && (NotesData[index].Value.GetTime() - 10) / 1000f < (gameDirector.musicTime + tapOffset))
             {
                 char ki = NotesData[index].Value.GetKind();
                 if (ki == 'F')
@@ -924,7 +940,8 @@ public class NotesDirector : MonoBehaviour
                 if (resultPoint[0] + resultPoint[1] + resultPoint[5] + resultPoint[6] + resultPoint[7] > 0)
                 {
                     isFull = 1;
-                    justFlame.color = new Color(0f, 59f / 255f, 1f, 1f);
+                    justFlame.startColor = new Color(0f, 59f / 255f, 1f, 1f);
+                    justFlame.endColor = new Color(0f, 59f / 255f, 1f, 1f);
                 }
             }
             else if (isFull == 1)
@@ -932,7 +949,8 @@ public class NotesDirector : MonoBehaviour
                 if (resultPoint[0] + resultPoint[6] + resultPoint[7] > 0)
                 {
                     isFull = 0;
-                    justFlame.color = Color.white;
+                    justFlame.startColor = Color.white;
+                    justFlame.endColor = Color.white;
                 }
             }
         }

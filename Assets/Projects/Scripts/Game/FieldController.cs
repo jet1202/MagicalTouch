@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using CriWare.CriTimeline.Atom;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,6 +10,8 @@ public class FieldController : MonoBehaviour
 {
     [SerializeField] private GameDirector gameDirector;
     public GameObject subNotes;
+    private LineRenderer rline;
+    private LineRenderer lline;
     
     // 引継ぎ設定
     public float Speed;
@@ -19,15 +22,17 @@ public class FieldController : MonoBehaviour
     public float nowSpeed = 0;
 
     public AngleWork[] angleWork = Array.Empty<AngleWork>();
-
-    public int[] activeTime = Array.Empty<int>();
+    public TransparencyItem[] transparencyItem = Array.Empty<TransparencyItem>();
+    
     private int timeProg;
     private bool isActive;
 
     private void Start()
     {
         transform.rotation = Quaternion.identity;
-        subNotes = transform.GetChild(1).gameObject;
+        subNotes = transform.GetChild(0).gameObject;
+        rline = transform.GetChild(1).GetComponent<LineRenderer>();
+        lline = transform.GetChild(2).GetComponent<LineRenderer>();
         isActive = true;
         timeProg = 0;
         
@@ -41,7 +46,17 @@ public class FieldController : MonoBehaviour
         if (gameDirector.isOk)
         {
             transform.rotation = Quaternion.AngleAxis(-TimeToAngle(gameDirector.musicTime), Vector3.right);
-            ActiveCheck(gameDirector.musicTime);
+            
+            float t = TimeToTransparency(gameDirector.musicTime);
+            rline.startColor = new Color(1, 1, 1, t);
+            rline.endColor = new Color(1, 1, 1, t);
+            lline.startColor = new Color(1, 1, 1, t);
+            lline.endColor = new Color(1, 1, 1, t);
+            
+            if (t == 0f)
+                subNotes.SetActive(false);
+            else
+                subNotes.SetActive(true);
         }
 
         if (gameDirector.isOk)
@@ -96,17 +111,39 @@ public class FieldController : MonoBehaviour
 
         return pos;
     }
-
-    public void ActiveCheck(float time)
+    
+    public float TimeToTransparency(float time)
     {
-        if (timeProg == activeTime.Length) return;
+        if (timeProg == transparencyItem.Length)
+            return transparencyItem[timeProg - 1].alpha / 100f;
         
-        if (activeTime[timeProg] / 1000f < time)
-        {
-            isActive = !isActive;
-            subNotes.SetActive(isActive);
+        if (transparencyItem[timeProg].time / 1000f < time)
             timeProg++;
+        
+        if (timeProg == transparencyItem.Length)
+            return transparencyItem[timeProg - 1].alpha / 100f;
+        
+        if (timeProg == 0)
+            return transparencyItem[0].alpha / 100f;
+        
+        TransparencyItem before = transparencyItem[timeProg - 1];
+        TransparencyItem after = transparencyItem[timeProg];
+
+        float t;
+        if (before.isVariation)
+        {
+            float T = time - before.time / 1000f;
+            float t1 = (after.time - before.time) / 1000f;
+            float v = (after.alpha - before.alpha) / 100f;
+            
+            t = before.alpha / 100f + v * T / t1;
         }
+        else
+        {
+            t = before.alpha / 100f;
+        }
+
+        return t;
     }
 
     public float TimeToAngle(float time)
@@ -164,10 +201,10 @@ public class FieldController : MonoBehaviour
         }
     }
     
-    public void ItemImport(SpeedItem[] data, AngleWork[] angleData, int[] active)
+    public void ItemImport(SpeedItem[] data, AngleWork[] angleData, TransparencyItem[] transparencyData)
     {
         angleWork = angleData;
-        activeTime = active;
+        transparencyItem = transparencyData;
         
         speedItem = data;
         int leng = speedItem.Length;

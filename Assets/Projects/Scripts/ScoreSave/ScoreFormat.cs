@@ -64,7 +64,7 @@ public class GameSetting
         TapOffset = 0;
         MusicVolume = 100;
         SeVolume = 100;
-        NoteThickness = 10;
+        NoteThickness = 7;
         FPSMode = false;
     }
 }
