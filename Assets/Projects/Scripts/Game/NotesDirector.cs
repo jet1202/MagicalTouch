@@ -277,6 +277,8 @@ public class NotesDirector : MonoBehaviour
                     score10 = 10;
                     break;
                 case 'H':
+                    score10 = 6;
+                    break;
                 case 'M':
                 case 'T':
                 case 'B':
@@ -313,7 +315,7 @@ public class NotesDirector : MonoBehaviour
             NoteSettings(_notesData, true);
             if (_notesData.Value.GetKind() == 'A')
             {
-                SlideSettings(_notesData.Key, _notesData.Value, slideData[_notesData.Value.GetNumber()].item);
+                SlideSettings(_notesData.Key, _notesData.Value, slideData[_notesData.Value.GetNumber()]);
             }
             else
             {
@@ -424,8 +426,11 @@ public class NotesDirector : MonoBehaviour
         noteData.Key.SetActive(isAppear);
     }
 
-    private void SlideSettings(GameObject obj, Note slide, SlideMaintain[] maintains)
+    private void SlideSettings(GameObject obj, Note slide, SlideSave slideSave)
     {
+        SlideMaintain[] maintains = slideSave.item;
+        int sColor = 1; // slideSave.color;
+        
         // slideのFieldの描画
         if (maintains == null) return;
 
@@ -492,6 +497,8 @@ public class NotesDirector : MonoBehaviour
         obj.transform.GetComponent<MeshFilter>().sharedMesh = mesh;
         TrashData.Add(new Trash(obj, (slide.GetTime() + maintains.Last().time) / 1000f, slide.GetStartLane(),
             slide.GetEndLane(), slide.GetKind()));
+        
+        obj.transform.GetComponent<MeshRenderer>().material.color = SlideColor(sColor, 0.5f);
     }
 
     GameObject NoteKind(char kind)
@@ -531,6 +538,37 @@ public class NotesDirector : MonoBehaviour
         }
 
         return k;
+    }
+    
+    private Color SlideColor(int n, float a)
+    {
+        Color color = Color.white;
+        switch (n)
+        {
+            case 0:
+                color = new Color(153 / 255f, 204 / 255f, 255 / 255f, a);
+                break;
+            case 1:
+                color = new Color(255 / 255f, 204 / 255f, 153 / 255f, a);
+                break;
+            case 2:
+                color = new Color(153 / 255f, 255f / 255f, 153f / 255f, a);
+                break;
+            case 3:
+                color = new Color(255 / 255f, 255f / 255f, 153f / 255f, a);
+                break;
+            case 4:
+                color = new Color(255 / 255f, 153f / 255f, 153f / 255f, a);
+                break;
+            case 5:
+                color = new Color(204f / 255f, 153f / 255f, 255f / 255f, a);
+                break;
+            case 6:
+                color = new Color(255f / 255f, 255f / 255f, 255f / 255f, a);
+                break;
+        }
+
+        return color;
     }
 
     public void BeginTouch(int laneNumber, double touchTime)
