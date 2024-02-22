@@ -155,12 +155,11 @@ public class NotesDirector : MonoBehaviour
 
         // LongMaintainの判定をリストに格納
         MaintainJudge = new List<float>();
-        int b;
-        float t, nex;
+        float t, nex, b;
         int leng = bpmData.Length;
         for (int i = 0; i < leng; i++)
         {
-            b = bpmData[i].bpm;
+            b = bpmData[i].bpm / 1000f;
             t = bpmData[i].time / 1000f;
         
             if (i == leng - 1)
@@ -429,7 +428,7 @@ public class NotesDirector : MonoBehaviour
     private void SlideSettings(GameObject obj, Note slide, SlideSave slideSave)
     {
         SlideMaintain[] maintains = slideSave.item;
-        int sColor = 1; // slideSave.color;
+        int sColor = slideSave.color;
         
         // slideのFieldの描画
         if (maintains == null) return;

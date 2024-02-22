@@ -10,13 +10,13 @@
             "chorus": 69000
         },
         {
-            "title": "K.Moe(VIP)",
-            "id": "KMoe_VIP",
-            "constant": [0, 0, 0, 150],
+            "title": "Thank",
+            "id": "Thank",
+            "constant": [0, 0, 0, 160],
             "division": "Pack1",
-            "composer": "ZxNX",
-            "number": 6,
-            "chorus": 33500
+            "composer": "creamSodaP",
+            "number": 2,
+            "chorus": 48000
         }
     ]
 }
