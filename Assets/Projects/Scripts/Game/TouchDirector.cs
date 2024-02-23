@@ -33,7 +33,7 @@ public class TouchDirector : MonoBehaviour
         _height = Screen.height;
         _width = Screen.width;
         
-        pW = _width / 10;
+        pW = _height / 10;
         basePoint = _width / 2 - pW * 6;
         
         moveAllow = (_height / 80) * (_height / 80);
@@ -86,8 +86,6 @@ public class TouchDirector : MonoBehaviour
     int TouchLane(Vector2 touchPos)
     {
         int r = ((int)touchPos.x - basePoint) / (pW / 2);
-        if (r < 0 || r > 23)
-            return -1;
         return r;
     }
 }

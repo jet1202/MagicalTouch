@@ -572,6 +572,8 @@ public class NotesDirector : MonoBehaviour
 
     public void BeginTouch(int laneNumber, double touchTime)
     {
+        Debug.Log($"Touch {laneNumber}");
+        
         touchTime += tapOffset;
         
         // NormalNote, LongNoteの始点
@@ -759,7 +761,7 @@ public class NotesDirector : MonoBehaviour
             
             Tfade.gameObject.SetActive(true);
             Tfade.GetComponent<Renderer>().material.SetFloat("_Adapt", Time.time);
-            Tfade.transform.localScale = new Vector3(wi, 8f, 1f);
+            Tfade.transform.localScale = new Vector3(wi, 6f, 1f);
             
             // effect4 LateFast
             Transform Tlf = Tr.GetChild(3);
