@@ -32,8 +32,13 @@ public class TouchDirector : MonoBehaviour
     {
         _height = Screen.height;
         _width = Screen.width;
-        
-        pW = _height / 10;
+
+        int h;
+        if ((float)_width / _height < 1.6f)
+            h = (int)(_width / 1.6f);
+        else
+            h = _height;
+        pW = h / 10;
         basePoint = _width / 2 - pW * 6;
         
         moveAllow = (_height / 80) * (_height / 80);
