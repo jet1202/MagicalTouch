@@ -1,0 +1,15 @@
+{
+    "tabs": [
+        "Main",
+        "Side"
+    ],
+    "item": [
+        {
+            "name": "Test2",
+            "sub": "Test2",
+            "division": "Pack1",
+            "number": 1,
+            "tab": 0
+        }
+    ]
+}
