@@ -5,11 +5,25 @@
     ],
     "item": [
         {
-            "name": "Test2",
-            "sub": "Test2",
+            "name": "Chapter 1",
+            "sub": "Beginning of the End",
             "division": "Pack1",
-            "number": 1,
-            "tab": 0
+            "tab": 0,
+            "document": -1
+        },
+        {
+            "name": "Chapter 2",
+            "sub": "Memories of the Past",
+            "division": "Pack2",
+            "tab": 0,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 1",
+            "sub": "A momentary break",
+            "division": "SidePack1",
+            "tab": 1,
+            "document": -1
         }
     ]
 }

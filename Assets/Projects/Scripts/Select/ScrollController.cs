@@ -201,9 +201,9 @@ public class ScrollController : MonoBehaviour
         Material back = box.transform.GetChild(3).GetComponent<Renderer>().material;
         Material bottom = box.transform.GetChild(0).GetComponent<Renderer>().material;
         
-        SetCube(front, DifficultyMode.Normal, image, size);
-        SetCube(top, DifficultyMode.Hard, image, size);
-        SetCube(back, DifficultyMode.Expert, image, size);
+        SetCube(front, DifficultyMode.Free, image, size);
+        SetCube(top, DifficultyMode.Normal, image, size);
+        SetCube(back, DifficultyMode.Busy, image, size);
         SetCube(bottom, DifficultyMode.Impossible, image, size);
 
         boxDisplay[cube] = number;
@@ -375,13 +375,13 @@ public class ScrollController : MonoBehaviour
         Color color = new Color();
         switch (m)
         {
-            case DifficultyMode.Normal:
+            case DifficultyMode.Free:
                 color = new Color(100f / 255f, 255f / 255f, 100f / 255f);
                 break;
-            case DifficultyMode.Hard:
+            case DifficultyMode.Normal:
                 color = new Color(100f / 255f, 100f / 255f, 255f / 255f);
                 break;
-            case DifficultyMode.Expert:
+            case DifficultyMode.Busy:
                 color = new Color(255f / 255f, 255f / 255f, 100f / 255f);
                 break;
             case DifficultyMode.Impossible:

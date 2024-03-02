@@ -14,11 +14,11 @@ public static class SelectData
 
     public enum DifficultyMode
     {
+        Free,
         Normal,
-        Hard,
-        Expert,
+        Busy,
         Impossible,
-        Joke
+        Break
     }
     
     public static string division;
