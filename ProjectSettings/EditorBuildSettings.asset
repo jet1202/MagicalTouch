@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Projects/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+    path: Assets/Projects/Scenes/CategorySelectScene.unity
+    guid: 7185a44399a23634f9357e95413e23e1
+  - enabled: 1
     path: Assets/Projects/Scenes/SelectScene.unity
     guid: 7053c1ab2cd204d4a9a489bea1469424
   - enabled: 1

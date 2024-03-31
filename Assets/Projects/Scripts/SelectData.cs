@@ -21,7 +21,7 @@ public static class SelectData
         Break
     }
     
-    public static string division;
+    public static string division = "Pack1";
     public static int number;
     public static SortMode mode = SortMode.Default;
     public static DifficultyMode difficulty = DifficultyMode.Normal;

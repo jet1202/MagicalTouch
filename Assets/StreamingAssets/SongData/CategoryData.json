@@ -24,6 +24,62 @@
             "division": "SidePack1",
             "tab": 1,
             "document": -1
+        },
+        {
+            "name": "Side Chapter 2",
+            "sub": "A momentary break",
+            "division": "SidePack2",
+            "tab": 1,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 3",
+            "sub": "A momentary break",
+            "division": "SidePack3",
+            "tab": 1,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 4",
+            "sub": "A momentary break",
+            "division": "SidePack4",
+            "tab": 1,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 5",
+            "sub": "A momentary break",
+            "division": "SidePack5",
+            "tab": 1,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 6",
+            "sub": "A momentary break",
+            "division": "SidePack6",
+            "tab": 1,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 7",
+            "sub": "A momentary break",
+            "division": "SidePack7",
+            "tab": 1,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 8",
+            "sub": "A momentary break",
+            "division": "SidePack8",
+            "tab": 1,
+            "document": -1
+        },
+        {
+            "name": "Side Chapter 9",
+            "sub": "A momentary break",
+            "division": "SidePack9",
+            "tab": 1,
+            "document": -1
         }
     ]
 }

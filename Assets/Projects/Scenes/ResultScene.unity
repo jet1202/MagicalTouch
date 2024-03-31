@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb0264ae4a25a04da84dca8351dc826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resultCanvas: {fileID: 261891800}
+  resultCanvas: {fileID: 979180791}
   backImage: {fileID: 405498589}
   image: {fileID: 536216389}
   mask: {fileID: 1147489141}

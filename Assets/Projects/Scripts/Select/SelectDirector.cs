@@ -53,8 +53,7 @@ public class SelectDirector : MonoBehaviour
         yield return StartCoroutine(corutine);
         songList = (SongList[])corutine.Current;
 
-        // division = SelectData.division;
-        division = "Pack1";
+        division = SelectData.division;
         
         List<SongList> displaySong = new List<SongList>();
         int leng = songList.Length;
@@ -106,6 +105,18 @@ public class SelectDirector : MonoBehaviour
             .OnComplete(() =>
             {
                 SceneManager.LoadScene("SettingScene");
+            });
+    }
+
+    public void MoveCategorySelect()
+    {
+        audioPlayer.StopBgm();
+        mask.SetActive(true);
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.GetComponent<Image>().DOFade(1f, 0.7f)
+            .OnComplete(() =>
+            {
+                SceneManager.LoadScene("CategorySelectScene");
             });
     }
 }

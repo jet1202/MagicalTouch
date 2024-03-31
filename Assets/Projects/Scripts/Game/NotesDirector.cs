@@ -393,7 +393,7 @@ public class NotesDirector : MonoBehaviour
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
         if (noteData.Value.GetKind() != 'A')
-            noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex, noteThickness);
+            noteData.Key.GetComponent<SpriteRenderer>().size = new Vector2(sizex - 0.15f, noteThickness);
         
         // float rot = fieldObjects[field].GetComponent<FieldController>().TimeToAngle(noteData.Value.GetTime() / 1000f);
         //     
@@ -572,8 +572,6 @@ public class NotesDirector : MonoBehaviour
 
     public void BeginTouch(int laneNumber, double touchTime)
     {
-        Debug.Log($"Touch {laneNumber}");
-        
         touchTime += tapOffset;
         
         // NormalNote, LongNoteの始点

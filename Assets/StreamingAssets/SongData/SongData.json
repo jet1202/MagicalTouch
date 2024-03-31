@@ -17,6 +17,15 @@
             "composer": "creamSodaP",
             "number": 2,
             "chorus": 48000
+        },
+        {
+            "title": "Aleph-0",
+            "id": "Aleph-0",
+            "constant": [0, 0, 0, 160],
+            "division": "Pack1",
+            "composer": "LeaF",
+            "number": 3,
+            "chorus": 11500
         }
     ]
 }

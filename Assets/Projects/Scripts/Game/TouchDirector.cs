@@ -62,7 +62,7 @@ public class TouchDirector : MonoBehaviour
             foreach (var touch in activeTouchList)
             {
                 touchlane = TouchLane(touch.screenPosition);
-                if (touchlane != -1)
+                if (0 <= touchlane && touchlane < 24)
                 {
                     laneTouching[touchlane] = true;
                     Vector2 move = touch.delta;

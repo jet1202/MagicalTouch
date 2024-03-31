@@ -4,7 +4,6 @@ using System.IO;
 using UnityEngine;
 using CriWare;
 using DG.Tweening;
-using UnityEngine.Experimental.Rendering;
 
 public class AudioPlayer : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class AudioPlayer : MonoBehaviour
 
     private Sequence _audioTweener;
     
-    void Start()
+    void Awake()
     {
         // acf設定
         string path = Application.streamingAssetsPath + "/Main/K-Rhythm.acf";
