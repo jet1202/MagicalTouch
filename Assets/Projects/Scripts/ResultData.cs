@@ -9,6 +9,6 @@ public static class ResultData
 
     public static string title = "Test2";
     public static string id = "Test2";
-    public static string difficult = "Normal";
+    public static SelectData.DifficultyMode difficult = SelectData.DifficultyMode.Normal;
     public static int difficulty = 10;
 }

@@ -26,6 +26,24 @@
             "composer": "LeaF",
             "number": 3,
             "chorus": 11500
+        },
+        {
+            "title": "Stellar:Dream",
+            "id": "StellarDream",
+            "constant": [0, 0, 0, 200],
+            "division": "SidePack1",
+            "composer": "Emocosine + Synthion",
+            "number": 4,
+            "chorus": 76000
+        },
+        {
+            "title": "μ3",
+            "id": "MU3",
+            "constant": [0, 0, 0, 200],
+            "division": "SidePack1",
+            "composer": "水野健治 VS 穴山大輔",
+            "number": 5,
+            "chorus": 12000
         }
     ]
 }

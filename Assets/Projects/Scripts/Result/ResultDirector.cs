@@ -36,7 +36,7 @@ public class ResultDirector : MonoBehaviour
         int[] detail = ResultData.resultDetail;
 
         title.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.title;
-        difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.difficult;
+        difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.difficult.ToString();
         difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().color = setColor(ResultData.difficult);
         difficulty.GetChild(1).GetComponent<TextMeshProUGUI>().text = (ResultData.difficulty / 10).ToString();
         score.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.score.ToString("D7");
@@ -85,21 +85,21 @@ public class ResultDirector : MonoBehaviour
         boardSeq.Play();
     }
 
-    public Color setColor(string difficult)
+    public Color setColor(SelectData.DifficultyMode difficult)
     {
         Color color = new Color();
         switch (difficult)
         {
-            case "Normal":
+            case SelectData.DifficultyMode.Free:
                 color = new Color(100f / 255f, 255f / 255f, 100f / 255f);
                 break;
-            case "Hard":
+            case SelectData.DifficultyMode.Normal:
                 color = new Color(100f / 255f, 100f / 255f, 255f / 255f);
                 break;
-            case "Expert":
+            case SelectData.DifficultyMode.Busy:
                 color = new Color(255f / 255f, 255f / 255f, 100f / 255f);
                 break;
-            case "Impossible":
+            case SelectData.DifficultyMode.Impossible:
                 color = new Color(255f / 255f, 100f / 255f, 100f / 255f);
                 break;
             default:

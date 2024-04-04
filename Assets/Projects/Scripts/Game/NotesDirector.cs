@@ -54,7 +54,7 @@ public class NotesDirector : MonoBehaviour
     // 引き継ぎ設定
     private string title;
     private string id;
-    private string difficulty;
+    private SelectData.DifficultyMode difficulty;
 
     private float noteThickness;
     private bool isAuto;
@@ -108,7 +108,7 @@ public class NotesDirector : MonoBehaviour
         Speed = ScoreData.setting.Game.NoteSpeed;
 
         // Sheet
-        IEnumerator corutine = importData.ImportSheet(id, difficulty);
+        IEnumerator corutine = importData.ImportSheet(id, difficulty.ToString());
         yield return StartCoroutine(corutine);
         List<Note> notesSheetA = (List<Note>)corutine.Current;
         
@@ -118,13 +118,13 @@ public class NotesDirector : MonoBehaviour
         Dictionary<int, SlideSave> slideData = (Dictionary<int, SlideSave>)corutine.Current;
         
         // Bpm
-        corutine = importData.ImportBpm(id, difficulty);
+        corutine = importData.ImportBpm(id, difficulty.ToString());
         yield return StartCoroutine(corutine);
         BpmSave bpmSaveData = (BpmSave)corutine.Current;
         bpmData = bpmSaveData.bpmItem;
         
         // Field
-        corutine = importData.ImportField(id, difficulty);
+        corutine = importData.ImportField(id, difficulty.ToString());
         yield return StartCoroutine(corutine);
         FieldSave field = (FieldSave)corutine.Current;
         if (field == null) throw new Exception();

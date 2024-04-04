@@ -136,6 +136,8 @@ public class ScrollController : MonoBehaviour
     /// </summary>
     private void ListSort()
     {
+        if (songList.Count == 0) return;
+        
         string nowSong = songList[number].id;
         int num;
         
@@ -414,7 +416,7 @@ public class ScrollController : MonoBehaviour
                 // 指定した曲の難易度の譜面が存在する
                 GameData.title = song.title;
                 GameData.id = song.id;
-                GameData.difficult = difficulty.ToString();
+                GameData.difficult = difficulty;
                 GameData.difficulty = song.constant[(int)difficulty];
                 SelectData.number = number;
                 

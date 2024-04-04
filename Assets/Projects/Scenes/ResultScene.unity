@@ -308,7 +308,7 @@ MonoBehaviour:
   backImage: {fileID: 405498589}
   image: {fileID: 536216389}
   mask: {fileID: 1147489141}
-  defaultJacket: {fileID: 0}
+  defaultJacket: {fileID: 2800000, guid: 9503858c7eb8da543b8e20ee814daf39, type: 3}
 --- !u!114 &123632815
 MonoBehaviour:
   m_ObjectHideFlags: 0
