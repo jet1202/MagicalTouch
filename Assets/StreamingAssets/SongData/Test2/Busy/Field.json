@@ -1,1 +1,364 @@
-{"item":[{"field":0,"speedItem":[{"time":0,"speed":100,"isVariation":false},{"time":113500,"speed":80000,"isVariation":false},{"time":113510,"speed":100,"isVariation":false}],"angleWork":[{"time":0,"angle":0,"variation":0}],"activeTime":[]},{"field":1,"speedItem":[{"time":0,"speed":100,"isVariation":false},{"time":10316,"speed":-400,"isVariation":true},{"time":10762,"speed":0,"isVariation":true},{"time":11059,"speed":100,"isVariation":false},{"time":19225,"speed":0,"isVariation":true},{"time":19670,"speed":50,"isVariation":false},{"time":19819,"speed":200,"isVariation":false},{"time":20116,"speed":0,"isVariation":true},{"time":20561,"speed":50,"isVariation":false},{"time":20709,"speed":40,"isVariation":false},{"time":87239,"speed":0,"isVariation":true},{"time":87685,"speed":50,"isVariation":false},{"time":87834,"speed":200,"isVariation":false},{"time":88131,"speed":0,"isVariation":true},{"time":88576,"speed":50,"isVariation":false},{"time":88725,"speed":200,"isVariation":false},{"time":89022,"speed":0,"isVariation":true},{"time":89467,"speed":50,"isVariation":false},{"time":89616,"speed":200,"isVariation":false},{"time":89913,"speed":0,"isVariation":true},{"time":90358,"speed":50,"isVariation":false},{"time":90507,"speed":100,"isVariation":false},{"time":101790,"speed":40,"isVariation":false}],"angleWork":[{"time":0,"angle":0,"variation":0},{"time":0,"angle":0,"variation":0},{"time":0,"angle":30,"variation":10},{"time":10613,"angle":0,"variation":0},{"time":11504,"angle":0,"variation":10},{"time":18781,"angle":30,"variation":0},{"time":40310,"angle":30,"variation":10},{"time":41498,"angle":0,"variation":10},{"time":46251,"angle":30,"variation":0},{"time":68528,"angle":30,"variation":20},{"time":68825,"angle":20,"variation":-30},{"time":68974,"angle":40,"variation":30},{"time":69122,"angle":10,"variation":-30},{"time":69271,"angle":30,"variation":30},{"time":69419,"angle":0,"variation":-30},{"time":69568,"angle":20,"variation":30},{"time":69716,"angle":0,"variation":-30},{"time":69865,"angle":20,"variation":30},{"time":70013,"angle":0,"variation":10},{"time":72389,"angle":360,"variation":0},{"time":72686,"angle":360,"variation":-20},{"time":72835,"angle":380,"variation":0},{"time":73281,"angle":380,"variation":-20},{"time":73429,"angle":400,"variation":10},{"time":73578,"angle":400,"variation":0},{"time":74172,"angle":40,"variation":0},{"time":90804,"angle":40,"variation":10},{"time":92289,"angle":0,"variation":10},{"time":97041,"angle":0,"variation":10},{"time":99417,"angle":20,"variation":0},{"time":100605,"angle":20,"variation":10},{"time":101197,"angle":0,"variation":0},{"time":101790,"angle":0,"variation":-15},{"time":103419,"angle":180,"variation":-15},{"time":105055,"angle":360,"variation":-15},{"time":106539,"angle":400,"variation":0},{"time":110400,"angle":400,"variation":10},{"time":113961,"angle":360,"variation":10},{"time":117377,"angle":1080,"variation":10}],"activeTime":[0,10310,11600,19200,19800,20100,20680,27250,67640,73440,85470,87250,87840,88140,88730,89030,89620,89910,101790,105930]}]}
+{
+    "item": [
+        {
+            "field": 0,
+            "isDummy": false,
+            "speedItem": [
+                {
+                    "time": 0,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 113500,
+                    "speed": 80000,
+                    "isVariation": false
+                },
+                {
+                    "time": 113510,
+                    "speed": 100,
+                    "isVariation": false
+                }
+            ],
+            "angleWork": [
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                }
+            ],
+            "transparencyItem": [
+                {
+                    "time": 0,
+                    "alpha": 100,
+                    "isVariation": false
+                }
+            ]
+        },
+        {
+            "field": 1,
+            "isDummy": false,
+            "speedItem": [
+                {
+                    "time": 0,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 10316,
+                    "speed": -400,
+                    "isVariation": true
+                },
+                {
+                    "time": 10762,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 11059,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 19225,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 19670,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 19819,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 20116,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 20561,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 20709,
+                    "speed": 40,
+                    "isVariation": false
+                },
+                {
+                    "time": 87239,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 87685,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 87834,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 88131,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 88576,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 88725,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 89022,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 89467,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 89616,
+                    "speed": 200,
+                    "isVariation": false
+                },
+                {
+                    "time": 89913,
+                    "speed": 0,
+                    "isVariation": true
+                },
+                {
+                    "time": 90358,
+                    "speed": 50,
+                    "isVariation": false
+                },
+                {
+                    "time": 90507,
+                    "speed": 100,
+                    "isVariation": false
+                },
+                {
+                    "time": 101790,
+                    "speed": 40,
+                    "isVariation": false
+                }
+            ],
+            "angleWork": [
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 0,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 0,
+                    "angle": 30,
+                    "variation": 10
+                },
+                {
+                    "time": 10613,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 11504,
+                    "angle": 0,
+                    "variation": 10
+                },
+                {
+                    "time": 18781,
+                    "angle": 30,
+                    "variation": 0
+                },
+                {
+                    "time": 40310,
+                    "angle": 30,
+                    "variation": 10
+                },
+                {
+                    "time": 41498,
+                    "angle": 0,
+                    "variation": 10
+                },
+                {
+                    "time": 46251,
+                    "angle": 30,
+                    "variation": 0
+                },
+                {
+                    "time": 68528,
+                    "angle": 30,
+                    "variation": 20
+                },
+                {
+                    "time": 68825,
+                    "angle": 20,
+                    "variation": -30
+                },
+                {
+                    "time": 68974,
+                    "angle": 40,
+                    "variation": 30
+                },
+                {
+                    "time": 69122,
+                    "angle": 10,
+                    "variation": -30
+                },
+                {
+                    "time": 69271,
+                    "angle": 30,
+                    "variation": 30
+                },
+                {
+                    "time": 69419,
+                    "angle": 0,
+                    "variation": -30
+                },
+                {
+                    "time": 69568,
+                    "angle": 20,
+                    "variation": 30
+                },
+                {
+                    "time": 69716,
+                    "angle": 0,
+                    "variation": -30
+                },
+                {
+                    "time": 69865,
+                    "angle": 20,
+                    "variation": 30
+                },
+                {
+                    "time": 70013,
+                    "angle": 0,
+                    "variation": 10
+                },
+                {
+                    "time": 72389,
+                    "angle": 360,
+                    "variation": 0
+                },
+                {
+                    "time": 72686,
+                    "angle": 360,
+                    "variation": -20
+                },
+                {
+                    "time": 72835,
+                    "angle": 380,
+                    "variation": 0
+                },
+                {
+                    "time": 73281,
+                    "angle": 380,
+                    "variation": -20
+                },
+                {
+                    "time": 73429,
+                    "angle": 400,
+                    "variation": 10
+                },
+                {
+                    "time": 73578,
+                    "angle": 400,
+                    "variation": 0
+                },
+                {
+                    "time": 74172,
+                    "angle": 40,
+                    "variation": 0
+                },
+                {
+                    "time": 90804,
+                    "angle": 40,
+                    "variation": 10
+                },
+                {
+                    "time": 92289,
+                    "angle": 0,
+                    "variation": 10
+                },
+                {
+                    "time": 97041,
+                    "angle": 0,
+                    "variation": 10
+                },
+                {
+                    "time": 99417,
+                    "angle": 20,
+                    "variation": 0
+                },
+                {
+                    "time": 100605,
+                    "angle": 20,
+                    "variation": 10
+                },
+                {
+                    "time": 101197,
+                    "angle": 0,
+                    "variation": 0
+                },
+                {
+                    "time": 101790,
+                    "angle": 0,
+                    "variation": -15
+                },
+                {
+                    "time": 103419,
+                    "angle": 180,
+                    "variation": -15
+                },
+                {
+                    "time": 105055,
+                    "angle": 360,
+                    "variation": -15
+                },
+                {
+                    "time": 106539,
+                    "angle": 400,
+                    "variation": 0
+                },
+                {
+                    "time": 110400,
+                    "angle": 400,
+                    "variation": 10
+                },
+                {
+                    "time": 113961,
+                    "angle": 360,
+                    "variation": 10
+                },
+                {
+                    "time": 117377,
+                    "angle": 1080,
+                    "variation": 10
+                }
+            ],
+            "transparencyItem": [
+                {
+                    "time": 0,
+                    "alpha": 100,
+                    "isVariation": false
+                }
+            ]
+        }
+    ]
+}

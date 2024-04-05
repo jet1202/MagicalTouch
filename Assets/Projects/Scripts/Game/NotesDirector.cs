@@ -31,7 +31,7 @@ public class NotesDirector : MonoBehaviour
     [SerializeField] private GameObject effectPool;
     
     [SerializeField] private LineRenderer justFlame;
-    [SerializeField] private List<MeshRenderer> laneArray;
+    [SerializeField] private GameObject laneMesh;
 
     [SerializeField] private GameObject mask;
     
@@ -57,7 +57,7 @@ public class NotesDirector : MonoBehaviour
     private SelectData.DifficultyMode difficulty;
 
     private float noteThickness;
-    private bool isAuto;
+    public bool isAuto;
     private bool isColor;
     private float tapOffset;
 
@@ -66,20 +66,20 @@ public class NotesDirector : MonoBehaviour
     private float lfpos = 4.5f;
 
     // ノーツ数
-    private int total;
+    public int total;
     public int combo = 0;
-    private int maxCombo = 0;
+    public int maxCombo = 0;
     
     // スコア
     public int score = 0;
-    private float scoreN = 0;
-    private float scoreC = 0;
     private int notesN10 = 0;
     private int totalN10 = 0;
     
     // 判定
     private int isFull = 2;
     public int[] resultPoint = new int[8];
+    public int[] tapJudge = new int[31];
+    public int[] pm = new int[6];
 
     private int bpmProg = 0;
     public int nowBpm = 0;
@@ -231,8 +231,8 @@ public class NotesDirector : MonoBehaviour
                 {
                     if (m.isDummy)
                         continue;
-                    else
-                        JudgeNotes.Add(new KeyValuePair<Note, bool>(n, true));
+                    
+                    JudgeNotes.Add(new KeyValuePair<Note, bool>(n, true));
                 }
                 
                 
@@ -276,7 +276,7 @@ public class NotesDirector : MonoBehaviour
                     score10 = 10;
                     break;
                 case 'H':
-                    score10 = 6;
+                    score10 = 4;
                     break;
                 case 'M':
                 case 'T':
@@ -387,8 +387,8 @@ public class NotesDirector : MonoBehaviour
             var n = noteData.Value;
         }
 
-        float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.5f;
-        float sizex = noteData.Value.GetEndLane() - noteData.Value.GetStartLane();
+        float posx = -6f + (noteData.Value.GetEndLane() + noteData.Value.GetStartLane()) * 0.25f;
+        float sizex = (noteData.Value.GetEndLane() - noteData.Value.GetStartLane()) / 2f;
         float time = TimeTo(noteData.Value.GetTime() / 1000f, field) * Speed;
         
         noteData.Key.transform.localPosition = new Vector3(posx, 0f, time);
@@ -440,8 +440,8 @@ public class NotesDirector : MonoBehaviour
 
         float lastTime = TimeTo(slide.GetTime() / 1000f, field);
         float lastLane = (slide.GetStartLane() + slide.GetEndLane()) / 2f;
-        Vector3 lastPosF = new Vector3(slide.GetStartLane() - lastLane, 0f, 0);
-        Vector3 lastPosL = new Vector3(slide.GetEndLane() - lastLane, 0f, 0);
+        Vector3 lastPosF = new Vector3((slide.GetStartLane() - lastLane) / 2f, 0f, 0);
+        Vector3 lastPosL = new Vector3((slide.GetEndLane() - lastLane) / 2f, 0f, 0);
         
         verts.Add(lastPosF);
         verts.Add(lastPosL);
@@ -453,8 +453,8 @@ public class NotesDirector : MonoBehaviour
         {
             var m = maintains[i];
 
-            Vector3 nextPosF = new Vector3(m.startLane - lastLane, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed);
-            Vector3 nextPosL = new Vector3(m.endLane - lastLane, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed);
+            Vector3 nextPosF = new Vector3((m.startLane - lastLane) / 2f, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed);
+            Vector3 nextPosL = new Vector3((m.endLane - lastLane) / 2f, 0f, (TimeTo((m.time + slide.GetTime()) / 1000f, field) - lastTime) * Speed);
 
             int l = verts.Count;
             List<int> parallelogram = new List<int>();
@@ -592,7 +592,7 @@ public class NotesDirector : MonoBehaviour
             }
             if (data.GetKind() != 'N' && data.GetKind() != 'L' && data.GetKind() != 'S') continue;
 
-            if (data.GetStartLane() * 2 <= laneNumber + 1 && laneNumber - 1 < data.GetEndLane() * 2)
+            if (data.GetStartLane() <= laneNumber + 1 && laneNumber <= data.GetEndLane())
             {
                 if (data.GetKind() != 'F')
                     isGetNote = true;
@@ -617,14 +617,14 @@ public class NotesDirector : MonoBehaviour
     void NoteJudge(float gap, int start, int end, char kind)
     {
         // ノーツの判定、スコア加算、Effect(判定文字表示、twinkle)表示
-        Vector3 appearPos = new Vector3(-6f + (start + end) * 0.5f, 0f, 0);
+        Vector3 appearPos = new Vector3(-6f + (start + end) * 0.25f, 0f, 0);
         var wi = end - start;
 
         // Paddle
         GameObject Pins = paddlePool.GetComponent<MyObjectPool>().SetObject();
         Pins.transform.position = appearPos;
         Pins.transform.rotation = new Quaternion(0.7071068f, 0, 0, 0.7071068f);
-        Pins.GetComponent<PaddleController>().width = wi;
+        Pins.GetComponent<PaddleController>().width = wi / 2f;
         Color Pcolor = new Color();
 
         // Judge
@@ -632,27 +632,32 @@ public class NotesDirector : MonoBehaviour
         Jins.transform.position = appearPos;
         Jins.transform.rotation = Quaternion.identity;
         char judgeKind = 'M';
-
-        // Color eColor = Color.black;
+        
         Color tColor = Color.black;
-        Color fColor = Color.clear;
         
         int s = 0;
+        int kindType = -1;
         switch (kind)
         {
             case 'N':
-            case 'F':
             case 'L':
             case 'S':
                 s = 10;
+                kindType = 0;
                 break;
             case 'H':
-                s = 6;
+                s = 4;
+                kindType = 1;
                 break;
             case 'M':
             case 'T':
             case 'B':
                 s = 2;
+                kindType = 2;
+                break;
+            case 'F':
+                s = 10;
+                kindType = 3;
                 break;
         }
 
@@ -662,7 +667,6 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 1f, 0f, 150f / 255f);
-            fColor = Color.yellow;
             resultPoint[3]++;
             combo++;
         }
@@ -671,7 +675,6 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 1f, 1f, 150f / 255f);
-            fColor = Color.white;
             if (gap > 0)
                 resultPoint[4]++;
             else
@@ -683,7 +686,6 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'G';
             Pcolor = new Color(95f / 255f, 184f / 255f, 1f, 1f);
             tColor = new Color(1f, 1f, 1f, 150f / 255f);
-            fColor = Color.cyan;
             // eColor = new Color(0f, 70f / 255f, 1f, 70f / 255f);
             if (gap > 0)
                 resultPoint[5]++;
@@ -697,7 +699,6 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'B';
             Pcolor = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
             tColor = Color.clear;
-            fColor = Color.green;
             if (gap > 0)
                 resultPoint[6]++;
             else
@@ -711,9 +712,16 @@ public class NotesDirector : MonoBehaviour
         // スコア加算
         notesN10 += s;
         if (maxCombo < combo) maxCombo = combo;
-        
-        // if (eColor != Color.black)
-        //     LaneEffect(start, end, new Color(0f, 1f, 0f, 70f / 255f));
+
+        if (kindType == 0)
+        {
+            int gGroup = Math.Clamp((int)((gap + 0.15f) * 1000) / 10, 0, 29);
+            tapJudge[gGroup]++;
+        }
+        else
+        {
+            pm[kindType * 2 - 2]++;
+        }
 
         if (tColor != Color.black)
         {
@@ -727,18 +735,27 @@ public class NotesDirector : MonoBehaviour
             // effect1 灰色のノーツの形をしたエフェクト
             Transform Tnote = Tr.GetChild(0);
             Tnote.GetComponent<MeshRenderer>().sortingLayerName = "Important";
-            Tnote.GetComponent<MeshRenderer>().material.color = tColor;
-            Tnote.localScale = new Vector3(wi, 1f, 1f);
-            Tnote.transform.localPosition = Vector3.zero;
-
-            Sequence seq = DOTween.Sequence();
-            seq.Append(Tnote.DOMoveY(6f, 0.4f).SetEase(Ease.OutQuad));
-            seq.Join(Tnote.GetComponent<MeshRenderer>().material.DOFade(0f, 0.5f).SetEase(Ease.Linear));
-            seq.Play().OnComplete(() =>
-            {
-                effectPool.GetComponent<MyObjectPool>().RemoveObject(Tins);
-            });
             
+            if (kindType == 0)
+            {
+                Tnote.gameObject.SetActive(true);
+                Tnote.GetComponent<MeshRenderer>().material.color = tColor;
+                Tnote.localScale = new Vector3(wi / 2f, 1f, 1f);
+                Tnote.transform.localPosition = Vector3.zero;
+
+                Sequence seq = DOTween.Sequence();
+                seq.Append(Tnote.DOMoveY(6f, 0.4f).SetEase(Ease.OutQuad));
+                seq.Join(Tnote.GetComponent<MeshRenderer>().material.DOFade(0f, 0.5f).SetEase(Ease.Linear));
+                seq.Play().OnComplete(() => { effectPool.GetComponent<MyObjectPool>().RemoveObject(Tins); });
+            }
+            else
+            {
+                Tnote.gameObject.SetActive(false);
+                Sequence seq = DOTween.Sequence();
+                seq.AppendInterval(0.5f);
+                seq.Play().OnComplete(() => { effectPool.GetComponent<MyObjectPool>().RemoveObject(Tins); });
+            }
+
             // effect2 フリックエフェクト
             Transform Tflick = Tr.GetChild(1);
             Tflick.GetComponent<MeshRenderer>().sortingLayerName = "Important";
@@ -759,7 +776,7 @@ public class NotesDirector : MonoBehaviour
             
             Tfade.gameObject.SetActive(true);
             Tfade.GetComponent<Renderer>().material.SetFloat("_Adapt", Time.time);
-            Tfade.transform.localScale = new Vector3(wi, 6f, 1f);
+            Tfade.transform.localScale = new Vector3(wi / 2f, 6f, 1f);
             
             // effect4 LateFast
             Transform Tlf = Tr.GetChild(3);
@@ -784,9 +801,10 @@ public class NotesDirector : MonoBehaviour
     {
         for (int i = start; i < end; i++)
         {
-            laneArray[i].material.DOKill();
-            laneArray[i].material.color = color;
-            laneArray[i].material.DOFade(0f, 0.5f).SetEase(Ease.InQuart);
+            MeshRenderer mesh = laneMesh.transform.GetChild(i).GetComponent<MeshRenderer>();
+            mesh.material.DOKill();
+            mesh.material.color = color;
+            mesh.material.DOFade(0f, 0.5f).SetEase(Ease.InQuart);
         }
     }
     
@@ -804,19 +822,45 @@ public class NotesDirector : MonoBehaviour
                     _notesData.Key.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                 NotesData.RemoveAt(0);
 
+                // Missエフェクト
                 GameObject jIns = judgePool.GetComponent<MyObjectPool>().SetObject();
                 int s = _notesData.Value.GetStartLane();
                 int e = _notesData.Value.GetEndLane();
                 jIns.transform.position =
-                    new Vector3(-6f + (s + e) * 0.5f, 0.5f, 0f);
+                    new Vector3(-6f + (s + e) * 0.25f, 0.5f, 0f);
                 LaneEffect(s, e, new Color(1f, 0f, 0f, 70f / 255f));
                 jIns.transform.rotation = Quaternion.identity;
                 jIns.GetComponent<JudgeController>().Setting('M');
                 combo = 0;
                 resultPoint[7]++;
                 damageController.Damage();
-                // Debug.Log("Damage");
-                //Debug.Log("Miss");
+
+                // pmにデータを詰める
+                int kind = -1;
+                switch (_notesData.Value.GetKind())
+                {
+                    case 'N':
+                    case 'L':
+                    case 'S':
+                        kind = 0;
+                        break;
+                    case 'H':
+                        s = 4;
+                        kind = 1;
+                        break;
+                    case 'M':
+                    case 'T':
+                    case 'B':
+                        kind = 2;
+                        break;
+                    case 'F':
+                        kind = 3;
+                        break;
+                }
+                if (kind == 0)
+                    tapJudge[30]++;
+                else
+                    pm[kind * 2 - 1]++;
 
                 if (NotesData.Count == 0) break;
                 _notesData = NotesData[0];
@@ -833,7 +877,7 @@ public class NotesDirector : MonoBehaviour
                     var isTaps = touchDirector.laneTouching;
 
                     bool tap = false;
-                    for (int i = Mathf.Max(n.GetStartLane() * 2 - 1, 0); i <= Mathf.Min(n.GetEndLane() * 2, 23); i++)
+                    for (int i = Mathf.Max(n.GetStartLane() - 1, 0); i <= Mathf.Min(n.GetEndLane(), 23); i++)
                     {
                         if (isTaps[i])
                         {
@@ -884,7 +928,7 @@ public class NotesDirector : MonoBehaviour
                     var isFlicks = touchDirector.laneFlicking;
 
                     bool flick = false;
-                    for (int i = Mathf.Max(n.GetStartLane() * 2 - 1, 0); i <= Mathf.Min(n.GetEndLane() * 2, 23); i++)
+                    for (int i = Mathf.Max(n.GetStartLane() - 1, 0); i <= Mathf.Min(n.GetEndLane(), 23); i++)
                     {
                         if (isFlicks[i])
                         {
@@ -964,9 +1008,7 @@ public class NotesDirector : MonoBehaviour
         if (gameDirector.isPlaying)
         {
             // スコア計算
-            scoreN = (float)notesN10 / totalN10;
-            scoreC = (float)maxCombo / total;
-            score = (int)(scoreN * 950000 + scoreC * 50000);
+            score = (int)((decimal)notesN10 / totalN10 * 1000000);
         }
         
         // AP, フルコン中のJustFlameの色
@@ -1013,7 +1055,7 @@ public class NotesDirector : MonoBehaviour
                 char kind = _notesData.Value.GetKind();
                 if (kind == 'N' || kind == 'L' || kind == 'S')
                 {
-                    int touchLane = _notesData.Value.GetStartLane() + _notesData.Value.GetEndLane();
+                    int touchLane = (_notesData.Value.GetStartLane() + _notesData.Value.GetEndLane()) / 2;
                     BeginTouch(touchLane, _notesData.Value.GetTime() / 1000f + gameDirector.waitTime - tapOffset);
                 }
 

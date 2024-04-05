@@ -88,14 +88,6 @@ public class GameDirector : MonoBehaviour
         progressText.text = 
             $"Time : {t}\n" +
             $"BPM  : {notesDirector.nowBpm}\n" +
-            $"BadF     : {notesDirector.resultPoint[0]}\n" +
-            $"GreatF   : {notesDirector.resultPoint[1]}\n" +
-            $"PerfectF : {notesDirector.resultPoint[2]}\n" +
-            $"Perfect+ : {notesDirector.resultPoint[3]}\n" +
-            $"PerfectL : {notesDirector.resultPoint[4]}\n" +
-            $"GreatL  : {notesDirector.resultPoint[5]}\n" +
-            $"BadL    : {notesDirector.resultPoint[6]}\n" +
-            $"Miss     : {notesDirector.resultPoint[7]}\n" + 
             $"Status   : {status.ToString()}";
         
         if (!isAudio)
@@ -125,8 +117,13 @@ public class GameDirector : MonoBehaviour
         if (status == CriAtomSourceBase.Status.PlayEnd && !isEnd)
         {
             isEnd = true;
-            ResultData.resultDetail = notesDirector.resultPoint;
             ResultData.score = notesDirector.score;
+            ResultData.tapJudge = notesDirector.tapJudge;
+            ResultData.resultDetail = notesDirector.resultPoint;
+            ResultData.pm = notesDirector.pm;
+            ResultData.combo = notesDirector.maxCombo;
+            ResultData.maxCombo = notesDirector.total;
+            ResultData.isAuto = notesDirector.isAuto;
             ResultData.difficult = GameData.difficult;
             ResultData.difficulty = GameData.difficulty;
             ResultData.title = GameData.title;
