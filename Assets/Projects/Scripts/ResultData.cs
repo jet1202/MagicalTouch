@@ -6,8 +6,9 @@ public static class ResultData
 {
     public static int score = 0;
     public static int[] tapJudge = new int[31];
-    public static int[] resultDetail = new int[6];
+    public static int[] resultDetail = new int[5];
     public static int[] pm = new int[6];
+    public static int tapGapSum = 0;
     public static int combo, maxCombo;
     public static bool isAuto;
 

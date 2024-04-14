@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
@@ -21,7 +22,9 @@ public class ResultDirector : MonoBehaviour
     private Texture jacket;
     private Texture rankTexture;
 
-    private Transform title, difficulty, score, combo, rank, tab1;
+    private Transform titleT, difficultyT, scoreT, comboT, rankT, tab1T, tab2T;
+
+    private int tab = 0;
     
     IEnumerator Start()
     {
@@ -29,46 +32,107 @@ public class ResultDirector : MonoBehaviour
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
         mask.SetActive(true);
         
-        title = resultCanvas.transform.GetChild(0);
-        difficulty = resultCanvas.transform.GetChild(1);
-        score = resultCanvas.transform.GetChild(2);
-        combo = resultCanvas.transform.GetChild(3);
-        rank = resultCanvas.transform.GetChild(4);
-        tab1 = resultCanvas.transform.GetChild(5);
+        titleT = resultCanvas.transform.GetChild(0);
+        difficultyT = resultCanvas.transform.GetChild(1);
+        scoreT = resultCanvas.transform.GetChild(2);
+        comboT = resultCanvas.transform.GetChild(3);
+        rankT = resultCanvas.transform.GetChild(4);
+        tab1T = resultCanvas.transform.GetChild(5);
+        tab2T = resultCanvas.transform.GetChild(6);
         
         // ロード
-        int[] detail = ResultData.resultDetail;
+        int score = ResultData.score;
+        int[] tapJudge = ResultData.tapJudge; // 31
+        int[] detail = ResultData.resultDetail; // 5
+        int[] pm = ResultData.pm; // 6
+        int tapGapSum = ResultData.tapGapSum;
+        int combo = ResultData.combo;
+        int maxCombo = ResultData.maxCombo;
+        bool isAuto = ResultData.isAuto;
+        
+        string title = ResultData.title;
+        string id = ResultData.id;
+        SelectData.DifficultyMode difficult = ResultData.difficult;
+        int difficulty = ResultData.difficulty;
+
+        int[] tapdetail = new int[5];
+        for (int i = 0; i < 31; i++)
+        {
+            if (12 <= i && i <= 17)
+                tapdetail[0] += tapJudge[i];
+            else if (10 <= i && i <= 19)
+                tapdetail[1] += tapJudge[i];
+            else if (5 <= i && i <= 24)
+                tapdetail[2] += tapJudge[i];
+            else if (0 <= i && i <= 29)
+                tapdetail[3] += tapJudge[i];
+            else if (i == 30)
+                tapdetail[4] += tapJudge[i];
+        }
+
+        int tapSum = tapJudge.Sum() - tapJudge[30];
+        float tapAve = (float)-tapGapSum / tapSum;
 
         // データを表示
-        title.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.title;
-        difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.difficult.ToString();
-        difficulty.GetChild(0).GetComponent<TextMeshProUGUI>().color = setColor(ResultData.difficult);
-        difficulty.GetChild(1).GetComponent<TextMeshProUGUI>().text = (ResultData.difficulty / 10).ToString();
-        score.GetChild(0).GetComponent<TextMeshProUGUI>().text = ResultData.score.ToString("D7");
-        combo.GetChild(0).GetComponent<TextMeshProUGUI>().text =
-            $"<align=left>MaxCombo<line-height=0>\n<align=right><size=30>{ResultData.combo}</size>/{ResultData.maxCombo}";
+        titleT.GetChild(0).GetComponent<TextMeshProUGUI>().text = title;
+        difficultyT.GetChild(0).GetComponent<TextMeshProUGUI>().text = difficult.ToString();
+        difficultyT.GetChild(0).GetComponent<TextMeshProUGUI>().color = setColor(difficult);
+        difficultyT.GetChild(1).GetComponent<TextMeshProUGUI>().text = (difficulty / 10).ToString();
+        scoreT.GetChild(0).GetComponent<TextMeshProUGUI>().text = score.ToString("D7");
+        comboT.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+            $"<align=left>MaxCombo<line-height=0>\n<align=right><size=30>{combo}</size>/{maxCombo}";
+        comboT.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+            "<size=30><b>PP</b></size>\n" + ((float)detail[0]/maxCombo * 100).ToString("F2") + "%";
 
-        if (ResultData.isAuto)
+        if (isAuto)
         {
-            rank.gameObject.SetActive(false);
-            tab1.gameObject.SetActive(false);
+            rankT.gameObject.SetActive(false);
+            tab1T.gameObject.SetActive(false);
+            tab2T.gameObject.SetActive(false);
         }
         else
         {
+            rankT.gameObject.SetActive(true);
+            tab1T.gameObject.SetActive(true);
+            tab2T.gameObject.SetActive(false);
+            
             // rank
-            int r = GetRank(ResultData.score);
-            if (r != 0 || detail[0] + detail[1] + detail[2] + detail[4] + detail[5] + detail[6] + detail[7] != 0)
+            int r = GetRank(score);
+            if (r != 0 || detail[0] + detail[1] + detail[2] + detail[4] != 0)
                 r++;
-            rank.GetComponent<Image>().sprite = rankSprites[r];
+            rankT.GetComponent<Image>().sprite = rankSprites[r];
 
             // tab1
-            Transform scoreDetail = tab1.GetChild(0);
-            scoreDetail.GetChild(1).GetComponent<TextMeshProUGUI>().text =
-                $"{detail[3]}\n{detail[2] + detail[4]}\n{detail[1] + detail[5]}\n{detail[0] + detail[6]}\n{detail[7]}\n";
+            Transform scoreDetailT = tab1T.GetChild(0);
+            scoreDetailT.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+                $"{detail[0]}\n{detail[1]}\n{detail[2]}\n{detail[3]}\n{detail[4]}\n";
+
+            Transform graphT = tab1T.GetChild(1);
+            int[] tap2 = new int[30];
+            Array.Copy(tapJudge, 0, tap2, 0, 30);
+            int max = tap2.Max();
+            if (max == 0) max = 1;
+            for (int i = 0; i < 30; i++)
+                graphT.GetChild(0).GetChild(i).GetComponent<Image>().fillAmount = (float)tapJudge[29 - i] / max;
+            graphT.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text =
+                tapAve.ToString("F1");
+            
+            // tab2
+            Transform chartDetailT = tab2T.GetChild(0);
+            for (int i = 0; i < 5; i++)
+                chartDetailT.GetChild(1).GetChild(i+1).GetChild(0).GetComponent<TextMeshProUGUI>().text = 
+                    tapdetail[i].ToString();
+            for (int i = 0; i < 3; i++)
+            {
+                chartDetailT.GetChild(i + 2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                    pm[i * 2].ToString();
+                chartDetailT.GetChild(i + 2).GetChild(5).GetChild(0).GetComponent<TextMeshProUGUI>().text = 
+                    pm[i * 2 + 1].ToString();
+            }
         }
 
         // ジャケットのデータ
-        IEnumerator corutine = GetComponent<ImportResult>().ImportJacket(ResultData.id);
+        IEnumerator corutine = GetComponent<ImportResult>().ImportJacket(id);
         yield return StartCoroutine(corutine);
         if (corutine.Current == null)
             jacket = defaultJacket;
@@ -80,15 +144,15 @@ public class ResultDirector : MonoBehaviour
         var m = image.GetComponent<Renderer>().material;
         m.SetFloat("_ImageSize", 0.85f);
         m.SetTexture("_Image", jacket);
-        m.SetColor("_color", setColor(ResultData.difficult));
+        m.SetColor("_color", setColor(difficult));
 
         // 動く前の位置につく
-        title.GetComponent<Image>().fillAmount = 0f;
-        difficulty.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
-        score.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
-        combo.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
-        rank.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
-        rank.localScale = new Vector3(2f, 2f, 2f);
+        titleT.GetComponent<Image>().fillAmount = 0f;
+        difficultyT.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
+        scoreT.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
+        comboT.GetComponent<RectTransform>().localPosition += new Vector3(800, 0, 0);
+        rankT.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
+        rankT.localScale = new Vector3(2f, 2f, 2f);
         
         mask.GetComponent<Image>().DOFade(0f, 1f).OnComplete(() =>
         {
@@ -97,12 +161,12 @@ public class ResultDirector : MonoBehaviour
         });
     }
 
-    public void MoveAnimation()
+    private void MoveAnimation()
     {
-        title.GetComponent<Image>().DOFillAmount(1f, 1f).SetEase(Ease.OutExpo);
-        difficulty.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.3f).SetRelative(true);
-        score.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.6f).SetRelative(true);
-        combo.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.9f).SetRelative(true);
+        titleT.GetComponent<Image>().DOFillAmount(1f, 1f).SetEase(Ease.OutExpo);
+        difficultyT.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.3f).SetRelative(true);
+        scoreT.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.6f).SetRelative(true);
+        comboT.GetComponent<RectTransform>().DOLocalMove(new Vector3(-800, 0, 0), 1f).SetEase(Ease.OutExpo).SetDelay(0.9f).SetRelative(true);
 
         var boardSeq = DOTween.Sequence();
         boardSeq.AppendInterval(0.2f);
@@ -112,12 +176,19 @@ public class ResultDirector : MonoBehaviour
 
         var rankSeq = DOTween.Sequence();
         rankSeq.AppendInterval(1.2f);
-        rankSeq.Append(rank.GetComponent<Image>().DOFade(1f, 1.5f).SetEase(Ease.OutQuad));
-        rankSeq.Join(rank.DOScale(new Vector3(1f, 1f, 1f), 1.5f).SetEase(Ease.InQuart));
+        rankSeq.Append(rankT.GetComponent<Image>().DOFade(1f, 1.5f).SetEase(Ease.OutQuad));
+        rankSeq.Join(rankT.DOScale(new Vector3(1f, 1f, 1f), 1.5f).SetEase(Ease.InQuart));
         rankSeq.Play();
     }
 
-    public int GetRank(int s)
+    private void ChangeTab()
+    {
+        tab = 1 - tab;
+        tab1T.gameObject.SetActive(tab == 0);
+        tab2T.gameObject.SetActive(tab == 1);
+    }
+
+    private int GetRank(int s)
     {
         int r = -1;
         if (s == 1000000) r = 0;
@@ -159,6 +230,11 @@ public class ResultDirector : MonoBehaviour
         }
 
         return color;
+    }
+    
+    public void TabButtonTap()
+    {
+        ChangeTab();
     }
 
     public void RestartButtonTap()

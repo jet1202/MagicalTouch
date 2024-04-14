@@ -119,8 +119,9 @@ public class GameDirector : MonoBehaviour
             isEnd = true;
             ResultData.score = notesDirector.score;
             ResultData.tapJudge = notesDirector.tapJudge;
-            ResultData.resultDetail = notesDirector.resultPoint;
+            ResultData.resultDetail = notesDirector.resultJudge;
             ResultData.pm = notesDirector.pm;
+            ResultData.tapGapSum = notesDirector.gapSum;
             ResultData.combo = notesDirector.maxCombo;
             ResultData.maxCombo = notesDirector.total;
             ResultData.isAuto = notesDirector.isAuto;

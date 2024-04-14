@@ -77,9 +77,10 @@ public class NotesDirector : MonoBehaviour
     
     // 判定
     private int isFull = 2;
-    public int[] resultPoint = new int[8];
+    public int[] resultJudge = new int[5];
     public int[] tapJudge = new int[31];
     public int[] pm = new int[6];
+    public int gapSum = 0;
 
     private int bpmProg = 0;
     public int nowBpm = 0;
@@ -667,7 +668,7 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 1f, 0f, 150f / 255f);
-            resultPoint[3]++;
+            resultJudge[0]++;
             combo++;
         }
         else if (g < 0.05f)
@@ -675,10 +676,7 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'P';
             Pcolor = new Color(1f, 1f, 0f, 1f);
             tColor = new Color(1f, 1f, 1f, 150f / 255f);
-            if (gap > 0)
-                resultPoint[4]++;
-            else
-                resultPoint[2]++;
+            resultJudge[1]++;
             combo++;
         }
         else if (g < 0.10f)
@@ -687,10 +685,7 @@ public class NotesDirector : MonoBehaviour
             Pcolor = new Color(95f / 255f, 184f / 255f, 1f, 1f);
             tColor = new Color(1f, 1f, 1f, 150f / 255f);
             // eColor = new Color(0f, 70f / 255f, 1f, 70f / 255f);
-            if (gap > 0)
-                resultPoint[5]++;
-            else
-                resultPoint[1]++;
+            resultJudge[2]++;
             s -= 4;
             combo++;
         }
@@ -699,10 +694,7 @@ public class NotesDirector : MonoBehaviour
             judgeKind = 'B';
             Pcolor = new Color(111f / 255f, 111f / 255f, 111f / 255f, 1f);
             tColor = Color.clear;
-            if (gap > 0)
-                resultPoint[6]++;
-            else
-                resultPoint[0]++;
+            resultJudge[3]++;
             s = 0;
             combo = 0;
         }
@@ -717,6 +709,7 @@ public class NotesDirector : MonoBehaviour
         {
             int gGroup = Math.Clamp((int)((gap + 0.15f) * 1000) / 10, 0, 29);
             tapJudge[gGroup]++;
+            gapSum += (int)Math.Round(gap * 1000);
         }
         else
         {
@@ -832,7 +825,7 @@ public class NotesDirector : MonoBehaviour
                 jIns.transform.rotation = Quaternion.identity;
                 jIns.GetComponent<JudgeController>().Setting('M');
                 combo = 0;
-                resultPoint[7]++;
+                resultJudge[4]++;
                 damageController.Damage();
 
                 // pmにデータを詰める
@@ -1016,7 +1009,7 @@ public class NotesDirector : MonoBehaviour
         {
             if (isFull == 2)
             {
-                if (resultPoint[0] + resultPoint[1] + resultPoint[5] + resultPoint[6] + resultPoint[7] > 0)
+                if (resultJudge[2] + resultJudge[3] + resultJudge[4] > 0)
                 {
                     isFull = 1;
                     justFlame.startColor = new Color(0f, 59f / 255f, 1f, 1f);
@@ -1025,7 +1018,7 @@ public class NotesDirector : MonoBehaviour
             }
             else if (isFull == 1)
             {
-                if (resultPoint[0] + resultPoint[6] + resultPoint[7] > 0)
+                if (resultJudge[3] + resultJudge[4] > 0)
                 {
                     isFull = 0;
                     justFlame.startColor = Color.white;
