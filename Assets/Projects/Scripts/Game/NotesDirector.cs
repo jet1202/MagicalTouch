@@ -192,13 +192,13 @@ public class NotesDirector : MonoBehaviour
                     if (n.GetLength() <= 100) continue;
 
                     JudgeNotes.Add(new KeyValuePair<Note, bool>(
-                        new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 10, n.GetStartLane(), n.GetEndLane(), 'T',
+                        new Note(n.GetNumber(), n.GetTime() + n.GetLength() - 100, n.GetStartLane(), n.GetEndLane(), 'T',
                             0, n.GetField()), false));
 
                     int fir;
                     for (int j = 0;; j++)
                     {
-                        if (MaintainJudge[j] > (n.GetTime() + 101) / 1000f)
+                        if (MaintainJudge[j] > (n.GetTime() + 100) / 1000f)
                         {
                             fir = j;
                             break;
@@ -219,8 +219,8 @@ public class NotesDirector : MonoBehaviour
             {
                 var m = slideData[n.GetNumber()];
 
-                TrashNotes.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), 'A', 0,
-                    n.GetField()));
+                TrashNotes.Add(new Note(n.GetNumber(), n.GetTime(), n.GetStartLane(), n.GetEndLane(), 'A',
+                    m.isDummy && !fieldIsDummy[n.GetField()] ? 0 : 1, n.GetField()));
 
                 if (fieldIsDummy[n.GetField()])
                 {
@@ -497,8 +497,9 @@ public class NotesDirector : MonoBehaviour
         obj.transform.GetComponent<MeshFilter>().sharedMesh = mesh;
         TrashData.Add(new Trash(obj, (slide.GetTime() + maintains.Last().time) / 1000f, slide.GetStartLane(),
             slide.GetEndLane(), slide.GetKind()));
-        
-        obj.transform.GetComponent<MeshRenderer>().material.color = SlideColor(sColor, 0.5f);
+
+        float a = slide.GetLength() == 0 ? 0.3f : 0.6f;
+        obj.transform.GetComponent<MeshRenderer>().material.color = SlideColor(sColor, a);
     }
 
     GameObject NoteKind(char kind)

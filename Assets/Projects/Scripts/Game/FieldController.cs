@@ -76,11 +76,8 @@ public class FieldController : MonoBehaviour
         }
         else
         {
-            if (speedProgress < speedItem.Length - 1)
-            {
-                if (time > speedItem[speedProgress + 1].time / 1000f)
-                    speedProgress++;
-            }
+            while (speedProgress < speedItem.Length - 1 && time > speedItem[speedProgress + 1].time / 1000f)
+                speedProgress++;
 
             pos = accDis[speedProgress];
 
@@ -117,7 +114,7 @@ public class FieldController : MonoBehaviour
         if (timeProg == transparencyItem.Length)
             return transparencyItem[timeProg - 1].alpha / 100f;
         
-        if (transparencyItem[timeProg].time / 1000f < time)
+        while (timeProg != transparencyItem.Length && transparencyItem[timeProg].time / 1000f < time)
             timeProg++;
         
         if (timeProg == transparencyItem.Length)

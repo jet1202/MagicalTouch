@@ -3,7 +3,7 @@
         {
             "title": "Test2",
             "id": "Test2",
-            "constant": [0, 0, 135, 155],
+            "constant": [0, 0, 145, 185],
             "division": "Pack1",
             "composer": "trollman0129",
             "number": 1,
@@ -21,7 +21,7 @@
         {
             "title": "Aleph-0",
             "id": "Aleph-0",
-            "constant": [0, 0, 0, 160],
+            "constant": [0, 0, 0, 170],
             "division": "Pack1",
             "composer": "LeaF",
             "number": 3,
@@ -44,6 +44,15 @@
             "composer": "水野健治 VS 穴山大輔",
             "number": 5,
             "chorus": 12000
+        },
+        {
+            "title": "MilK",
+            "id": "MilK",
+            "constant": [0, 0, 150, 0],
+            "division": "SidePack1",
+            "composer": "もりもりあつし",
+            "number": 6,
+            "chorus": 28000
         }
     ]
 }
