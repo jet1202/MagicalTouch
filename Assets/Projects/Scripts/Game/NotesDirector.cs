@@ -40,7 +40,7 @@ public class NotesDirector : MonoBehaviour
 
     public BpmItem[] bpmData;
 
-    private List<float> MaintainJudge;
+    private List<int> MaintainJudge;
 
     private List<GameObject> fieldObjects = new List<GameObject>();
 
@@ -155,7 +155,7 @@ public class NotesDirector : MonoBehaviour
         cri.SetBgm(id);
 
         // LongMaintainの判定をリストに格納
-        MaintainJudge = new List<float>();
+        MaintainJudge = new List<int>();
         float t, nex, b;
         int leng = bpmData.Length;
         for (int i = 0; i < leng; i++)
@@ -168,9 +168,9 @@ public class NotesDirector : MonoBehaviour
             else
                 nex = bpmData[i + 1].time / 1000f;
 
-            for (float j = t; j < nex; j += 60f / b)
+            for (float j = t; j < nex; j += 30f / b)
             {
-                MaintainJudge.Add(j);
+                MaintainJudge.Add((int)Math.Round(j * 1000));
             }
         }
         
@@ -198,7 +198,7 @@ public class NotesDirector : MonoBehaviour
                     int fir;
                     for (int j = 0;; j++)
                     {
-                        if (MaintainJudge[j] > (n.GetTime() + 100) / 1000f)
+                        if (MaintainJudge[j] > n.GetTime())
                         {
                             fir = j;
                             break;
@@ -207,10 +207,10 @@ public class NotesDirector : MonoBehaviour
 
                     for (int j = fir;; j++)
                     {
-                        if (MaintainJudge[j] > (n.GetTime() + n.GetLength() - 100) / 1000f)
+                        if (MaintainJudge[j] >= n.GetTime() + n.GetLength() - 100)
                             break;
 
-                        JudgeNotes.Add(new KeyValuePair<Note, bool>(new Note(n.GetNumber(), (int)Math.Floor(MaintainJudge[j] * 1000),
+                        JudgeNotes.Add(new KeyValuePair<Note, bool>(new Note(n.GetNumber(), MaintainJudge[j],
                             n.GetStartLane(), n.GetEndLane(), 'M', 0, n.GetField()), false));
                     }
                 }

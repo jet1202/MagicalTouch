@@ -1900,7 +1900,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1337254079}
   - {fileID: 1563106808}
@@ -2490,9 +2490,10 @@ MonoBehaviour:
   combo: 0
   maxCombo: 0
   score: 0
-  resultPoint: 0000000000000000000000000000000000000000000000000000000000000000
+  resultJudge: 0000000000000000000000000000000000000000
   tapJudge: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   pm: 000000000000000000000000000000000000000000000000
+  gapSum: 0
   nowBpm: 0
 --- !u!1 &811173886
 GameObject:
@@ -5708,7 +5709,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1819987201}
   m_RootOrder: 1
@@ -6114,7 +6115,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1380776533}
   m_Father: {fileID: 555576923}
@@ -6280,7 +6281,7 @@ MonoBehaviour:
   m_text: Pause
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a0e03aa8ea9d60f4bb2d32492158066e, type: 2}
-  m_sharedMaterial: {fileID: -7934609101092868954, guid: a0e03aa8ea9d60f4bb2d32492158066e,
+  m_sharedMaterial: {fileID: 1987632109643355252, guid: a0e03aa8ea9d60f4bb2d32492158066e,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -6810,7 +6811,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1819987201
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7692,7 +7693,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 555576923}
   m_RootOrder: 4

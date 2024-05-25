@@ -28,12 +28,21 @@
             "chorus": 11500
         },
         {
+            "title": "TwiNotes37510",
+            "id": "TwiNotes",
+            "constant": [0, 0, 0, 170],
+            "division": "Pack2",
+            "composer": "creamSodaP",
+            "number": 4,
+            "chorus": 3000
+        },
+        {
             "title": "Stellar:Dream",
             "id": "StellarDream",
             "constant": [0, 0, 0, 200],
             "division": "SidePack1",
             "composer": "Emocosine + Synthion",
-            "number": 4,
+            "number": 5,
             "chorus": 76000
         },
         {
@@ -42,7 +51,7 @@
             "constant": [0, 0, 0, 200],
             "division": "SidePack1",
             "composer": "水野健治 VS 穴山大輔",
-            "number": 5,
+            "number": 6,
             "chorus": 12000
         },
         {
@@ -51,7 +60,7 @@
             "constant": [0, 0, 150, 0],
             "division": "SidePack1",
             "composer": "もりもりあつし",
-            "number": 6,
+            "number": 7,
             "chorus": 28000
         }
     ]
