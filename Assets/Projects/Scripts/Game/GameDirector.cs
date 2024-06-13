@@ -42,7 +42,7 @@ public class GameDirector : MonoBehaviour
     void Awake()
     {
 #if !UNITY_EDITOR && PLATFORM_ANDROID
-        if (ScoreData.setting.Game.FPSMode)
+        if (SaveData.setting.Game.FPSMode)
             Application.targetFrameRate = 120;
         else
             Application.targetFrameRate = 60;
@@ -92,7 +92,7 @@ public class GameDirector : MonoBehaviour
         
         if (!isAudio)
         {
-            if (musicTime > -ScoreData.setting.Game.SongOffset / 1000f)
+            if (musicTime > -SaveData.setting.Game.SongOffset / 1000f)
             {
                 isAudio = true;
                 cri.bgm.Play(0);

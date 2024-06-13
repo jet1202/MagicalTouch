@@ -43,7 +43,7 @@ public class TouchDirector : MonoBehaviour
         
         moveAllow = (_height / 80) * (_height / 80);
 
-        isAuto = ScoreData.setting.Game.IsAuto;
+        isAuto = SaveData.setting.Game.IsAuto;
         if (isAuto)
         {
             laneTouching = Enumerable.Repeat<bool>(true, 24).ToArray();

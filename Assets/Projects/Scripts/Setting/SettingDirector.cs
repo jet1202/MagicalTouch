@@ -5,6 +5,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SettingDirector : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class SettingDirector : MonoBehaviour
         m.SetColor("_BaseColor", new Color(150f / 255f, 255f / 255f, 255f / 255f, 1f));
         m.SetFloat("_width", 0.4f);
 
-        var set = ScoreData.setting.Game;
+        var set = SaveData.setting.Game;
         noteSpeedText.GetComponent<TextMeshProUGUI>().text = (set.NoteSpeed / 10f).ToString("F1");
         isSimultaneousLine.GetComponent<Toggle>().isOn = set.IsPushLine;
         isAuto.GetComponent<Toggle>().isOn = set.IsAuto;
@@ -48,5 +49,16 @@ public class SettingDirector : MonoBehaviour
 
         mask.GetComponent<Image>().DOFade(0f, 0.7f)
             .OnComplete(() => { mask.SetActive(false); });
+    }
+
+    public void Back()
+    {
+        // データの保存
+        SaveDataSave.SettingWrite();
+        
+        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+        mask.SetActive(true);
+        mask.GetComponent<Image>().DOFade(1f, 0.7f)
+            .OnComplete(() => { SceneManager.LoadScene(SettingData.fromScene); });
     }
 }

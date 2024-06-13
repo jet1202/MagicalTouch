@@ -1,17 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using static ScoreData;
+using static SaveData;
 
 public class InputController : MonoBehaviour
 {
-    [SerializeField] private GameController gameController;
-    [SerializeField] private GameObject mask;
+    [SerializeField] private SettingDirector settingDirector;
     
     [SerializeField] private TextMeshProUGUI noteSpeedText;
     [SerializeField] private TextMeshProUGUI songOffsetText;
@@ -22,16 +18,12 @@ public class InputController : MonoBehaviour
     {
         setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed - 1, 10, 110);
         noteSpeedText.text = (setting.Game.NoteSpeed / 10f).ToString("F1");
-        
-        gameController.ChangePosition();
     }
     
     public void NoteSpeedRight()
     {
         setting.Game.NoteSpeed = Math.Clamp(setting.Game.NoteSpeed + 1, 10, 110);
         noteSpeedText.text = (setting.Game.NoteSpeed / 10f).ToString("F1");
-        
-        gameController.ChangePosition();
     }
     
     public void SimultaneousLine(bool isOn)
@@ -58,16 +50,12 @@ public class InputController : MonoBehaviour
     {
         setting.Game.SongOffset = Math.Clamp(setting.Game.SongOffset - 5, -300, 300);
         songOffsetText.text = (setting.Game.SongOffset / 10f).ToString("F1");
-        
-        gameController.ChangeMusicOffset();
     }
     
     public void MusicOffsetRight()
     {
         setting.Game.SongOffset = Math.Clamp(setting.Game.SongOffset + 5, -300, 300);
         songOffsetText.text = (setting.Game.SongOffset / 10f).ToString("F1");
-        
-        gameController.ChangeMusicOffset();
     }
     
     public void TapOffsetLeft()
@@ -96,16 +84,12 @@ public class InputController : MonoBehaviour
     {
         setting.Game.NoteThickness = Math.Clamp(setting.Game.NoteThickness - 1, 1, 10);
         noteThicknessText.text = (setting.Game.NoteThickness / 10f).ToString("F1");
-        
-        gameController.ChangeThickness();
     }
     
     public void NoteThicknessRight()
     {
         setting.Game.NoteThickness = Math.Clamp(setting.Game.NoteThickness + 1, 1, 10);
         noteThicknessText.text = (setting.Game.NoteThickness / 10f).ToString("F1");
-        
-        gameController.ChangeThickness();
     }
 
     public void FPSMode(bool isOn)
@@ -115,9 +99,6 @@ public class InputController : MonoBehaviour
 
     public void BackButton()
     {
-        mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
-        mask.SetActive(true);
-        mask.GetComponent<Image>().DOFade(1f, 0.7f)
-            .OnComplete(() => { SceneManager.LoadScene(SettingData.fromScene); });
+        settingDirector.Back();
     }
 }

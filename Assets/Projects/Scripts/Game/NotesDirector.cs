@@ -96,7 +96,7 @@ public class NotesDirector : MonoBehaviour
         id = GameData.id;
         difficulty = GameData.difficult;
         
-        var set = ScoreData.setting.Game;
+        var set = SaveData.setting.Game;
         noteThickness = set.NoteThickness / 10f;
         isAuto = set.IsAuto;
         isColor = set.IsColor;
@@ -106,7 +106,7 @@ public class NotesDirector : MonoBehaviour
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
         
         // データをImport
-        Speed = ScoreData.setting.Game.NoteSpeed;
+        Speed = SaveData.setting.Game.NoteSpeed;
 
         // Sheet
         IEnumerator corutine = importData.ImportSheet(id, difficulty.ToString());

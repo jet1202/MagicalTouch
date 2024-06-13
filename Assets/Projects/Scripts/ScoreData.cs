@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public static class ScoreData
+
+[Serializable]
+public static class SaveData
 {
-    public static SongData[] song;
+    public static ScoreData song = new ScoreData();
     public static Setting setting = new Setting();
 }

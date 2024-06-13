@@ -36,7 +36,7 @@ public class FieldController : MonoBehaviour
         isActive = true;
         timeProg = 0;
         
-        Speed = ScoreData.setting.Game.NoteSpeed;
+        Speed = SaveData.setting.Game.NoteSpeed;
         subNotes.transform.position = new Vector3(0, 0, 0);
         subNotes.SetActive(true);
     }

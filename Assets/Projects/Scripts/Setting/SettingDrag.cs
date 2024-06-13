@@ -20,7 +20,7 @@ public class SettingDrag : MonoBehaviour, IDragHandler
         var dy = e.delta.y / _height * 600;
 
         var posy = transform.GetChild(0).GetComponent<RectTransform>().localPosition.y;
-        posy = Math.Clamp(posy + dy, 250f, 910f);
+        posy = Math.Clamp(posy + dy, 250f, 250f);
         transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(0f, posy, 0f);
     }
 }

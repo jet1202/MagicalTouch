@@ -34,6 +34,10 @@ public class CategoryWindowController : MonoBehaviour
         mask.SetActive(true);
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
         
+        // Setting, Scoreのデータのインポート
+        SaveDataSave.SettingRead();
+        SaveDataSave.ScoreRead();
+        
         // CategoryDataのインポート
         IEnumerator corutine = importCategory.ImportCategoryData();
         yield return StartCoroutine(corutine);
