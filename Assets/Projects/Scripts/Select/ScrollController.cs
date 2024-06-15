@@ -16,16 +16,20 @@ public class ScrollController : MonoBehaviour
     [SerializeField] private GameObject CenterBoxes;
     [SerializeField] private Scrollbar scrollbar;
     [SerializeField] private GameObject songData;
+    [SerializeField] private GameObject detailData;
     [SerializeField] private TextMeshProUGUI sortText;
     
     [SerializeField] private ImportScore importScore;
     [SerializeField] private List<GameObject> boxes;
-    private int[] boxDisplay = Enumerable.Repeat<int>(-2, 12).ToArray();
+    private float boxAngle;
+    private int[] boxDisplay;
     private List<SongDataList> songList;
 
     [SerializeField] private Texture defaultImage;
 
     [SerializeField] private GameObject subCube;
+    
+    [SerializeField] private Sprite[] rankSprites;
 
     private float _scrollNumber;
     private int number;
@@ -55,6 +59,9 @@ public class ScrollController : MonoBehaviour
     // 初期設定
     public IEnumerator Setting(List<SongList> list)
     {
+        boxAngle = 360f / boxes.Count;
+        boxDisplay = Enumerable.Repeat<int>(-2, boxes.Count).ToArray();
+        
         // songListに基本情報(SongList) + Score + Jacketを追加、管理する
         songList = new List<SongDataList>();
         foreach (var s in list)
@@ -76,7 +83,7 @@ public class ScrollController : MonoBehaviour
             else
                 t = (Texture)corutine.Current;
             n.image = t;
-            n.score = new int[]{0, 0, 0, 0}; // Score反映
+            n.detail = importScore.GetScore(s.id); // Score反映
             
             songList.Add(n);
         }
@@ -155,7 +162,7 @@ public class ScrollController : MonoBehaviour
                 s = songList.OrderBy(x => x.constant[(int)difficulty]).ThenBy(x => x.number);
                 break;
             case SortMode.Score:
-                s = songList.OrderBy(x => x.id); // Scoreの反映
+                s = songList.OrderBy(x => x.detail[(int)difficulty].score); // Scoreの反映
                 break;
             default:
                 s = songList.OrderBy(x => x.number);
@@ -165,7 +172,7 @@ public class ScrollController : MonoBehaviour
 
         num = songList.FindIndex(n => nowSong == n.id);
         
-        boxDisplay = Enumerable.Repeat<int>(-2, 12).ToArray();
+        boxDisplay = Enumerable.Repeat<int>(-2, boxes.Count).ToArray();
         
         AdjustNumber(num);
         SongChange();
@@ -178,7 +185,7 @@ public class ScrollController : MonoBehaviour
     /// <param name="number"></param>
     private void CubeChange(int cube, int number)
     {
-        if (cube < 0) cube += 12;
+        if (cube < 0) cube += boxes.Count;
         
         float size;
         Texture image;
@@ -191,7 +198,7 @@ public class ScrollController : MonoBehaviour
         }
         else
         {
-            size = 0.85f;
+            size = 0.9f;
             image = songList[number].image;
         }
 
@@ -217,27 +224,49 @@ public class ScrollController : MonoBehaviour
     private void SongChange()
     {
         // 反対側のCubeの画像を変更
-        for (int i = number - 5; i < number + 7; i++)
+        for (int i = number - boxes.Count / 2; i < boxes.Count; i++)
         {
-            int c = i % 12;
+            int c = i % boxes.Count;
             CubeChange(c, i);
         }
         
         // Song詳細情報を表示
+        var song = songList[number];
+        
         var title = songData.transform.GetChild(1);
         var difficulty2 = songData.transform.GetChild(2);
         var composer = songData.transform.GetChild(3);
+        var score = detailData.transform.GetChild(1).GetChild(0);
+        var rank = detailData.transform.GetChild(1).GetChild(1);
+        var countT = detailData.transform.GetChild(1).GetChild(3);
+        var countT2 = detailData.transform.GetChild(1).GetChild(5);
         
         Color color;
         color = GetColor(difficulty);
         
-        title.GetComponent<TextMeshProUGUI>().text = songList[number].title;
+        title.GetComponent<TextMeshProUGUI>().text = song.title;
         difficulty2.GetChild(0).GetComponent<Image>().color = color;
         difficulty2.GetChild(1).GetComponent<TextMeshProUGUI>().text =
-            songList[number].constant[(int)difficulty] != 0
-                ? (songList[number].constant[(int)difficulty] / 10).ToString()
+            song.constant[(int)difficulty] != 0
+                ? (song.constant[(int)difficulty] / 10).ToString()
                 : "-";
-        composer.GetComponent<TextMeshProUGUI>().text = songList[number].composer;
+        composer.GetComponent<TextMeshProUGUI>().text = song.composer;
+
+        var s = song.detail[(int)difficulty];
+        score.GetComponent<TextMeshProUGUI>().text = s.score.ToString("D7");
+        if (s.tryCount == 0)
+        {
+            rank.gameObject.SetActive(false);
+            countT.GetComponent<TextMeshProUGUI>().text = " NULL\n NULL\n";
+            countT2.GetComponent<TextMeshProUGUI>().text = " NULL\n NULL\n";
+        }
+        else
+        {
+            rank.GetComponent<Image>().sprite = rankSprites[ResultDirector.GetRank(s.score) + (s.isStar ? 0 : 1)];
+            rank.gameObject.SetActive(true);
+            countT.GetComponent<TextMeshProUGUI>().text = $" {s.tryCount}\n {s.compCount}";
+            countT2.GetComponent<TextMeshProUGUI>().text = $" {s.fcCount}\n {s.apCount}";
+        }
     }
 
     /// <summary>
@@ -265,7 +294,7 @@ public class ScrollController : MonoBehaviour
         int Bnumber = number;
         number = Math.Clamp((int)Math.Round(_scrollNumber), 0, leng - 1);
 
-        Quaternion rot = Quaternion.AngleAxis(-_scrollNumber * 30, Vector3.up);
+        Quaternion rot = Quaternion.AngleAxis(-_scrollNumber * boxAngle, Vector3.up);
         CenterBoxes.transform.rotation = rot;
         
         if (Bnumber != number)
@@ -308,12 +337,12 @@ public class ScrollController : MonoBehaviour
                 (x) =>
                 {
                     cubeRotate = x;
-                    for (int i = 0; i < 12; i++)
+                    for (int i = 0; i < boxes.Count; i++)
                     {
                         Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
                         var lot = boxes[i].transform.localRotation;
                         boxes[i].transform.localRotation = localAngle;
-                        boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
+                        boxes[i].transform.Rotate(0, i * boxAngle, 0, Space.World);
                     }
                 },
                 e,
@@ -323,12 +352,12 @@ public class ScrollController : MonoBehaviour
         else
         {
             cubeRotate = e;
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < boxes.Count; i++)
             {
                 Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
                 var lot = boxes[i].transform.localRotation;
                 boxes[i].transform.localRotation = localAngle;
-                boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
+                boxes[i].transform.Rotate(0, i * boxAngle, 0, Space.World);
             }
         }
     }
@@ -340,13 +369,13 @@ public class ScrollController : MonoBehaviour
     public void CubeRotation(float del)
     {
         cubeRotate += del;
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < boxes.Count; i++)
         {
             // 一度回転軸を合わせてから回転
             Quaternion localAngle = Quaternion.AngleAxis(cubeRotate, Vector3.right);
             var lot = boxes[i].transform.localRotation;
             boxes[i].transform.localRotation = localAngle;
-            boxes[i].transform.Rotate(0, i * 30, 0, Space.World);
+            boxes[i].transform.Rotate(0, i * boxAngle, 0, Space.World);
         }
     }
 
@@ -354,7 +383,7 @@ public class ScrollController : MonoBehaviour
     {
         if (isScrolling) // (Math.Abs(inertia) > 0f)
         {
-            scrollbar.value -= leng - 1 == 0 ? 0f :inertia * (1f / 30f) / (leng - 1);
+            scrollbar.value -= leng - 1 == 0 ? 0f :inertia * (1f / boxAngle) / (leng - 1);
             inertia /= 1f + friction;
 
             // スクロールスピードが一定以下になったら止め、位置を調整
@@ -430,8 +459,24 @@ public class ScrollController : MonoBehaviour
                     m = s.GetChild(i).GetComponent<Renderer>().material;
                     if (i == 1) t = song.image;
                     else t = defaultImage;
-                    SetCube(m, difficulty, t, 0.85f);
+                    SetCube(m, difficulty, t, 0.9f);
                 }
+                
+                // データのセーブ
+                int saveIndex = SaveData.song.item.FindIndex(x => x.Id == song.id);
+                if (saveIndex == -1)
+                {
+                    SongData n = new SongData(song.id);
+                    n.detail = new SongDetail[4];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        n.detail[i] = new SongDetail();
+                    }
+                    SaveData.song.item.Add(n);
+                    saveIndex = SaveData.song.item.Count - 1;
+                }
+                SaveData.song.item[saveIndex].detail[(int)difficulty].tryCount++;
+                SaveDataSave.ScoreWrite();
 
                 IEnumerator corutine = subDirector.MoveGameFromSelect(song);
                 StartCoroutine(corutine);

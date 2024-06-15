@@ -45,7 +45,7 @@ public class SongDataList
     public int number;
     public int chorus;
 
-    public int[] score;
+    public SongDetail[] detail;
     public Texture image;
 }
 

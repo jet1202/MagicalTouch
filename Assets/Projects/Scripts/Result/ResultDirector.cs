@@ -28,7 +28,6 @@ public class ResultDirector : MonoBehaviour
     
     IEnumerator Start()
     {
-
         mask.GetComponent<Image>().color = new Color(0f, 0f, 0f, 1f);
         mask.SetActive(true);
         
@@ -54,6 +53,34 @@ public class ResultDirector : MonoBehaviour
         string id = ResultData.id;
         SelectData.DifficultyMode difficult = ResultData.difficult;
         int difficulty = ResultData.difficulty;
+        
+        // スコアのセーブ
+        
+        int saveIndex = SaveData.song.item.FindIndex(x => x.Id == id);
+        int highScore = 0;
+        bool isAP = detail[0] == maxCombo;
+
+        if (!isAuto)
+        {
+            if (saveIndex != -1)
+            {
+                highScore = SaveData.song.item[saveIndex].detail[(int)difficult].score;
+                if (score > highScore)
+                    SaveData.song.item[saveIndex].detail[(int)difficult].score = score;
+
+                SaveData.song.item[saveIndex].detail[(int)difficult].compCount++;
+                if (combo == maxCombo)
+                    SaveData.song.item[saveIndex].detail[(int)difficult].fcCount++;
+                if (isAP)
+                    SaveData.song.item[saveIndex].detail[(int)difficult].apCount++;
+
+                SaveDataSave.ScoreWrite();
+            }
+            else
+            {
+                Debug.Log("データを保存できませんでした");
+            }
+        }
 
         int[] tapdetail = new int[5];
         for (int i = 0; i < 31; i++)
@@ -79,6 +106,9 @@ public class ResultDirector : MonoBehaviour
         difficultyT.GetChild(0).GetComponent<TextMeshProUGUI>().color = setColor(difficult);
         difficultyT.GetChild(1).GetComponent<TextMeshProUGUI>().text = (difficulty / 10).ToString();
         scoreT.GetChild(0).GetComponent<TextMeshProUGUI>().text = score.ToString("D7");
+        scoreT.GetChild(1).gameObject.SetActive(!isAuto);
+        scoreT.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+            (score - highScore > 0 ? "<color=#ff8686>+" : "<color=#8686ff>") + (score - highScore).ToString("D7");
         comboT.GetChild(0).GetComponent<TextMeshProUGUI>().text =
             $"<align=left>MaxCombo<line-height=0>\n<align=right><size=30>{combo}</size>/{maxCombo}";
         comboT.GetChild(1).GetComponent<TextMeshProUGUI>().text =
@@ -98,7 +128,7 @@ public class ResultDirector : MonoBehaviour
             
             // rank
             int r = GetRank(score);
-            if (r != 0 || detail[0] + detail[1] + detail[2] + detail[4] != 0)
+            if (r != 0 || isAP)
                 r++;
             rankT.GetComponent<Image>().sprite = rankSprites[r];
 
@@ -115,7 +145,7 @@ public class ResultDirector : MonoBehaviour
             for (int i = 0; i < 30; i++)
                 graphT.GetChild(0).GetChild(i).GetComponent<Image>().fillAmount = (float)tapJudge[29 - i] / max;
             graphT.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text =
-                tapAve.ToString("F1");
+                $"Recommended Offset : <b>{tapAve.ToString("F1")}</b>";
             
             // tab2
             Transform chartDetailT = tab2T.GetChild(0);
@@ -183,12 +213,14 @@ public class ResultDirector : MonoBehaviour
 
     private void ChangeTab()
     {
+        if (ResultData.isAuto) return;
+        
         tab = 1 - tab;
         tab1T.gameObject.SetActive(tab == 0);
         tab2T.gameObject.SetActive(tab == 1);
     }
 
-    private int GetRank(int s)
+    public static int GetRank(int s)
     {
         int r = -1;
         if (s == 1000000) r = 0;

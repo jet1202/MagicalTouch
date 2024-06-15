@@ -138,21 +138,24 @@ public static class SaveDataSave
         {
             item = new List<SongData>()
             {
-                new SongData()
+                new SongData("Test2")
                 {
-                    Id = "Test2",
-                    Detail = new List<ScoreDetail>()
+                    detail = new SongDetail[4]
                     {
-                        new ScoreDetail { Difficulty = 2, Score = 900000, Rank = 1 },
-                        new ScoreDetail { Difficulty = 3, Score = 852300, Rank = 0 }
+                        new SongDetail(),
+                        new SongDetail(),
+                        new SongDetail() { score = 900000 },
+                        new SongDetail() { score = 852300 }
                     }
                 },
-                new SongData()
+                new SongData("TwiNote")
                 {
-                    Id = "TwiNote",
-                    Detail = new List<ScoreDetail>()
+                    detail = new SongDetail[4]
                     {
-                        new ScoreDetail { Difficulty = 1, Score = 900000, Rank = 1 }
+                        new SongDetail(),
+                        new SongDetail() { score = 900000 },
+                        new SongDetail(),
+                        new SongDetail()
                     }
                 }
             }

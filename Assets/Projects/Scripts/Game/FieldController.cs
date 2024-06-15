@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using CriWare.CriTimeline.Atom;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class FieldController : MonoBehaviour
 {
@@ -25,7 +22,6 @@ public class FieldController : MonoBehaviour
     public TransparencyItem[] transparencyItem = Array.Empty<TransparencyItem>();
     
     private int timeProg;
-    private bool isActive;
 
     private void Start()
     {
@@ -33,7 +29,6 @@ public class FieldController : MonoBehaviour
         subNotes = transform.GetChild(0).gameObject;
         rline = transform.GetChild(1).GetComponent<LineRenderer>();
         lline = transform.GetChild(2).GetComponent<LineRenderer>();
-        isActive = true;
         timeProg = 0;
         
         Speed = SaveData.setting.Game.NoteSpeed;

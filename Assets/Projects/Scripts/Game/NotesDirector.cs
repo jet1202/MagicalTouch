@@ -61,7 +61,6 @@ public class NotesDirector : MonoBehaviour
     private bool isColor;
     private float tapOffset;
 
-    private float jsize = 1f;
     private float lfsize = 1f;
     private float lfpos = 4.5f;
 

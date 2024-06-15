@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -71,5 +72,22 @@ public class ImportScore : MonoBehaviour
                 yield return null;
             }
         }
+    }
+
+    public SongDetail[] GetScore(string id)
+    {
+        foreach (var item in SaveData.song.item)
+        {
+            if (item.Id == id)
+                return item.detail;
+        }
+
+        return new SongDetail[4]
+        {
+            new SongDetail(),
+            new SongDetail(),
+            new SongDetail(),
+            new SongDetail()
+        };
     }
 }

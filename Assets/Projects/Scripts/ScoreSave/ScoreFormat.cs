@@ -7,6 +7,11 @@ using MessagePack;
 public class ScoreData
 {
     public List<SongData> item;
+    
+    public ScoreData()
+    {
+        item = new List<SongData>();
+    }
 }
 
 
@@ -14,17 +19,42 @@ public class ScoreData
 [Serializable]
 public class SongData
 {
-    /*[Key(0)]*/ public string Id;
-    /*[Key(1)]*/ public List<ScoreDetail> Detail;
+    /*[Key(0)]*/
+    public string Id;
+    /*[Key(1)]*/ public SongDetail[] detail = new SongDetail[4];
+    
+    public SongData(string id)
+    {
+        Id = id;
+        detail = new SongDetail[4]
+        {
+            new SongDetail(),
+            new SongDetail(),
+            new SongDetail(),
+            new SongDetail()
+        };
+    }
 }
 
-// [MessagePackObject]
 [Serializable]
-public class ScoreDetail
+public class SongDetail
 {
-    /*[Key(0)]*/ public int Difficulty;
-    /*[Key(1)]*/ public int Score;
-    /*[Key(2)]*/ public int Rank;
+    public int score;
+    public bool isStar;
+    public int tryCount;
+    public int compCount;
+    public int fcCount;
+    public int apCount;
+
+    public SongDetail()
+    {
+        score = 0;
+        isStar = false;
+        tryCount = 0;
+        compCount = 0;
+        fcCount = 0;
+        apCount = 0;
+    }
 }
 
 // [MessagePackObject]

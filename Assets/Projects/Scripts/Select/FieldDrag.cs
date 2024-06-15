@@ -45,7 +45,7 @@ public class FieldDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         {
             // 横
             float d = _delta.x;
-            scrollbar.value -= scrollController.leng - 1 == 0 ? 0 : ((d / _width) * 3f) / (scrollController.leng - 1);
+            scrollbar.value -= scrollController.leng - 1 == 0 ? 0 : ((d / _width) * 2.5f) / (scrollController.leng - 1);
         }
         else
         {
